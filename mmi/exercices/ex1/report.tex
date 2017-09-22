@@ -1,0 +1,92 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    Mathematical Methods for Computer Science 1\\
+    Fall 2017
+  }
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+\end{center}
+
+\section*{\texttt{1}}
+\subsection*{a)}
+
+The number of permutation $f$ of the set $s = \{1,2,3,4,5\}$ where $f(1) \neq 1$
+is computed by using the formula on the number of permutation of a set :
+$NbPerm(s) = |s|!$ where $f(1) \neq 1$, so we modify the formula :
+$NbPerm'(s) = (|s|-1) * ((|s|-1)!)$.
+
+Finally we can compute $NbPerm'(s) = 4 * (4!) = 96.$
+
+\subsection*{b)}
+
+The number of 10-digit numbers that have at least two equal digit can be
+computated by substracting the number of digit which have no duplicated digit,
+noted $N_{noDuplicate}$, to the total number of 10-digit numbers, noted
+$N_{tot}$.
+
+Normally, the total number of a n-digit number could be compute by using the
+function $N_{tot}(n) = 10^n$, but a number can't start with $0$ sowe have to
+slightly modify to formula : $N_{tot}(n) = 9 *
+10^{n-1}$ where $n \ge 0$.
+
+Now we can compute $N_{tot}(10) = 9 * 10^9$.
+
+Then, the number of 10-digit number that have no duplicate's digit is the same
+has the number of permutation $f$ of the set $s = \{0,1,2,3,4,5,6,7,8,9\}$ where
+$f(0) \neq 0$. So we take the formula $NbPerm'(s) = (|s|-1) * ((|s|-1)!)$ and
+we compute $N_{noDuplicate} = NbPerm'(10) = 9 * (9!)$.
+
+Finally, we can compute the total number of 10-digit number that have at least
+two equal digits : $N_{withDuplicate} = N_{tot} - N_{noDuplicate} = 9 * 10^9 - 9
+* (9!) = 8'996'734'080$.
+
+\section*{\texttt{2}}
+\subsection*{a}
+
+From any square on the chessboard, a rook is threatening $7*2 = 14$ another
+square. The total number of square on a chessboard is $8*8 = 64$ so there is
+$64-14 = 50$ free square for the other rook. So we have two choice to made : put
+the first rook on any square ($64$ possibility) and put the second rook on a
+non-threatened square ($64 - 14 = 50$ possibility). Finally the number of
+position that satisfy the constraint are $64 * 50 = 3200$.
+
+\subsection*{b}
+
+Putting two rooks of the same color on a chessboards is the same as computing
+$\begin{pmatrix}64 \\ 2\end{pmatrix} = \frac{64!}{2! * 62!} = \frac{64 * 63}{2}
+= 2016$.
+
+The other way is to make a first choice from $64$ squares and a second choice of
+$63$ squares. But because the two rooks are undistinguishable, we need to divide
+the total by $2$ : $\frac{64*63}{2} = 2016$
+
+\subsection*{c}
+
+
+
+\section*{\texttt{3}}
+\subsection*{a}
+\subsection*{b}
+
+\section*{\texttt{4}}
+\subsection*{a}
+\subsection*{b}
+
+\section*{\texttt{5}}
+\subsection*{a}
+\subsection*{b}
+
+\end{document}
+
+
