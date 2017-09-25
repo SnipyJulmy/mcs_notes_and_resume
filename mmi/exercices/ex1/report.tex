@@ -1,6 +1,7 @@
 \documentclass[a4paper,11pt]{report}
 
 \usepackage{amsmath}
+\usepackage{fullpage}
 
 \author{Sylvain Julmy}
 \date{\today}
@@ -15,6 +16,12 @@
     Fall 2017
   }
   \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  Series 1
+  \vspace*{1.4cm}
+
+  Sylvain Julmy
+  
   \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
 \end{center}
 
@@ -73,19 +80,79 @@ the total by $2$ : $\frac{64*63}{2} = 2016$
 
 \subsection*{c}
 
+First, we place a rook on one of the $64$ squares of the chessboards and then we
+choose a square to put the second, that gives two differents situation :
+\begin{enumerate}
+\item The second rook is places on a square already threatened by the other rook
+\item The second rook is places on a square that it is not threatened by the other rook
+\end{enumerate}
 
+In the first situation, the total number of square controlled
+$N_{ControlledSquare}$ by the two rooks is $14 + 14 - 7 - 1 = 20$. In the second
+situation, the total number of square controlled by the two rooks is $14 + 14 -
+2 = 26$, because two square are threatened twice.
+
+If we consider the first situation only, we have $64 * 63 * (62 - 20) * (61 -
+20) = 6943104$ situations that satisfies the constraints and in the second
+situation we have $64 * 63 * (62 - 26) * (61 - 26) = 5080320$ situations that
+satisfies the constraints.
+
+The sum of the two gives the total number of position that satisfies the
+constraints : $5'080'320 + 6'943'104 = 12'023'424$
 
 \section*{\texttt{3}}
 \subsection*{a}
+
+The number of natural divisors of $60$ is $12$ ($10$ is $1$ and $60$ are not
+counted). This number is equal to the number of possible sub-set of the
+(multi-)set $\{2,2,3,5\}$, but we have to remove some sub-set due to the fact
+that there is two $2$ in the (multi-)set : $2^4 - 4 = 16 - 4 = 12$. We remove
+$4$ because $2$ and $2'$ are the same so any time $2$ could be replace by $2'$
+we remove one from $2^4$.
+
 \subsection*{b}
+
+For any natural number $n$ such that $\not\exists k$ where $k^2 = n$, the number
+of natural divisor of $n$ is even because each operand $o_1$ of the multiplication
+that gives $n$ needs a second operand $o_2$ where $o_1 \neq o_2$. For example,
+we take $n=12$ :
+
+\begin{align*}
+  &1 * 12 = 12
+  &2 * 6 = 12
+  &3 * 4 = 12
+\end{align*}
+
+For any natural number $n$ such that $\exists k$ where $k^2 = n$, the number of
+natural divisor is increased by exactly one because $k * k = n$.
 
 \section*{\texttt{4}}
 \subsection*{a}
+
+The total number of different words in the language is $4^3 = 4 * 4 * 4 = 64$.
+
 \subsection*{b}
+
+The total number of different words that start with a vowels is $4 * 5 * 3 * 4 *
+2 = 480$.
+
+The total number of different words that start with a consonants is $5 * 4 * 4 *
+3 * 3 = 720$.
+
+The total number of different words is $480 + 720 = 1200$.
 
 \section*{\texttt{5}}
 \subsection*{a}
+
+The number of different ways to separate $2n$ persons into two teams is the same
+as taking $n$ from $2n$ and dividing the whole by $2$ because a groups of $n$
+have a symetric groups : $\begin{pmatrix}2n \\ n\end{pmatrix} * 2^{-1}$.
+
 \subsection*{b}
+
+First, we count the number of permutation of $n$ stone and then we divive the
+whole by $n$ because the bracelets is circular, so circular permutation don't
+count : $\frac{n!}{n}$.
 
 \end{document}
 

@@ -1,0 +1,117 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{etoolbox}
+\usepackage{sourcecodepro}
+\usepackage{amsmath}
+\usepackage{amsthm}
+
+\title{Resume : Description Logic}
+
+\begin{document}
+
+\maketitle
+
+$C$ is the set of concept names and $R$ the set of role names. Every concept names is a concept description (CD).
+
+Formal notation :
+\begin{align*}
+& C \sqcap D \rightarrow \text{conjonction} \\
+& C \sqcup D \rightarrow \text{disjonction} \\
+& \neg C \rightarrow \text{negation} \\
+& \exists r.C \rightarrow \text{existential restriction} \\
+& \forall r.C \rightarrow \text{value restriction}
+\end{align*}
+
+An interpretation $I = (\Delta,\cdot )$ such that $\Delta \neq \emptyset$, ($\Delta$ is called the domain of the interpretation) and with the following :
+\begin{align*}
+& A \in C \rightarrow A^I \subseteq \Delta \\
+& r \in R \rightarrow r^I \subseteq \Delta \times \Delta \\
+& \top^I = \Delta \\
+& \bot^I = \Delta \\
+& (C \sqcap D)^I = C^I \cap D^I \\
+& (C \sqcup D)^I = C^I \cup D^I  \\
+& (\neg C)^I = \Delta \setminus C^I \\
+& (\exists r.C)^I = \{d \in \Delta \mid \exists e \in \Delta \text{ with } (d,e) \in r^I \text{ and } e \in C^I \}\\
+& (\forall r.C)^I = \{ d \in \Delta \mid \forall e \in \Delta, \text{ if } (d,e) \in r^I, \text{ then }e \in C^I \}
+\end{align*}
+
+We call $C^I$ the extension of $C$ in $I$ and $b \in \Delta^I$ an $r-filler$ of $a$ in $I$ if $(a,b) \in r^I$.
+
+\newtheorem{Lemma}{Lemma}
+\begin{Lemma}
+Let $I$ be an interpretation, $C$, $D$ concepts and $r$ a role. Then
+\begin{align*}
+& \top^I = (C \sqcup \neg C)^I \\
+& \bot^I = (C \sqcap \neg C)^I \\
+& (\neg \neg C)^I = C^I \\
+& (\neg(C \sqcap D))^I = (\neg C \sqcup \neg D)^I \\
+& (\neg(C \sqcup D))^I = (\neg C \sqcap \neg D)^I \\
+& (\neg(\exists r.C))^I = (\forall r.\neg C)^I \\
+& (\neg(\forall r.C))^I = (\exists r.\neg C)^I
+\end{align*}
+\end{Lemma}
+
+Because the $\sqcup$ operator can be tricky sometimes, we use the following relation to replace the $\sqcup$ by $\sqcap$ : $C \sqcup D \rightarrow \neg(\neg C \sqcap \neg D)$.
+
+\section*{$ALC$ $TBoxes$}
+
+For $C$ and $D$ possibly compound $ALC$ concepts, an expression of form $C \sqsubseteq D$ is called an $ALC$ general concept inclusion (GCI). We use $C \equiv D$ has an abbreviation for $ C\tau \sqsubseteq D, D \sqsubseteq C$. A finite set of GCI is called an $ALC$ $TBox$ and noted $\tau$.
+
+\begin{Lemma}
+If $\tau \in \tau'$ for two $TBox$ $\tau$ and $\tau'$, then each model of $\tau'$ is also a model of $\tau$. 
+\end{Lemma}
+
+Example of a $TBox$ $T_{ex}$ :
+\begin{align*}
+T_{ex} = \{ Course &\sqsubseteq \neg Person,\\
+UGC &\sqsubseteq Course,\\
+PGC &\sqsubseteq Course,\\
+Teacher &\equiv Person \sqcap \exists teaches.Course,\\
+\exists teaches.T &\sqsubseteq Person,\\
+Student &\equiv Person \sqcap \exists attends.Course ,\\
+\exists attends.T &\sqsubseteq Person \}
+\end{align*}
+
+\section*{$ALC$ $ABoxes$}
+
+Let $I$ be a set of individual names disjoint from $R$ and $C$. For $a,b \in I$ individual names, $C$ a possibly compound $ALC$ concept, and $r \in R$ a role name, an expression of the form $a:C$ is called an $ALC$ concept assertion and $(a,b) : r$ is called and $ALC$ role assertion.
+
+A finite set of concept and role assertion is called an $ALC$ $ABox$. An interpretation function $\cdot^I$ is additionally required to map every individual name $a\in I$ to an element $a^I \ in \Delta^I$. An interpretation $I$ satisfies a concept assertion $a:C$ if $a^I \in C^I$ and a role assertion $(a,b):r$ if $(a^I,b^I) \in r^I$.
+
+An interpretation that satisfies each concept assertion and each role assertion in a $ABox$ $A$ is called a model of $A$.
+
+Example of a $ABox$ $A_{ex}$ :
+\begin{align*}
+A_{ex} = \{ Mary &: Person, \\
+CS600 &: Course,\\
+Ph456 &: Course \sqcap PGC,\\
+Hugo &: Person,\\
+Betty &: Person \sqcap Teacher,\\
+(Mary,CS600) &: teaches,\\
+(Hugo,Ph456) &: teaches,\\
+(Betty,Ph456) &: attends,\\
+(Mary,Ph456) &: attends \}
+\end{align*}
+
+Then we can create an interpretation $I$ of this $ABox$ which is a model:
+\begin{align*}
+\Delta^I &= \{h,m,c6,p4\}, \\
+Mary^I &= m \\
+Betty^I &= Hugo^I = h, \\
+CS600^I &=  c6,\\
+Ph456^I &=  p4,\\
+Person^I &= \{h,m,c6,p4\},\\
+Teacher^I &= \{h,m\},\\
+Course^I &= \{c6,p4\},\\
+PGC^I &= \{p4\},\\
+UGC^I &= \{cs\},\\
+Student^I &= \emptyset,\\
+teaches^I &= \{(m,c6),(h,p4)\},\\
+attends^I &= \{(h,p4),(m,p4)\}
+\end{align*}
+
+Note that isn't a model of the previous example of a $TBox$.
+
+\end{document}
