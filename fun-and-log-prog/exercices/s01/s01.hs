@@ -56,10 +56,10 @@ max3''''' a b c = m (m a b) c where
   m = \x -> \y -> max x y
 
 -- 3.c
-signe :: (Num a,Ord a, Eq a) => a -> String
-signe' :: (Num a,Ord a, Eq a) => a -> String
-signe'' :: (Num a,Ord a, Eq a) => a -> String
-signe''' :: (Num a,Ord a, Eq a) => a -> String
+signe :: (Num a,Ord a) => a -> String
+signe' :: (Num a,Ord a) => a -> String
+signe'' :: (Num a,Ord a) => a -> String
+signe''' :: (Num a,Ord a) => a -> String
 
 thisNumberIs :: String -> String
 thisNumberIs str = "Ce nombre est " ++ str

@@ -1,0 +1,104 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath}
+\usepackage{fullpage}
+\usepackage[cache=false]{minted}
+
+\usemintedstyle{tango}
+
+\newminted[promelacode]{C}{
+  frame=single,
+  framesep=6pt,
+  breaklines=true,
+  fontsize=\scriptsize
+}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\begin{center}
+\Large{
+    Verification of Cyber-Physical System\\
+    Fall 2017
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  Exercice Sheet 1
+
+  \vspace*{1.4cm}
+
+  Author : Sylvain Julmy
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Ultes-Nitsche Ulrich
+    
+    Assistant : Prisca Dotti
+  \end{flushleft}
+
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercice 1}
+\section*{Exercice 2}
+\section*{Exercice 3}
+
+When looking for non-progress cycles :
+
+\paragraph*{Does Spin detect an error when using the \textit{week fairness}
+  constraint ?} No
+
+\paragraph*{Does Spin detect an error when is not using the \textit{week
+    fairness} constraint ?} No
+
+It looks like that Spin does not detect any non-progress cycles with the given
+code :
+
+\begin{promelacode}
+byte x = 2;
+
+active proctype A(){
+       do
+          :: x = 3 - x; progress : skip;
+       od
+}
+
+active proctype B(){
+       do
+          :: x = 3 - x; progress : skip;
+       od
+}
+\end{promelacode}
+
+By the way, if we remove one progress label (either from proc A or proc
+B), Spin does detect a non-progress cycle when not using \textit{week fairness}
+constraint:
+
+\begin{promelacode}
+byte x = 2;
+
+active proctype A(){
+       do
+          :: x = 3 - x;
+       od
+}
+
+active proctype B(){
+       do
+          :: x = 3 - x; progress : skip;
+       od
+}
+\end{promelacode}
+
+
+
+\end{document}
+
+%%% Local Variables:
+%%% TeX-command-extra-options: "-shell-escape"
+%%% mode: latex
+%%% End:
