@@ -1,0 +1,54 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath}
+\usepackage{fullpage}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    Functionnal and Logic Programming\
+    Fall 2017
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  S01 : Hoare Logic
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Ultes-Nitsche Ulrich
+
+    Assistant : Christophe Stammet
+  \end{flushleft}
+
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exerice 1 : Complete Hoare Triple}
+
+\begin{enumerate}
+\item $\{true\} \ y = 25 \ \{y = 25\}$
+\item $\{x \leq 6\} \ y = 6 \ \{y \geq x\}$
+\item $\{x=2\} \ x = x - 4 \ \{x=-2\}$
+\item $\{int\ x \vee int\ y\} \ x=16;y=2;while(x > 3)\{x = \frac{x}{y}\} \ \{???\}$
+\item $\{???\} \ if(x \equiv 0 \mod 2)\{y=2x\} else \{x=y\} \ \{???\}$
+\item $\{x=5 \wedge int\ x \} \ x = x-2; y = x; x=y-x; \ \{???\}$
+\end{enumerate}
+
+\section*{Exerice 2 : Weird Hoare Triple}
+
+\section*{Exerice 3 : Formal Proof of Hoare Triple : if clause}
+
+\section*{Exerice 3 : Formal Proof of Hoare Triple : while loop}
+
+\end{document}
+
+%%% Local Variables:
+%%% TeX-command-extra-options: "-shell-escape"
+%%% mode: latex
+%%% End:
