@@ -1,0 +1,265 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath}
+\usepackage{fullpage}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+% Tikz
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usetikzlibrary{shapes}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    Mathematical Methods for Computer Science 1\\
+    Fall 2017
+  }
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  Series 2
+  \vspace*{1.4cm}
+
+  Sylvain Julmy
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+\end{center}
+
+\section*{\texttt{1}}
+\subsection*{a)}
+Picking $n$ object out of $r$ possible choice when repetition is allowed and
+order not allowed is computed by using the formula $f(n,r) = \begin{pmatrix}n + r - 1 \\
+  r - 1\end{pmatrix}$. So to choose $8$ out of $10$ postcards : $f(8,10)
+= \begin{pmatrix} 8+10-1\\ 10-1\end{pmatrix} = \begin{pmatrix} 17\\
+  9\end{pmatrix} = 24'310$.
+
+\subsection*{b)}
+
+In order to pick $15$ postcards out of $10$ choice, such that we have at least
+one postcards of every kind, we separate the problem into two parts :
+\begin{enumerate}
+\item Pick the $10$ different postcards for the $10$ first choice, because there
+  is no choice and repetition is alowed, we have $f(10,10) = 1$ total different
+  possible choice.
+\item Pick the last $5$ out of $10$ using the formula in $1.a$ : $f(5,10)
+  = \begin{pmatrix} 5 + 10 - 1 \\ 5 - 1\end{pmatrix} = \begin{pmatrix} 14 \\
+    4\end{pmatrix} = 1001$.
+\end{enumerate}
+
+Finally, we multiply the two to obtain the total number of ways of obtaining
+$15$ postcards is $1 * 1001 = 1001$.
+
+\subsection*{c)}
+
+The number of ways to buy $8$ different postcards out of $10$ possible choice is
+given by $\frac{10!}{2!}$. Because at the first choice we have $10$ possible
+choice, at the second we have $10-1$, hand so on.
+
+\subsection*{d)}
+
+The number of ways of splitting $8$ postcards into $5$ different letter-boxes is
+dividing into $2$ problems :
+\begin{enumerate}
+\item We separate the first $5$ postcards into the $5$ boxes so every friends is
+  getting a postcard. The number of possible ways to do this is given by :
+  $\frac{n}{n-k} = \frac{8!}{3!} = 6720$ where $n$ is the total number of postcards and
+  $k$ the number of different letter-boxes.
+\item Then we separate the rest of the $8 - 5 = 3$ letters into the $5$
+  letter-boxes, it's the same as choosing for each postcard the letter-box in
+  which to put the card, so the total number of ways of doing this is : $5 * 5 *
+  5 = 5^3 = 125$.
+\end{enumerate}
+
+Finally we multiply the two numbers $6720$ and $125$ in order to obtain the
+total number of ways of splitting $8$ postcards into $5$ different letter-boxes
+: $6720 * 125 = 840'000$.
+
+\section*{\texttt{2}}
+
+\subsection*{a)}
+
+The number of ways to pick $6$ balls out of $49$ is given by $\begin{pmatrix} 49
+  \\ 6 \end{pmatrix} = 13'983'816$.
+
+The number of 6-balls-pick that are guessing exactly $3$ numbers is the same as
+picking $3$ out of $6$ good choices and $3$ out of $49-6$ bad choices :
+$\begin{pmatrix} 6 \\ 3\end{pmatrix} * \begin{pmatrix} 43 \\ 3\end{pmatrix} =
+8'815$.
+
+We can formulate the function $f(n,k,r)$ which compute the total numbers of ways
+of picking $k$ good numbers and $r$ bad numbers out of $n$ possible numbers
+where $k + r = 6$ (in this case) : $f(n,k,r) = \begin{pmatrix} r + k \\
+  k \end{pmatrix} * \begin{pmatrix} n-(r+k) \\ r\end{pmatrix}$.
+
+The number of 6-balls-pick that are guessing at least $3$ numbers is the sum of
+the number of 6-balls-pick that are guessing exactly $3$,$4$,$5$ and $6$ numbers. So
+we take the formula above and we compute the total number of 6-balls-pick that
+are guessing at least $3$ numbers :
+\begin{align*}
+  f(49,3,3) + f(49,4,2) + f(49,5,1) + f(49,6,0) &=\\
+  \begin{pmatrix} 6 \\ 3\end{pmatrix} * \begin{pmatrix} 43 \\ 3\end{pmatrix} +
+  \begin{pmatrix} 6 \\ 4\end{pmatrix} * \begin{pmatrix} 43 \\ 2\end{pmatrix} +
+  \begin{pmatrix} 6 \\ 5\end{pmatrix} * \begin{pmatrix} 43 \\ 1\end{pmatrix} +
+  \begin{pmatrix} 6 \\ 6\end{pmatrix} * \begin{pmatrix} 43 \\ 0\end{pmatrix} &=\\
+  246'820 + 13'545 + 258 + 1 &= 260'624
+\end{align*}
+
+\subsection*{b)}
+
+Prove $\begin{pmatrix} m + n \\ k\end{pmatrix} = \begin{pmatrix} m \\
+  0\end{pmatrix} * \begin{pmatrix} n \\ k\end{pmatrix} + \begin{pmatrix} m \\
+  1\end{pmatrix} * \begin{pmatrix} n \\ k-1\end{pmatrix} + \cdots
++ \begin{pmatrix} m \\ k\end{pmatrix}* \begin{pmatrix} n \\ 0\end{pmatrix}$.
+
+The idea is to think about picking $k$ balls out of a bag that contains $m$
+black balls and $n$ white balls. At each try we can get $i$ black balls and $j =
+k - i$ white balls. The total number of possibility $\begin{pmatrix} m+n \\
+  k\end{pmatrix}$ is the same as summing $k$ times :
+\begin{itemize}
+\item Picking $0$ black balls and $k$ white balls
+\item Picking $1$ black balls and $k-1$ white balls
+\item $\cdots$
+\item Picking $k$ black balls and $0$ white balls
+\end{itemize}
+
+So
+$$
+\begin{pmatrix} m + n \\ k\end{pmatrix} = \sum_{i=0}^{k}\begin{pmatrix} m \\
+  i\end{pmatrix} \begin{pmatrix} n \\ k-i\end{pmatrix}
+$$
+
+\section*{\texttt{3}}
+\subsection*{a)}
+
+The number of latice which are going from $A$ to $B$ through $C$ is the product of
+the number of latice which are going from $A$ to $C$ by the number of latice
+which are going from $C$ to $B$.
+
+Number of $(A,C)$ latice : $\begin{pmatrix} 5 \\ 2\end{pmatrix}
+= \begin{pmatrix} 5  \\ 3\end{pmatrix} = 10$.
+
+Number of $(C,B)$ latice : $\begin{pmatrix} 5 \\ 2\end{pmatrix}
+= \begin{pmatrix} 5  \\ 3\end{pmatrix} = 10$.
+
+Total number of latice from $A$ to $B$ through $C$ : $10 * 10 = 100$.
+
+\subsection*{b)}
+
+Prove the identity $I = $
+$$
+\begin{pmatrix} 2n \\ n\end{pmatrix} = \sum_{i=0}^{n} \begin{pmatrix} n \\ i\end{pmatrix}^2
+$$
+
+In order to prove $I$, we use the formula $f(k,l) = \begin{pmatrix} k+l \\
+  k\end{pmatrix}$ which compute the number of monotone path between $(0,0)$ and
+$(k,l)$. We know that the number of white points $n_w$ in the big diagonals,
+perpendicular to the big diagonals $AB$, is $n_w = k = l$. So we can compute the
+number of monotone path between $A$ and $B$ using a similar methods as in $3.a$.
+
+The number of monotone path between $A$ and $B$ is given by the sum of the whole
+number of path between $A$ and $C_i$ and between $C_i$ and $B$ where $C_i$
+represents the points in the middle of the path. Then we compute each case (in
+this case we use $k = l = 6$ to simplify the reasoning) :
+\begin{itemize}
+\item From $A = (0,0)$ to $B = (k,l)$ passing by $C_i = (0,l)$ : number of monotone path is $\begin{pmatrix} k \\ 0\end{pmatrix} * \begin{pmatrix} l \\ l \end{pmatrix}$
+\item From $A = (0,0)$ to $B = (k,l)$ passing by $C_i = (1,l-1)$ : number of monotone path is $\begin{pmatrix} k \\ 1\end{pmatrix} * \begin{pmatrix} l \\ l-1 \end{pmatrix}$
+\item $\cdots$
+\item From $A = (0,0)$ to $B = (k,l)$ passing by $C_i = (k,0)$ : number of monotone path is $\begin{pmatrix} k \\ k\end{pmatrix} * \begin{pmatrix} l \\ 0 \end{pmatrix}$
+\end{itemize}
+
+And because $k = l$ and $\begin{pmatrix} m \\ n\end{pmatrix} = \begin{pmatrix} m
+  \\ m - n\end{pmatrix}$, we have prove $I$
+
+\subsection*{c)}
+
+Prove the identity $I = $
+$$
+\begin{pmatrix} 2n \\ n\end{pmatrix} = \sum_{i=0}^{n} \begin{pmatrix} n \\ i\end{pmatrix}^2
+$$
+
+using $I' = $
+
+$$
+\begin{pmatrix} m + n \\ k\end{pmatrix} = \sum_{i=0}^{k}\begin{pmatrix} m \\
+  i\end{pmatrix} \begin{pmatrix} n \\ k-i\end{pmatrix}
+$$
+
+$I'$ is the same as $I$ where picking $k$ balls from a bag of $m + n$ total balls
+where the number of white $n$ and black $m$ balls is the same : $m = n$. In this
+case we know that we have to pick $k$ balls out of $2k = m + n$ total balls. So
+we pick the formula $I'$ and replace $m$ by $n$ and $k$ by $n$, because $m = n$
+and $k = n$ :
+
+$$
+\begin{pmatrix} n + n \\ n\end{pmatrix} = \sum_{i=0}^{n}\begin{pmatrix} n \\
+  i\end{pmatrix} \begin{pmatrix} n \\ n-i\end{pmatrix}
+$$
+
+And because $\begin{pmatrix} n \\ i\end{pmatrix} = \begin{pmatrix} n \\
+  n-i\end{pmatrix}$ we finally have
+
+$$
+\begin{pmatrix} n + n \\ n\end{pmatrix} = \begin{pmatrix} 2n \\ n\end{pmatrix} = \sum_{i=0}^{n}\begin{pmatrix} n \\
+  i\end{pmatrix}^2
+$$
+
+\section*{\texttt{4}}
+
+The total number of composition of $n$ is given  by $2^{n-1}$, having a sum of
+$n$ $1$ : $1_0+1_1+1_2+...+1_n$ we have to place between the $1$ either a $+$ or
+a $,$, so we can obtain a composition of $n$.
+
+Example with $n = 5$ :
+\begin{itemize}
+\item $Comp_n = \{1,1,1,1,1\}$
+\item $Comp_n = \{1+1,1,1+1\} = \{2,1,2\}$
+\item hand so on.
+\end{itemize}
+
+We have to place $2$ different kind of ``operator'' and we have $n-1$ place to
+put them so we have $2^{n-1}$ possible composition for $n$.
+
+\section*{\texttt{5}}
+\subsection*{a)}
+
+$$
+\begin{array}{ccccccccccc}
+  &    &    &    &    &  1 &    &    &    &    &   \cr
+  &    &    &    &  1 &    &  1 &    &    &    &   \cr
+  &    &    &  \circled{1} &    &  2 &    &  1 &    &    &   \cr
+  &    &  1 &    &  \circled{3} &    &  3 &    &  1 &    &   \cr
+  &  1 &    &  4 &    &  \circled{6} &    &  4 &    &  1 &   \cr
+1 &    &  5 &    & \circled{10} &    & 10 &    &  5 &    & 1 \cr
+\dots \cr
+\end{array}
+$$
+
+Comment : $1 + 3 + 6 = 10$
+
+\subsection*{b)}
+
+Using the Pascal trianble, $\begin{pmatrix} n \\ 0\end{pmatrix}$ is always
+starting in the left side of the triangle at $1$. As we know
+$\begin{pmatrix} n+1 \\ 1\end{pmatrix}$, we can compute $\begin{pmatrix} n+2 \\
+  1\end{pmatrix}$ because there is only $1$ on the left side of the triangle.
+
+Then, as we know $\begin{pmatrix} n + 2 \\ 2\end{pmatrix}$, we can compute
+$\begin{pmatrix} n+3 \\ 2\end{pmatrix}$ by using $\begin{pmatrix} n \\
+  0\end{pmatrix}$,$\begin{pmatrix} n+1 \\ 1\end{pmatrix}$ and $\begin{pmatrix}
+  n+2 \\ 2\end{pmatrix}$.
+
+So, by induction, if we know the entire ``diagonals'' $\begin{pmatrix} n \\
+  0\end{pmatrix} , \begin{pmatrix} n+1 \\ 1\end{pmatrix},
+\cdots, \begin{pmatrix} n+k-1 \\ k-1\end{pmatrix}$ we can compute
+$\begin{pmatrix} n + l \\ k - 1\end{pmatrix}$.
+
+\end{document}
+
+
