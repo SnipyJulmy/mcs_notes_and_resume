@@ -1,0 +1,198 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath}
+\usepackage{fullpage}
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{color}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\begin{center}
+  \large{
+    Formal Methods\\
+    Fall 2017
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  S02 : Hoare Logic and Propositional Logic
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Ultes-Nitsche Ulrich
+
+    Assistant : Christophe Stammet
+  \end{flushleft}
+
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  Submitted by Sylvain Julmy
+  
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercise 2.1 : }
+
+In order to check the satisfiability of a formula, we just have to demonstrate
+his validity.
+
+\subsection*{(a)}
+We have to find an interpretation $I$ such that 
+\[
+  I \models (A \to B) \leftrightarrow (\neg B \to \neg A)
+\]
+
+Using the inference rules, we get
+
+\begin{forest}
+  [$I \models (A \to B) \leftrightarrow (\neg B \to \neg A)$
+  [$I \models (A \to B) \wedge (\neg B \to \neg A)$
+    [$\begin{gathered}I \models (A \to B) \\ I \models (\neg B \to \neg
+      A)\end{gathered}$
+    [$\begin{gathered} I \not\models A \\ I \models (\neg B \to \neg
+      A) \end{gathered}$
+    [$\begin{gathered}I \not\models A \\ I \not\models \neg B \end{gathered}$
+    [$\begin{gathered}I \not\models A \\ I \models B\end{gathered}$]
+    ]
+    [$\begin{gathered}I \not\models A \\ I \models \neg A \end{gathered}$
+    [$\begin{gathered}I \not\models A \\ I \not\models  A\end{gathered}$
+    [$I \not\models A$]
+    ]
+    ]
+    ]
+    [$\begin{gathered} I \models B \\ I \models (\neg B \to \neg
+      A) \end{gathered}$
+    [$\begin{gathered} I \models B \\ I \not\models \neg B \end{gathered}$
+    [$\begin{gathered}I \models B \\ I \models B \end{gathered}$
+    [$I \models B$]
+    ]
+    ]
+    [$\begin{gathered} I \models B \\ I \models \neg A \end{gathered}$
+    [$\begin{gathered}I \models B \\ I \not\models A\end{gathered}$]
+    ]
+    ]
+    ]
+  ]
+  [$I \not\models (A \to B) \vee (\neg B \to \neg A)$
+  [$\begin{gathered}I \not\models (A \to B) \\ I \not\models (\neg B \to \neg
+    A)\end{gathered}$
+  [$\begin{gathered}I \models A \\ I \not\models B \\ I \not\models (\neg B \to
+    \neg A)\end{gathered}$
+  [$\begin{gathered}I \models A \\ I \not\models B \\ I \models \neg B \\ I
+    \not\models \neg A\end{gathered}$
+  [$\begin{gathered} I \models A \\ I \not\models B \\ I \not\models B \\ I
+    \models A \end{gathered}$
+  [$\begin{gathered} I \models A \\ I \not\models B \end{gathered}$]
+  ]
+  ]
+  ]
+  ]
+  ]
+  ]
+\end{forest}
+
+And by unifiying the lefting formula, we have
+$$
+\begin{matrix} I \not\models A \\ I \models B \end{matrix}\ \bigg| \  I \not\models A
+\ \bigg| \ I \models B \ \bigg| \ \begin{matrix}I \models B \\ I \not\models
+  A \end{matrix} \ \bigg| \ \begin{matrix}I \models A \\ I \not\models B\end{matrix}
+$$
+
+we have $5$ ways to find an interpretation $I$ that satisfies the base
+formula. Because we have $I \models A$ and $I \not\models A$, $A$ could take any
+value $true$ or $false$ and satisfies the formula, and it is the same for $B$,
+so the formula is satisfiable for any value for $A$ and $B$ so the formula is
+valid.
+
+To verify this, we could use the truth table of the formula and find out that
+the result is always $1$ :
+
+\begin{center}
+\begin{tabular}{@{ }c@{ }@{ }c | c@{ }@{}c@{}@{ }c@{ }@{ }c@{ }@{ }c@{ }@{}c@{}@{ }c@{ }@{}c@{}@{ }c@{ }@{ }c@{ }@{ }c@{ }@{ }c@{ }@{ }c@{ }@{}c@{}@{ }c}
+a & b &  & ( & a & $\rightarrow$ & b & ) & $\leftrightarrow$ & ( & $\neg$ & b & $\rightarrow$ & $\neg$ & a & ) & \\
+\hline 
+T & T &  &  & T & T & T &  & \textcolor{red}{T} &  & F & T & T & F & T &  & \\
+T & F &  &  & T & F & F &  & \textcolor{red}{T} &  & T & F & F & F & T &  & \\
+F & T &  &  & F & T & T &  & \textcolor{red}{T} &  & F & T & T & T & F &  & \\
+F & F &  &  & F & T & F &  & \textcolor{red}{T} &  & T & F & T & T & F &  & \\
+\end{tabular}
+\end{center}
+
+\subsection*{(b)}
+
+We have to find an interpretation $I$ such that 
+\[
+  I \models (A \vee B) \to ( A \wedge B)
+\]
+
+Using the inference rules, we get
+
+\begin{forest}
+  [$I \models (A \vee B) \to ( A \wedge B)$
+  [$\begin{gathered} I \not\models (A \vee B) \end{gathered}$
+  [$\begin{gathered} I \not\models A \\ I \not\models B \end{gathered}$]
+  ]
+  [$\begin{gathered} I \models (A \wedge B) \end{gathered}$
+  [$\begin{gathered} I \models A \\ I \models B \end{gathered}$]
+  ]
+  ]
+\end{forest}
+
+So the formula is satisfies for $I : \{A \mapsto true, B \mapsto true \}$ or
+$I : \{ A \mapsto false, B \mapsto false \}$, but it is not valid, for example,
+the interpretation $I : \{ A \mapsto true, B \mapsto false \}$ do not satisfies
+$(A \vee B) \to (A \wedge B)$.
+
+\section*{Exercise 2.2 :}
+
+\subsection*{(a)}
+
+\paragraph*{NNF:}
+
+\begin{align*}
+  \neg ((\neg P \vee Q) \to \neg R) &= \neg(\neg (\neg P \vee Q) \vee \neg R)\\
+                                    &= \neg((\neg\neg P \wedge \neg Q) \vee \neg R)\\
+                                    &= \neg((P \wedge \neg Q) \vee \neg R)\\
+                                    &= \neg (P \wedge \neg Q) \wedge \neg \neg R \\
+                                    &= \neg (P \wedge \neg Q) \wedge R \\
+                                    &= (\neg P \vee \neg \neg Q) \wedge R \\
+                                    &= (\neg P \vee Q) \wedge R
+\end{align*}
+
+\paragraph*{CNF:}
+$$
+(\neg P \vee Q) \wedge R
+$$
+
+\paragraph*{DNF:}
+$$
+(\neg P \vee Q) \wedge R = (\neg P \wedge R) \vee (Q \wedge R)
+$$
+
+\subsection*{(b)}
+
+\begin{align*}
+  ((P \wedge Q) \to (Q \to (P \wedge Q))) \wedge P &= (( \neg(P \wedge Q)) \vee (Q \to (P \wedge Q))) \wedge P \\
+                                                   &= ((\neg P \vee \neg Q) \vee (\neg Q \vee (P \wedge Q))) \wedge P\\
+                                                   &= ((\neg P \vee \neg Q) \wedge P) \vee ((\neg Q \vee (P \wedge Q)) \wedge P)\\
+                                                   &= \underbrace{(\neg P \wedge P)}_{false} \vee (\neg Q \wedge P) \vee ((\neg Q \vee (P \wedge Q)) \wedge P)\\
+                                                   &= (\neg Q \wedge P) \vee (\neg Q \wedge P) \vee (P \wedge Q)\\
+                                                   &= (\neg Q \wedge P) \vee (P \wedge Q)\\
+                                                   &= \underbrace{(\neg Q \vee Q)}_{true} \wedge P\\
+                                                   &= P
+\end{align*}
+
+$P$ is in NNF, CNF and DNF form.
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% End:

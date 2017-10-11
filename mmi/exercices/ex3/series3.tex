@@ -1,0 +1,214 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath}
+\usepackage{fullpage}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    Mathematical Methods for Computer Science 1\
+    Fall 2017
+  }
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  Series 3
+  \vspace*{1.4cm}
+
+  Sylvain Julmy
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+\end{center}
+
+\section*{\texttt{1}}
+\subsection*{a)}
+
+Show that for $n = k + l + m$, we have
+$$
+\begin{pmatrix} n \\ k,l,m\end{pmatrix} = \begin{pmatrix} n-1 \\
+  k-1,l,m\end{pmatrix} + \begin{pmatrix} n-1 \\ k,l-1,m\end{pmatrix} + \begin{pmatrix} n-1 \\ k,l,m-1\end{pmatrix}
+$$
+
+The idea is to pick $k$ black balls, $l$ red balls and $m$ white balls out of a
+bag of $m = k + l + m$ balls. We fix the first picked balls and that leads us to
+three differents posibility :
+\begin{enumerate}
+\item We have pick a black balls, so there is $m-1 = (k-1) + l + m$ balls left in
+  the bags, and the number of ways of picking the $m-1$ last balls is
+  $\begin{pmatrix} m-1 \\ k-1,m,l\end{pmatrix}$.
+\item We have pick a red balls, so there is $m-1 = k + (l-1) + m$ balls left in
+  the bags, and the number of ways of picking the $m-1$ last balls is
+  $\begin{pmatrix} m-1 \\ k,l-1,m\end{pmatrix}$.
+\item We have pick a white balls, so there is $m-1 = k + l + (m-1)$ balls left in
+  the bags, and the number of ways of picking the $m-1$ last balls is
+  $\begin{pmatrix} m-1 \\ k,l,m-1\end{pmatrix}$.
+\end{enumerate}
+
+By summing the three differents possibilities we obtain the total number of ways
+$\begin{pmatrix} n \\ k,l,m\end{pmatrix}$ :
+$$
+  \begin{pmatrix} n-1 \\ k-1,l,m\end{pmatrix} + \begin{pmatrix} n-1 \\
+    k,l-1,m\end{pmatrix} + \begin{pmatrix} n-1 \\ k,l,m-1\end{pmatrix}
+  = \begin{pmatrix} n \\ k,l,m\end{pmatrix}
+$$
+
+\subsection*{b)}
+
+Show that for every $n$ we have
+$$
+\sum_{k+l+m=n \vee k,l,m \geq 0} \begin{pmatrix} n \\ k,l,m\end{pmatrix} = 3^n
+$$
+
+Using the multinomial theorem
+$$
+(x_1 + x_2 + \cdots + x_n)^n = \sum_{k_1 + k_2 + \cdots + k_r =
+  n}\begin{pmatrix} n \\ k_1,k_2,\cdots,k_r\end{pmatrix} a_1^{k_1} * a_2^{k_2} *
+\cdots * a_r^{k_r}
+$$
+
+If we replace $x_i$ by $1$, we obtain
+$$
+\underbrace{(1 + 1 + \cdots + 1)}_r^n = r^n = \sum_{k_1 + k_2 + \cdots + k_r =
+  n} \begin{pmatrix} n \\ k_1,k_2,\cdots,k_r\end{pmatrix} * \underbrace{1 * 1 * \cdots * 1}_r
+$$
+
+And when we replace ${k_1,k_2,\cdots,k_r}$ by ${k,l,m}$, we obtain $r=3$ and
+$$
+r^n = 3^n = \sum_{k+l+m = n} \begin{pmatrix} n \\ k,l,m\end{pmatrix}
+$$
+
+\section*{\texttt{2}}
+
+Prove
+$$
+\begin{pmatrix} n \\ k_1,\cdots,k_r\end{pmatrix} = \begin{pmatrix} n \\
+  k_r\end{pmatrix} \begin{pmatrix} n-k_r \\ k_1,\cdots,k_{r-1}\end{pmatrix}
+$$
+
+\subsection*{a)} With the multinomial coefficients formula, we have
+$$
+\begin{pmatrix} n \\ k_1,\cdots,k_m\end{pmatrix} = \frac{n!}{\prod_{i=1}^n k_i!}
+$$
+
+then
+
+\begin{align*}
+  \begin{pmatrix} n \\ k_m\end{pmatrix} \begin{pmatrix} n-k_m \\ k_1,\cdots,k_{m-1}\end{pmatrix} &= \frac{n!}{k_m!(n-k_m)!} \frac{(n-k_m)!}{k_1!k_2! \cdots k_{m-1} !} \\
+                                                                                                &= \frac{n!}{k_m!k_1!k_2!\cdots k_{m-1}!}\\
+                                                                                                &= \begin{pmatrix} n \\ k_1,k_2,\cdots,k_m\end{pmatrix}
+\end{align*}
+
+\subsection*{b)} With a combinatorial argument : the idea is to cunt how many
+differents words are possible with $k_1$ letters $\alpha$, $k_2$ letters
+$\beta$, ..., $k_m$ letters $\gamma$.
+
+The first ways of doing this by using the multinomial coefficients :
+$\begin{pmatrix} n \\ k_1,\cdots,k_m\end{pmatrix}$ with $n = \sum_{i=1}^mk_i$.
+
+The second ways is to pick, at first, the $k_m$ $\gamma$ letters :
+$\begin{pmatrix} n \\ k_m\end{pmatrix}$, then we pick the lefting letters
+without the $k_m$ $\gamma$ : $\begin{pmatrix} n-k_m \\
+  k_1,k_2,\cdots,k_{m-1} \end{pmatrix}$.
+
+Because we count the same set of objetc using two differents ways, the
+combinatorial proof is done.
+
+\section*{\texttt{3}}
+\subsection*{a)}
+This is the same as putting $7$ objects into $3$ sets of capacity $4$,$2$ and
+$1$ : $\begin{pmatrix} 7 \\ 4,2,1\end{pmatrix} = \frac{7!}{4!2!1!} =
+\frac{7*6*5}{2} = 105$
+
+\subsection*{b)}
+This is the same as putting $10$ people into $5$ rooms where each room as a
+capacity of $2$ : $\begin{pmatrix} 10 \\ 2,2,2,2,2\end{pmatrix} =
+\frac{10!}{2!2!2!2!2!} = \frac{10!}{32} = 113400$.
+
+\section*{\texttt{4}}
+The set of student who ski : $A$, the set of the student who climb : $B$, the
+set of the student who do ico hockey : $C$. We have to following informations :
+\begin{align*}
+  |A| &= 20 \\ 
+  |B| &= 15 \\ 
+  |C| &= 8 \\
+  |A \cup B| &= 6\\
+  |A \cup C| &= 2\\
+  |B \cup C| &= 3
+\end{align*}
+
+Using the inclusion-exclusion formula, we have :
+\begin{align*}
+  |A \cup B \cup C| &= 33 \\
+                    &= |A| + |B| + |C| - |A \cap B| - |A \cap C| - |B \cap C| + |A \cap B \cap C| \\
+                    &= 20 + 15 + 8 - 6 - 2 - 3 + |A \cap B \cap C|\\
+                    &= 32 + |A \cap B \cap C|
+\end{align*}
+
+Using simple algebra we have
+$$
+33 = 32 + |A \cap B \cap C|
+$$
+
+so
+
+$$
+|A \cap B \cap C| = 1
+$$
+
+The is $1$ student who do all three sport
+\section*{\texttt{5}}
+The number of monotone maps $f : \{1,\cdots,n\} \to \{1,\cdots,n\}$ is given by
+$\begin{pmatrix} 2n \\ n\end{pmatrix}$.
+
+The idea is that a map is a sequence from $1$ to $n$ where the entries are from
+$1$ to $n$. The number $k$ of increases between the entries is specifying by
+throwing $k$ balls into $n$ boxes, so we have
+$$
+\sum_{k=0}^n \begin{pmatrix} n+k-1 \\ k\end{pmatrix} = \begin{pmatrix} 2n \\ n\end{pmatrix}
+$$
+
+\section*{\texttt{6}}
+
+First, we consider that the couple are a unique entity. The number of ways to
+put them around the table is $k!$. Because the table is a ring, we have to
+divide the result by $m$ because we can rotate a pick, example :
+$\{1,2,3\}$,$\{3,1,2\}$ and $\{2,3,1\}$ are the same because the table is
+cyclic. So we have $\frac{k!}{m}$ number of ways of putting the couples around
+the table.
+
+Because we can swap the people inside the couples, we have to compute the number
+of permutation inside the couples : $2^n$.
+
+Finally, the number of differents ways can $k$ married couples sit at this table
+so that every couple sits next to each other is given by $2^k\frac{k!}{m}$
+
+\section*{\texttt{7}}
+
+This is similar to the m\'{e}nage problem proposed by Lucas, except that the
+people of the same sex can sit next to each other. The idea to solve this
+problem is to use the inclusion-exclusion principle on the sets of all the
+possible ways of putting the $2n$ individuals person : $2n!$
+$$
+m_n = \sum_{k=0}^n (-1)^k \begin{pmatrix} n \\ k\end{pmatrix} \alpha_k
+$$
+
+$\alpha_k$ is computed using the following formula :
+$$
+\alpha_k = 2n * (2n-k-1)! * 2^k
+$$
+
+Finally we have
+$$
+m_n = \sum_{k=0}^n (-1)^k \begin{pmatrix} n \\ k\end{pmatrix} * 2n * (2n-k-1)! * 2^k
+$$
+
+About the answer : I did not found the answer alone, I have search a bit in the
+literature to find out the answer\footnote{https://math.dartmouth.edu/~doyle/docs/menage/menage/menage.html}.
+
+
+\end{document}

@@ -11,8 +11,8 @@
 \begin{document}
 
 \begin{center}
-  \Large{
-    Functionnal and Logic Programming\
+  \large{
+    Formal Methods\\
     Fall 2017
   }
   
@@ -26,25 +26,244 @@
     Assistant : Christophe Stammet
   \end{flushleft}
 
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  Submitted by Sylvain Julmy
+  
   \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
 \end{center}
 
-\section*{Exerice 1 : Complete Hoare Triple}
+\section*{Exercise 1 : Complete Hoare Triple}
 
 \begin{enumerate}
-\item $\{true\} \ y = 25 \ \{y = 25\}$
-\item $\{x \leq 6\} \ y = 6 \ \{y \geq x\}$
-\item $\{x=2\} \ x = x - 4 \ \{x=-2\}$
-\item $\{int\ x \vee int\ y\} \ x=16;y=2;while(x > 3)\{x = \frac{x}{y}\} \ \{???\}$
-\item $\{???\} \ if(x \equiv 0 \mod 2)\{y=2x\} else \{x=y\} \ \{???\}$
-\item $\{x=5 \wedge int\ x \} \ x = x-2; y = x; x=y-x; \ \{???\}$
+\item $\{true\} \ y = 25 \ \{y = 25\}$ : if $y$ it is assigned with $25$, then $y$
+  must be equal to $25$.
+\item $\{x \leq 6\} \ y = 6 \ \{y \geq x\}$ : if $y$ it is assigned to $6$ and then
+  $y$ is greater or equals to $x$, $x$ must be less or equals to $6$ so we would
+  have $x \leq 6 \vee y \geq x \vee y = 6$ evaluated to $true$.
+\item $\{x=2\} \ x = x - 4 \ \{x=-2\}$ : if the precondition is $x=2$ and the
+  post-condition is $x=-2$, we have to find a sequence of statements that
+  transforms $2$ to $-2$.
+\item $\{int\ x \wedge int\ y\} \ x=16;y=2;while(x > 3)\{x = \frac{x}{y}\} \ \{x'
+  \leq 3\}$ : the post-condition is equivalent to the negation of the
+  loop condition.
+\item $\{x = 3\} \ if\ (x \equiv 0 \mod 2)\{y=2x\}\ else\ \{x=y\} \ \{x' = y\}$ :
+  Because of the pre-condition $P$, we have $P \implies x = 3$, so the $true$
+  branch of the \textit{if} will never happen so we can reduce the body of $S$
+  to $x = y$. Finally, we can put the post-condition $Q$ to $x = y$.
+\item $\{x=5 \wedge int\ y \} \ x = x-2; y = x; x=y-x; \ \{x' = 0\}$ : here we
+  assume that the precondition $x=5$ implies that the $x$ variable is an
+  integer too. Due to $y = x$, the last statement $x = y - x$ is equivalent to
+  $x = x - x$, because $y = x$. So we would have $x = x - x = x' = 0$.
 \end{enumerate}
 
-\section*{Exerice 2 : Weird Hoare Triple}
+\section*{Exercise 2 : Weird Hoare Triple}
 
-\section*{Exerice 3 : Formal Proof of Hoare Triple : if clause}
+\subsection*{(1)}
 
-\section*{Exerice 3 : Formal Proof of Hoare Triple : while loop}
+Using the following transformation $\{P\}S\{Q\} \rightarrow P \wedge \Phi_S
+\implies Q$, we can translate the Hoare Triple :
+$$
+\{int\ x \wedge int\ y\}P\{true\}
+$$
+
+to
+
+$$
+int\ x \wedge int\ y \wedge P \implies true
+$$
+
+Because $Q = true$, we can write any program $P$ so that the Hoare Triple is
+valid, provided that $P$ terminates.
+
+So $P$ could be, for example $$y = 2x; x = 2y; y = y / 2;$$.
+
+\subsection*{(2)}
+
+Using the same transformation as before, we can translate the Hoare Triple :
+$$
+\{int\ x \wedge int\ y\} P \{false\}
+$$
+
+to
+
+$$
+int\ x \wedge int\ y \wedge P \implies false
+$$
+
+In order to obtain a \textbf{valid} Hoare Triple, we have to demonstrate that
+the program $P$ we are going to write will never terminates. If $P$ terminates,
+the post-condition will be evaluated to $false$ and so the Hoare Triple would
+not be a valid one.
+
+For example, the following Hoare Triple is valid because $P$ will never
+terminate :
+
+$$
+\{int\ x \wedge int\ y\}\ while(true)\ \{skip;\} \{false\}
+$$
+
+\section*{Exercise 3 : Formal Proof of Hoare Triple : if clause}
+
+\begin{align*}
+  & \{int\ a \wedge int\ b \wedge b > 0\} \\
+  & if(a < 0)\ \{a = 2a\} \\
+  & else\ \{a = b\} \\
+  & \{b \geq a\}
+\end{align*}
+
+In order to prove the previous Hoare Triple, we have to prove the two following
+ones due to the If-Then-Else construction.
+
+\begin{equation}
+\begin{gathered}
+  \{int\ a \wedge int\ b \wedge b > 0 \wedge a < 0\}\ a=2a;\ \{b \geq a\} \\
+  = \\
+  int\ a \wedge int\ b \wedge b > 0 \wedge a < 0 \wedge a'=2a \implies b \geq a'
+\end{gathered}
+\end{equation}
+
+and
+
+\begin{equation}
+\begin{gathered}
+  \{int\ a \wedge int\ b \wedge b > 0 \wedge a \geq 0\}\ a=b;\ \{b \geq a\} \\
+  = \\
+  int\ a \wedge int\ b \wedge b > 0 \wedge a \geq 0 \wedge a' = b \implies b \geq a'
+\end{gathered}
+\end{equation}
+
+\subsection*{Proving $(1)$}
+
+Because of $a < 0$, multiplying $a$ by $2$ using $a' = 2a$ will always implies
+$a' < 0$, $a'$ will never become positive due to the usage of mathematical
+integers, no ``computer'' ones which are cyclic. Therefore, $b \geq a'$ will
+always be true if and only if $int\ a \wedge int\ b \wedge b > 0 \wedge a < 0$
+is true and after executing $a=2a$.
+
+\subsection*{Proving $(2)$}
+
+Because of $b > 0$, applying $a' = b$ will always imply $a' > 0 \wedge a' =
+b$. Because $a' = b \implies b \geq a'$, $b \geq a'$ will always be true if and
+only if $int\ a \wedge int\ b \wedge b > 0 \wedge a \geq 0$ is true and after
+executing $a = b$.
+
+\section*{Exercise 4 : Formal Proof of Hoare Triple : while loop}
+
+\begin{equation}
+\label{eqn:ex4-hoare-triple}
+\begin{aligned}
+  & \{int\ n \wedge n > 0 \wedge int\ x \wedge x > 0\} \\
+  & i = 0;\\
+  & power=1;\\
+  & while(i < n)\{\\
+  & \quad power = power * x\\
+  & \quad i = i + 1\\
+  & \}\\
+  & \{power = x^n\}
+\end{aligned}
+\end{equation}
+
+In order to prove the previous Hoare Triple, we have to prove the $\text{\textit{total
+    correctness}} = \text{\textit{partial correctness}} +
+\text{\textit{termination}}$.
+
+\subsection*{Proving \textit{Termination}}
+
+In order to prove the termination of~\eqref{eqn:ex4-hoare-triple}, we need to
+find a variant $var$ which is a non-negative integer expression that is
+decreased by $1$ in each execution of the loop body and cannot go below $0$.
+
+We transform~\eqref{eqn:ex4-hoare-triple} into
+\[
+  \{int\ var \wedge var > 0\}\ power = power*x;\ i = i + 1;\ \{var > var' \geq 0\}
+\]
+
+where
+
+\[
+  var = n - i
+\]
+
+We know that $int\ n \wedge n > 0 \wedge i = 0 \wedge int\ i$ ($i = 0 \implies
+int\ i$, then $int\ (n-i) \wedge (n-i) > 0$ is true, so the pre-condition is
+fulfilled.
+
+Now we transform the previous Hoare Triple into
+\[
+  int\ (n-i) \wedge (n-i) > 0 \wedge power' = power * x \wedge i' = i + 1
+  \implies n - i > n - i' \geq 0
+\]
+
+Due to $n - i > 0$ and $i' = i + 1$, we would have $n - i' = n - (i + 1) \geq 0$
+since the lowest value greater than $0$ is $1$, $n - i + 1$ could,at the lowest,
+be $1$, therefore $n - i' \geq 0$ is true.
+
+Due to $n > 0 \wedge int\ n \wedge int\ i \wedge n-i > 0$, we know that $n - i >
+n - i + 1$. So we have proved that~\eqref{eqn:ex4-hoare-triple} is terminating.
+
+\subsection*{Proving \textit{Partial Correctness}}
+
+We have to find a loop invariant $inv$ that is true at the following points :
+\begin{itemize}
+\item before the loop
+\item before each execution of the loop body
+\item after each execution of the loop body
+\item after the loop
+\end{itemize}
+
+Then, we could transform the equation \ref{eqn:ex4-hoare-triple} to
+
+\begin{align}
+  & \{int\ n \wedge n > 0 \wedge int\ x \wedge x > 0\}\ i=0;\ power=1;\ \{inv\} \\
+  & \{inv \wedge i < n \}\ power = power * x;\ i = i + 1;\ \{inv\} \\
+  & \{inv \wedge \neg(i < n)\}\ skip;\ \{power = x^n\}
+\end{align}  
+
+where
+
+$$
+inv = (power = x^i)
+$$
+
+and we will prove the Hoare Triple $(4)$, $(5)$ and $(6)$ in order to
+demonstrate the partial correctness of \ref{eqn:ex4-hoare-triple}.
+
+\subsubsection*{Proving $(4)$}
+
+To prove that $(4)$ is true, we transform it into
+$$
+int\ n \wedge n > 0 \wedge int\ x \wedge x > 0 \wedge i = 0 \wedge power = 1
+\implies power = x^i
+$$
+
+Due to $i=0$, $power = 1$ and $x > 0$, $x^i = x^0 = 1 = power$, so $(4)$ is true.
+
+\subsubsection*{Proving $(5)$}
+
+To prove that $(5)$ is true, we transform it into
+\[
+  power = x^i \wedge i > n \wedge power' = power * x \wedge i' = i + 1 \implies
+  power' = x^{i'}
+\]
+
+Due to $power = x^i$, executing $power' = power * x$ is the same as $power' =
+x^i * x = x^{i+1}$ and due to $i' = i + 1$, the invariant $power' = x^{i'} =
+x^{i + 1}$ is true.
+
+\subsubsection*{Proving $(6)$}
+
+To prove that $(6)$ is true, we transform it into
+\[
+  power = x^i \wedge i \geq n \implies power = x^n
+\]
+
+We know that the variable $i$ would be equals to $n$ after the loop : $i = 0
+\implies int\ i$, $i$ is increased by $1$ only and the loop's end when $i \geq
+n$.
+
+Finally, we have $(i = n \implies i \geq n) \wedge (x^i = x^n = power)$, so we
+have demonstrated the partial correctness of~\eqref{eqn:ex4-hoare-triple}.
 
 \end{document}
 

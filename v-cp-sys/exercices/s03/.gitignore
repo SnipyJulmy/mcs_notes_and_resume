@@ -294,4 +294,4 @@ TSWLatexianTemp*
 *.trail
 
 # End of https://www.gitignore.io/api/latex,emacs
-S01_Julmy_Sylvain.zip
+*.zip

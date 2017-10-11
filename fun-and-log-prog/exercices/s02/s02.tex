@@ -1,0 +1,90 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath}
+\usepackage{fullpage}
+\usepackage[cache=false]{minted}
+
+\usemintedstyle{tango}
+
+\newmintedfile{haskell}{frame=single, framesep=6pt, breaklines=true,fontsize=\scriptsize}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\newcommand{\ex}[2]{\haskellfile[firstline=#1,lastline=#2]{s02.hs}}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    Functionnal and Logic Programming\
+    Fall 2017
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  S02 : Haskell (List and recursivity)
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Le Peutrec Stephane
+    
+    Assistant : Lauper Jonathan
+  \end{flushleft}
+
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{1}
+\subsection*{f1}
+\ex{14}{26}
+
+\subsection*{fib}
+\ex{29}{40}
+
+\newpage
+
+\section*{2}
+\subsection*{last'}
+\ex{43}{47}
+
+\subsection*{delete'}
+\ex{50}{59}
+
+\subsection*{maximum'}
+\ex{62}{67}
+
+\subsection*{scalarProduct}
+\ex{70}{74}
+
+\newpage
+
+\section*{3}
+\subsection*{length'}
+\ex{77}{80}
+
+\subsection*{deleteAll'}
+\ex{83}{88}
+
+\subsection*{toUpperString}
+\ex{91}{94}
+
+\newpage
+
+\section*{4}
+\subsection*{countVowel}
+\ex{97}{104}
+
+\subsection*{analyseString}
+\ex{107}{110}
+
+\subsection*{analyseString2}
+\ex{113}{116}
+
+\end{document}
+
+%%% Local Variables:
+%%% TeX-command-extra-options: "-shell-escape"
+%%% mode: latex
+%%% End:
