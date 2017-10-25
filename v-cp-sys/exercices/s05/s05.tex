@@ -1,0 +1,93 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath,amssymb}
+\usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage[cache=false]{minted}
+
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{color}
+
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+\makeatletter
+\pgfmathdeclarefunction{alpha}{1}{%
+  \pgfmathint@{#1}%
+  \edef\pgfmathresult{\pgffor@alpha{\pgfmathresult}}%
+}
+
+\newcommand*{\until}{U}
+\newcommand*{\disj}{\ ,\ }
+\newcommand*{\A}{\square}  % Always
+\newcommand*{\D}{\diamondsuit} % eventually
+
+\newcommand*{\Pq}{(\top,\bot)}
+\newcommand*{\pQ}{(\bot,\top)}
+\newcommand*{\PQ}{(\top,\top)}
+\newcommand*{\pq}{(\bot,\bot)}
+
+\usemintedstyle{tango}
+
+\newminted[promelacode]{C}{
+  frame=single,
+  framesep=6pt,
+  breaklines=true,
+  fontsize=\scriptsize
+}
+
+\newmintinline[promelainline]{C}{breaklines=true,fontsize=\small}
+
+\newmintedfile{c}{frame=single, framesep=6pt, breaklines=true,fontsize=\scriptsize}
+\newcommand{\ex}[3]{\cfile[firstline=#1,lastline=#2]{ex#3.pml}}
+
+% tikz
+\usepackage{tikz}
+\usetikzlibrary{snakes}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2.5pt}
+
+\begin{document}
+
+\begin{center}
+\Large{
+    Verification of Cyber-Physical System\\
+    Fall 2017
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  Exercice Sheet 5
+
+  \vspace*{1.4cm}
+
+  Author : Sylvain Julmy
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Ultes-Nitsche Ulrich
+    
+    Assistant : Prisca Dotti
+  \end{flushleft}
+
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercice 1}
+
+\subsection*{(1)}
+
+\subsection*{(2)}
+
+\section*{Exercice 2}
+
+
+\end{document}

@@ -1,0 +1,173 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath}
+\usepackage{fullpage}
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{color}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\newcommand*{\equal}{=}
+
+\begin{document}
+
+\begin{center}
+  \large{
+    Formal Methods\\
+    Fall 2017
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  S03
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Ultes-Nitsche Ulrich
+
+    Assistant : Christophe Stammet
+  \end{flushleft}
+
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  Submitted by Sylvain Julmy
+  
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercise 1 : }
+
+We denote $V$ the variable $P$ from the SAT-algorithm given in the course. Note
+: we assume that the algorithm is smart enough to simplify expressions like $\top
+\wedge P = P$ or $\bot \vee Q = Q$, in order to decrease the size of the
+following resolution :
+
+\begin{center}
+\begin{forest}
+  [$SAT((P \vee \neg Q) \leftrightarrow (\neg P \wedge Q))$
+  [$V \equal P$
+  [$SAT((\top \vee \neg Q) \leftrightarrow (\neg \top \wedge Q)) \vee SAT((\bot
+  \vee \neg Q) \leftrightarrow (\neg \bot \wedge Q))$
+  [$SAT((\top \vee \neg Q) \leftrightarrow (\neg \top \wedge Q))$
+  [$SAT((\top) \leftrightarrow (\bot \wedge Q))$
+  [$SAT((\top) \leftrightarrow (\bot))$
+  [$SAT(\bot)$
+  [$false$]]]]]
+  [$SAT((\bot \vee \neg Q) \leftrightarrow (\neg \bot \wedge Q))$
+  [$SAT((\neg Q) \leftrightarrow (\top \wedge Q))$
+  [$SAT(\neg Q \leftrightarrow Q)$
+  [$V \equal Q$
+  [$SAT(\neg \top \leftrightarrow \top ) \vee SAT(\neg \bot \leftrightarrow
+  \bot)$
+  [$SAT(\neg \top \leftrightarrow \top)$
+  [$SAT(\bot \leftrightarrow \top)$
+  [$SAT(\bot)$
+  [$false$]]]]
+  [$SAT(\neg \bot \leftrightarrow \bot)$
+  [$SAT(\top \leftrightarrow \bot)$
+  [$SAT(\bot)$
+  [$false$]]]]
+  ]]]]]]]]
+\end{forest}
+\end{center}
+
+So we have $false \vee false \vee false$ is $false$.
+
+\section*{Exercice 2}
+
+\subsection*{(a)}
+
+Two formulae are equivalent if they have the same models, equisatisfiability is
+weaker than equivalence. If two formulae $A$ and $B$ are equisatisfiable, it
+means that if $A$ is satisfiable, $B$ is satisfiable too and if $B$ is
+satisfiable, $A$ is satisfiable. Two formulae can be satisfiable but not
+equivalent.
+
+For example, $A$ and $\top$ are equisatisfiable, if $\top$ is satisfiable (which
+is always the case), so $A$ is satisfiable, but $A$ is not equivalent to $\top$.
+
+The two formulae $(P \vee \neg P)$ and $(P \implies P)$ are equivalent, both are
+tautology. Because they are equivalent, they are also equisatisfiable. So the
+equivalence implies the equisatisfiability, but the equisatisfiability don't
+imply the equivalence.
+
+Another example of equisatisfiability : $A \vee B$ and $(A \vee n) \wedge (B
+\vee \neg n)$, but they are not equivalent.
+
+\subsection*{(b)}
+
+The transformation of a formula $\phi$ into an equivalent formula $\phi'$ in CNF
+has an exponential complexity (in the worst case). Turning $\phi$ into an
+equisatisfiability formula $\phi_{eq}$ has a linear complexity. Because we just
+have to check for the satisfiability of a formula, we can use a equisatisfiable
+one to reduce the space and time complexity.
+
+\section*{Exercise 3}
+
+\[
+  F \equiv \neg P \wedge (Q \to R)
+\]
+
+\subsection*{Transformation into a equisatisfiability formula $F'$}
+
+\begin{align*}
+  rep(F) &= rep(\neg P \wedge (Q \to R)) = P_1 \\
+  rep(\neg P)   &= P_2\\
+  rep(Q \to R) &= P_3 \\
+  rep(Q) &= Q \\
+  rep(P) &= P \\
+  rep(R) &= R
+\end{align*}
+
+\begin{align*}
+  F' = P1 &\wedge (\neg P_1 \vee P_2) \wedge (\neg P_1 \vee P_3) \wedge (P_1 \vee \neg P_2 \vee \neg P_3)
+  && \text{($enc(\neg P \wedge (Q \to R))$)} \\
+          &\wedge (\neg P_2 \vee \neg P) \wedge (P_2 \vee P)
+  && \text{($enc(\neg P)$)} \\
+          &\wedge (P_3 \vee Q) \wedge (P_3 \vee \neg R) \wedge (\neg P_3 \vee \neg Q \vee R)
+  && \text{($enc(Q \to R)$)}
+\end{align*}
+
+\subsection*{Applying the resolution}
+
+\subsubsection*{Using $P_1$}
+\begin{gather*}
+P1 \wedge (\neg P_1 \vee P_2) \wedge (\neg P_1 \vee P_3) \wedge (P_1 \vee \neg
+P_2 \vee \neg P_3) \wedge \cdots = \\
+P_3 \wedge P_2 \wedge \underbrace{(P_2 \vee \neg P_2 \vee \neg P_3)}_\top \underbrace{\wedge (P_3 \vee \neg
+P_2 \vee \neg P_3)}_\top \wedge \cdots = \\
+P_3 \wedge P_2 \wedge \cdots
+\end{gather*}
+
+\subsubsection*{Using $P_2$}
+
+\begin{gather*}
+  P_3 \wedge P_2 \wedge (\neg P_2 \vee \neg P) \wedge (P_2 \vee P) \wedge \cdots
+  = \\
+  P_3 \wedge \neg P \wedge \underbrace{(\neg P \vee P)}_\top \wedge \cdots = \\
+  P_3 \wedge \neg P \wedge \cdots
+\end{gather*}
+
+\subsubsection*{Using $P_3$}
+
+\begin{gather*}
+  P_3 \wedge \neg P \wedge (P_3 \vee Q) \wedge (P_3 \vee \neg R) \wedge (\neg
+  P_3 \vee \neg Q \vee R) = \\
+  \neg P \wedge (\neg Q \vee R) \wedge \underbrace{Q \vee \neg Q \vee R}_\top
+  \wedge \underbrace{\neg R \vee \neg Q \vee R}_\top = \\
+  \neg P \wedge (\neg Q \vee R)
+\end{gather*}
+
+$F$ is satisfiable with the interpretation $I : \{ P \mapsto false, Q \mapsto
+false, R \mapsto true \}$
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% End:

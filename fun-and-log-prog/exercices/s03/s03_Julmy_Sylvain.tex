@@ -1,0 +1,123 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath}
+\usepackage{fullpage}
+\usepackage[cache=false]{minted}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\newmintedfile{haskell}{frame=single, framesep=6pt, breaklines=true,fontsize=\scriptsize}
+\newcommand{\ex}[3]{\haskellfile[firstline=#1,lastline=#2]{#3.hs}}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    Functional and Logic Programming\
+    Fall 2017
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  S03 : Haskell (Lists and lexical analysis)
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Le Peutrec Stephane
+    
+    Assistant : Lauper Jonathan
+  \end{flushleft}
+
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercise 1}
+
+\subsection*{flatten}
+\ex{18}{21}{s03}
+
+\subsection*{partitions}
+\ex{23}{27}{s03}
+
+
+\subsection*{permutations}
+\ex{29}{36}{s03}
+
+\section*{Exercise 2}
+
+\subsection*{length'}
+\ex{38}{41}{s03}
+
+\subsection*{deleteAll'}
+\ex{43}{45}{s03}
+
+\subsection*{toUpperString}
+\ex{47}{49}{s03}
+
+\section*{Exercise 3.a}
+
+\subsection*{isFinalState}
+\ex{13}{16}{ex3a}
+
+\subsection*{firstState}
+\ex{18}{19}{ex3a}
+
+\subsection*{transition}
+\ex{21}{29}{ex3a}
+
+\subsection*{isToken}
+\ex{32}{43}{ex3a}
+
+\subsection*{reconizedFromState}
+\ex{45}{48}{ex3a}
+
+\section*{Exercise 3.b}
+
+\subsection*{Type declaration}
+\ex{14}{16}{ex3b}
+
+\subsection*{isToken}
+\ex{19}{20}{ex3b}
+
+\subsection*{reconizedFromState}
+\ex{22}{27}{ex3b}
+
+\subsection*{isFinalState}
+\ex{29}{30}{ex3b}
+
+\subsection*{nextState}
+\ex{32}{38}{ex3b}
+
+\section*{Exercise 3.c}
+
+The first technic (using function) is clearer to write and to read. The
+transitions are clearly defined and modifying them is easy because we just have
+to add pattern matching case (and that is the same for the $isFinalState$ and
+$firstState$ functions). The two remaining functions, $isToken$ and
+$reconizedFromState$ are very straightforward to write and read to.
+
+The second technic (using type aliases and record-like structures) is a little
+bit longer to write and read. The implementation (mostly $reconizedFromState$
+and $nextState$)is longer than the previous one.
+
+The big advantage of the second technic is its scaleability. If we have to
+produce the automata from, for example, a regular expression we have to parse,
+it's easier to generates the data structures than generating function likes the
+one in part \textit{a}.
+
+The advantage of the first technic is that we can use function composition and
+higher-order function to manipulate our automata.
+
+For me, it's easier to manipulate structured data instead of function in this
+case. For example, if we want, during the computation of an automaton, to know
+something about a specific transition, it would be easier to implement this if we
+have a list of transitions instead of having a function to analyse.
+
+\end{document}
+
+%%% Local Variables:
+%%% TeX-command-extra-options: "-shell-escape"
+%%% mode: latex
+%%% End:

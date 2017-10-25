@@ -1,0 +1,79 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath}
+\usepackage{fullpage}
+\usepackage[cache=false]{minted}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\newmintedfile{haskell}{frame=single, framesep=6pt, breaklines=true,fontsize=\scriptsize}
+\newcommand{\ex}[3]{\haskellfile[firstline=#1,lastline=#2]{#3.hs}}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    Functional and Logic Programming\
+    Fall 2017
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  S03 : Haskell (Lists and lexical analysis)
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Le Peutrec Stephane
+    
+    Assistant : Lauper Jonathan
+  \end{flushleft}
+
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercise 1}
+
+\subsection*{Fibonnacci}
+\ex{16}{28}{ex1}
+
+\subsection*{Product}
+\ex{30}{40}{ex1}
+
+\subsection*{Flatten}
+\ex{42}{51}{ex1}
+
+\subsection*{DeleteAll}
+\ex{53}{65}{ex1}
+
+\subsection*{Insert}
+\ex{67}{79}{ex1}
+
+\subsection*{Reverse}
+\ex{84}{89}{ex1}
+
+\section*{Exercise 2}
+
+\subsection*{Type declaration}
+\ex{21}{26}{ex2}
+
+\newpage
+\subsection*{Tokens definition}
+\ex{29}{95}{ex2}
+
+\subsection*{Function from series 03}
+\ex{105}{124}{ex2}
+
+\subsection*{GetToken}
+\ex{99}{103}{ex2}
+
+\subsection*{LexAnalyse}
+\ex{126}{130}{ex2}
+
+\end{document}
+
+%%% Local Variables:
+%%% TeX-command-extra-options: "-shell-escape"
+%%% mode: latex
+%%% End:

@@ -1,0 +1,71 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath}
+\usepackage{fullpage}
+\usepackage[cache=false]{minted}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\newmintedfile{haskell}{frame=single, framesep=6pt, breaklines=true,fontsize=\scriptsize}
+\newcommand{\ex}[3]{\haskellfile[firstline=#1,lastline=#2]{#3.hs}}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    Functional and Logic Programming\
+    Fall 2017
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  S03 : Haskell (Lists and lexical analysis)
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Le Peutrec Stephane
+    
+    Assistant : Lauper Jonathan
+  \end{flushleft}
+
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercise 1}
+
+\subsection*{insert'}
+\ex{20}{24}{s04}
+
+\subsection*{insertionSort}
+\ex{26}{28}{s04}
+
+\subsection*{takeWhile'}
+\ex{30}{30}{s04}
+
+\subsection*{zipWith'}
+\ex{36}{39}{s04}
+
+\subsection*{intersect'}
+\ex{41}{58}{s04}
+
+\subsection*{divisorList}
+\ex{60}{80}{s04}
+
+\subsection*{perfectNumber}
+\ex{82}{83}{s04}
+
+\subsection*{perfectNumbers}
+\ex{85}{87}{s04}
+
+\section*{Exercise 2 : calculatePolynomial}
+
+\ex{91}{104}{s04}
+
+\end{document}
+
+%%% Local Variables:
+%%% TeX-command-extra-options: "-shell-escape"
+%%% mode: latex
+%%% End:

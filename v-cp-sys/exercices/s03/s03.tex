@@ -1,0 +1,126 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath,amssymb}
+\usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage[cache=false]{minted}
+
+\usemintedstyle{tango}
+
+\newminted[promelacode]{C}{
+  frame=single,
+  framesep=6pt,
+  breaklines=true,
+  fontsize=\scriptsize
+}
+
+\newmintinline[promelainline]{C}{breaklines=true,fontsize=\small}
+
+\newmintedfile{c}{frame=single, framesep=6pt, breaklines=true,fontsize=\scriptsize}
+\newcommand{\ex}[3]{\cfile[firstline=#1,lastline=#2]{ex#3.pml}}
+
+% tikz
+\usepackage{tikz}
+\usetikzlibrary{snakes}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2.5pt}
+
+\begin{document}
+
+\begin{center}
+\Large{
+    Verification of Cyber-Physical System\\
+    Fall 2017
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  Exercice Sheet 2
+
+  \vspace*{1.4cm}
+
+  Author : Sylvain Julmy
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Ultes-Nitsche Ulrich
+    
+    Assistant : Prisca Dotti
+  \end{flushleft}
+
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercice 1}
+
+The following \textit{Promela} model is equivalent to the one given in exercice:
+
+\ex{8}{42}{1}
+
+we use a generic \textit{Promela} process to simulate two process which want to
+access a critical section represented by the \promelainline|critical:| label. We
+use a never claim too : if both process are at the \promelainline|critical:|
+label, the never claim is allowed to end, which should not be permitted by a
+valid model.
+
+\section*{Exercice 2}
+
+The mutual exclusion problem states that any of the process $A$ and $B$ are at
+the same time in the critical section. We can translate this to the $LTL$
+formula $f = \square (\neg inCS_A \wedge \neg inCS_b)$, where $inCS_p$ denots
+``process p is in critical section''. Because that is a
+behavior of the system which should never happen, we use the following spin
+command to generate the never claim :
+
+\begin{verbatim}
+spin -f '!( []!(p && q) )'
+\end{verbatim}
+
+which give us the following never claim :
+
+\begin{promelacode}
+  never  {    /* !( []!(p && q) ) */
+    T0_init:
+    do
+    :: atomic { ((p && q)) -> assert(!((p && q))) }
+    :: (1) -> goto T0_init
+    od;
+
+    accept_all:
+    skip
+  }
+\end{promelacode}
+
+Finally we would have the following promela model :
+
+\ex{8}{52}{2}
+
+We can also check manually the $LTL$ formula by forcing $p$ and $q$ to $true$ :
+
+\begin{promelacode}
+/* LTL formula and variable */
+
+#define p true
+#define q true
+\end{promelacode}
+
+Which leads into an error on the verification of the \textit{Promela} model.
+
+\section*{Exercice 3}
+
+The \textit{Promela} model given in exercice $3$ is corresponding to the $LTL$
+formula $f = \diamondsuit \square p$, which means, with respect to the never
+claim, ``It should never happen that, at the moment, $p$ will always be $true$
+in the future''.
+
+Its like the following sequence should never happen :
+\[
+  (1) , (0) , (0) , (1) , (0) , \underbrace{(1)}_{a} , (\cdots) , (1) , (\cdots)
+\]
+
+because at the moment $a$, $p$ never change back to $false$.
+
+\end{document}
