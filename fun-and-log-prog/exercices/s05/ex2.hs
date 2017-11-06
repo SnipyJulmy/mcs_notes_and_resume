@@ -169,7 +169,7 @@ test1 = T.TestCase (do assertGetToken "{" t1 True
                        assertGetToken "toto" t16 True)
 
 test2 = T.TestCase (do assertLexAnalyse "int a ;" [code t12, code t16, code t5]
-                       assertLexAnalyse "int b ;" [code t12, code t16, code t5] )
+                       assertLexAnalyse "int b ;" [code t12, code t16, code t5])
 
 tests = T.TestList [
   T.TestLabel "testGetToken" test1,

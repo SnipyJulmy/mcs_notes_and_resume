@@ -1,0 +1,89 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath}
+\usepackage{fullpage}
+\usepackage[cache=false]{minted}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\newmintedfile{haskell}{frame=single, framesep=6pt, breaklines=true,fontsize=\scriptsize}
+\newcommand{\ex}[3]{\haskellfile[firstline=#1,lastline=#2]{#3.hs}}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    Functional and Logic Programming\
+    Fall 2017
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  S06 : Haskell (Personalised types)
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Le Peutrec Stephane
+    
+    Assistant : Lauper Jonathan
+  \end{flushleft}
+
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercise 1}
+
+\subsection*{Product}
+\ex{16}{19}{ex1}
+
+\subsection*{Flatten}
+\ex{21}{24}{ex1}
+
+\subsection*{AllDifferent}
+\ex{30}{57}{ex1}
+
+\subsection*{DeleteAll}
+\ex{26}{28}{ex1}
+
+\section*{Exercise 2}
+
+\subsection*{Type declaration}
+\ex{16}{17}{ex2}
+
+\subsection*{InsertInTree}
+\ex{19}{24}{ex2}
+
+\subsection*{SearchInTree}
+\ex{26}{32}{ex2}
+
+\subsection*{SortTree}
+\ex{34}{37}{ex2}
+
+\section*{Exercise 3}
+
+\subsection*{Type declaration}
+\ex{17}{22}{ex3}
+
+\subsection*{Token definition}
+\ex{24}{67}{ex3}
+
+\subsection*{RecognizedFromState}
+\ex{69}{80}{ex3}
+
+\subsection*{GetNextRecognizedToken}
+\ex{82}{92}{ex3}
+
+\subsection*{LexAnalyse}
+\ex{94}{100}{ex3}
+
+\subsection*{Function for series 05}
+\ex{102}{118}{ex3}
+
+\end{document}
+
+%%% Local Variables:
+%%% TeX-command-extra-options: "-shell-escape"
+%%% mode: latex
+%%% End:
