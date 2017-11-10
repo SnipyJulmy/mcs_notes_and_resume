@@ -9,6 +9,8 @@
 
 \setlength{\parindent}{0pt}
 
+\newminted{prolog}{frame=single, framesep=6pt,
+  breaklines=true,fontsize=\scriptsize,linenos}
 \newmintedfile{prolog}{frame=single, framesep=6pt,
   breaklines=true,fontsize=\scriptsize}
 \newmintinline{prolog}{}
@@ -40,21 +42,87 @@
 \subsection*{(\protect\Verb+=+)}
 
 The predicat \prologinline|=/2|, is the unification operator. It unify the two
-terms given in argument.
+terms given in argument. Note : the standard unification algorithm does not
+check occurences, use \prologinline|unify_with_occurs_check/2| for that.
 
 \subsection*{(\protect\Verb+$\backslash$=+)}
 
+Succeed if and only if both argument of \prologinline|\=/2| can't be unified.
+For example, \prologinline|a(B) \= a(C).| is false because we could found that
+$A=C$ or $C=A$.
+
 \subsection*{(\protect\Verb+==+)}
+
+Succeed if and only if both argument of \prologinline|==| are the same atom or
+the same variable. For example, \prologinline|X == Y| is false and
+\prologinline|X == X| is true.
 
 \subsection*{(\protect\Verb+$\backslash$==+)}
 
+Succeed if and only if both argument of \prologinline|\==/2| are not the same atom
+or not the same variable. For example, \prologinline|X \== Y| is true and
+\prologinline|X \== X| is false.
+
 \subsection*{(\protect\Verb+=$\backslash$=+)}
+
+Succeed if and only if both argument are instancied variable, number and both
+number are different. For example, \prologinline|1 =\= 2| is true.
 
 \subsection*{(\protect\Verb+=:=+)}
 
+Succeed if and only if both argument are instancied variable, number and both
+number are the same. For example, \prologinline|2 =:= 2| is true.
+
 \subsection*{(\protect\Verb+is+)}
 
+Unify the first argument with the second argument which must be an expression.
+For example, \prologinline|1 is 3 - 2| is true and \prologinline|A is 5 - 3| is
+true and $A$ is unified with $2$. Note that in the left expression, all variable
+has to be instancied, so we can't write something like \prologinline|2 is 3 -
+X.|, this cause a failure.
+
+\ex{9}{35}{ex2}
+
 \section*{Exercise 2}
+
+\subsection*{\prologinline|child/2|}
+\ex{11}{12}{ex3}
+
+\subsection*{\prologinline|father/2|}
+\ex{14}{17}{ex3}
+
+\subsection*{\prologinline|mother/2|}
+\ex{19}{22}{ex3}
+
+\subsection*{\prologinline|grandParent/2|}
+\ex{24}{27}{ex3}
+
+\subsection*{\prologinline|grandFather/2|}
+\ex{29}{32}{ex3}
+
+\subsection*{\prologinline|uncle/2|}
+\ex{34}{40}{ex3}
+
+\subsection*{\prologinline|ancestor/2|}
+
+\begin{prologcode}
+% ancestor(?X,?Y), succeed if X is the ancestor of Y
+ancestor(X,Y) :- parent(X,Y).
+ancestor(X,Y) :-
+    parent(X,SomeBody),
+    ancestor(SomeBody,Y).
+\end{prologcode}
+
+Note : inverting the order of the two predicates \prologinline|ancestor/2| does
+not affect its behaviour, because we call parent anyway and
+\prologinline|parent/2| always unify both variable. On the other hand, if we
+invert the $4th$ and the $5th$ line, we would have an infinite recursion and
+then a stack overflow, because ancestor would call itself with variables again
+and again.
+
+\section*{Exercise 3}
+
+\ex{9}{16}{ex4}
 
 \end{document}
 

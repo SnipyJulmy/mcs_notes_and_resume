@@ -1,0 +1,244 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath}
+\usepackage{fullpage}
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{color}
+
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\newcommand*{\equal}{=}
+\newcommand*{\Pc}{\mathcal{P}}
+\newcommand*{\NPc}{\mathcal{NP}}
+\newcommand*{\NPCc}{\mathcal{NPC}}
+
+\begin{document}
+
+\begin{center}
+  \large{
+    Formal Methods\\
+    Fall 2017
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  S06
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Ultes-Nitsche Ulrich
+
+    Assistant : Christophe Stammet
+  \end{flushleft}
+
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  Submitted by Sylvain Julmy
+  
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercise 1}
+
+Note : we use a tree representation for all the posibilities of runs for a given
+word. The $nth$ level of a tree corespond to the $nth$ character of a word.
+
+\subsection*{($w_1$)}
+\begin{center}
+  \begin{forest}
+    [$q_0$ 
+    [$q_1$, edge label={node[midway,right] {$x$}}
+    [$q_1$, edge label={node[midway,right] {$y$}}
+    [$q_1$, edge label={node[midway,right] {$y$}}
+    [$q_1$, edge label={node[midway,right] {$y$}}
+    [$q_{F_1}$, edge label={node[midway,left] {$x$}}]
+    [$q_2$, edge label={node[midway,right] {$x$}}
+    [$q_{F_2}$, edge label={node[midway,right] {$y$}}]
+    ] ] ] ] ] ]
+  \end{forest}
+\end{center}
+
+Possible runs with tapes :
+\begin{itemize}
+\item $(q_0,q_1,q_1,q_1,q_1,q_{F_1})$ , $tape = (x,y,y,y,x,B,B,\dots)$
+\item $(q_0,q_1,q_1,q_1,q_1,q_2,q_{F_2})$  , $tape = (x,y,y,B,B,B,\dots)$
+\end{itemize}
+
+\subsection*{($w_2$)}
+
+\begin{center}
+  \begin{forest}
+    [$q_0$ 
+    [$q_1$, edge label={node[midway,right] {$x$}}
+    [$q_1$, edge label={node[midway,right] {$y$}}
+    [$q_{F_1}$, edge label={node[midway,left] {$x$}}]
+    [$q_2$, edge label={node[midway,right] {$x$}}
+    [$q_{F_2}$, edge label={node[midway,right] {$y$}}
+    [$fail$, edge label={node[midway,right] {$x$}}
+    ] ] ] ] ] ]
+  \end{forest}
+\end{center}
+
+Possible runs with tapes :
+\begin{itemize}
+\item $(q_0,q_1,q_1,q_{F_1})$ , $tape = (x,y,x,B,B,\dots)$
+\item $(q_0,q_1,q_1,q_2,q_{F_2})$  , $tape = (x,y,B,B,B,\dots)$, end in an
+  non-accepting state and no possible transition.
+\end{itemize}
+
+\subsection*{($w_3$)}
+
+\begin{center}
+  \begin{forest}
+    [$q_0$
+    [$q_{F_3}$, edge label={node[midway,right] {$y$}}
+    [$q_{F_3}$, edge label={node[midway,left] {$y$}}
+    [$q_{F_3}$, edge label={node[midway,left] {$y$}}]
+    [$q_{3}$, edge label={node[midway,right] {$y$}}
+    [$fail$]
+    ]
+    ]
+    [$q_{3}$, edge label={node[midway,right] {$y$}}
+    [$fail$, edge label={node[midway,right] {$y$}}]
+    ]
+    ]
+    ]
+  \end{forest}
+\end{center}
+
+Possible runs with tapes :
+\begin{itemize}
+\item $(q_0,q_{F_3},q_{F_3},q_{F_3})$ , $tape = (x,x,x,B,B,\dots)$
+\item $(q_0,q_{F_3},q_{F_3},q_3)$  , $tape = (x,x,B,B,B,\dots)$, end in an
+  non-accepting state.
+\item $(q_0,q_{F_3},q_3)$  , $tape = (x,B,B,B,\dots)$, end in an
+  non-accepting state and no possible transition.
+\end{itemize}
+
+We can also assume that the Turing Machine immediatly accept the word if an
+accepting state is reached. So, for the word $w_3=yyy$, the only possible run
+would be $(q_1,q_{F_3})$ with the tape $tape = (x,\dots)$.
+
+\subsection*{($w_4$)}
+
+We can assume that the Turing Machine immediatly accept the word if an
+accepting state is reached. So, for the word $w_4=yx$, the only possible run
+would be $(q_1,q_{F_3})$ with the tape $tape = (x,\dots)$.
+
+If the Turing machine don't stop when reaching $q_{F_3}$, then the computation
+tree would be :
+
+\begin{center}
+  \begin{forest}
+    [$q_0$
+    [$q_{F_3}$, edge label={node[midway,right] {$y$}}
+    [$fail$, edge label={node[midway,right] {$x$}}
+    ]]]
+  \end{forest}
+\end{center}
+
+and the Turing machine will be non-accepting.
+
+\subsection*{($w_5$)}
+
+\begin{center}
+  \begin{forest}
+    [$q_0$
+    [$q_4$, edge label={node[midway,right] {$z$}}
+    [$q_4$, edge label={node[midway,left] {$x$}}
+    [$q_{F_4}$, edge label={node[midway,left] {$y$}}]
+    ]
+    [$q_5$, edge label={node[midway,right] {$x$}}
+    [$q_{5}$, edge label={node[midway,right] {$y$}}
+    [$q_{F_4}$, edge label={node[midway,right] {$z$}}]
+    ]
+    ]
+    ]
+    ]
+  \end{forest}
+\end{center}
+
+Possible runs with tapes :
+\begin{itemize}
+\item $(q_0,q_4,q_4,q_{F_4})$ , $tape = (B,x,B,B,B,\dots)$
+\item $(q_0,q_{5},q_{5},q_{F_4})$  , $tape = (B,x,y,B,B,\dots)$
+\end{itemize}
+
+\section*{Exercise 2}
+
+\subsection*{(1)}
+
+If a problem is in $\mathcal{P}$, it means that the problem could be solve in a
+polynomial time. In other word, the problem is solved by a deterministic Turing
+machine in a polynomial complexity.
+
+\subsection*{(2)}
+
+If a probkem is in $\mathcal{NP}$, it means that the problem needs a
+super-polynomial time to be solve. In other word, the problem is solved by a
+non-deterministic Turing Machine in a polynomial complexity.
+
+\subsection*{(3)}
+
+The $\mathcal{NP}$-complete class is the problem from $\mathcal{NP}$ for which
+we don't know if it exist a polynomial algorithm on a deterministic Turing
+Machine which solve them. This class also holds an interresing property : if we
+can solve $1$ problem on the $\mathcal{NP}$-complete class in a polynomial time
+on a deterministic Turing machine, then we can solve any $\mathcal{NP}$-complete
+problem in a polynomial time on a deterministic Turing machine. Example of
+$\mathcal{NP}$-complete problems :
+\begin{itemize}
+\item SAT
+\item Hamiltonian path
+\item Knapsack
+\item $\dots$
+\end{itemize}
+
+\subsection*{(4)}
+
+\subsubsection*{$\mathcal{P} \subseteq \mathcal{NP}$}
+
+Correct, the complexity class $\mathcal{P}$ is contained in $\mathcal{NP}$,
+because a deterministic Turing Machine is just a special case of a
+non-deterministic Turing Machine.
+
+\subsubsection*{$\mathcal{NP} \not= \emptyset$}
+
+Wrong, $\mathcal{NP}$ contains the problems of $\mathcal{P}$ and from the
+$\mathcal{NP}$-complete classes.
+
+\subsubsection*{$\mathcal{NP} \subseteq \mathcal{NPC}$}
+
+If we prove that $\Pc = \NPc$, then we would have $\Pc = \NPc = \NPCc$ so $\NPc
+\subseteq \NPC$ would be true.
+
+Otherwise it is false, because we have $\Pc \subseteq \NPc$, $\NPCc \subseteq
+\NPc$ and $\Pc \not= \NPCc$ so $\NPc \subseteq \NPCc$ is false.
+
+\subsubsection*{$\mathcal{P} \cap \mathcal{NPC} \not= \emptyset$}
+
+It is the $\Pc = \NPc$ problem, if $\Pc = \NPc$, so $\Pc \cap \NPCc = \Pc =
+\NPCc = \NPc$. Else, if $\Pc \not= \NPc$, then $\Pc \cap \NPCc = \emptyset$. Or
+maybe, it is not a decidable problem to prove that $\Pc = \NPc$, but we don't
+know yet. 
+
+\subsection*{(5)}
+
+In order to prove that $\mathcal{P} = \mathcal{NP}$, we could find an algorithm
+in a polynomial time for a $\mathcal{NP}$-complete problem. For example, finding
+an algorithm in $O(n^{O(1)})$ for the $SAT$ problem is enough to prove
+$\mathcal{P} = \mathcal{NP}$.
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% End:

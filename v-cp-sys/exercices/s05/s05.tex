@@ -105,6 +105,26 @@ Local automata :
   \end{tikzpicture}
 \end{center}
 
+We use some annotation in order to simplify the readings :
+
+\begin{center}
+  \begin{tikzpicture}[shorten >=1pt,node distance=4cm,on grid,auto]
+    \node[state,initial,accepting] (init) {$a$};
+    \node[state,accepting] (b) [below left = of init] {$c$};
+    \node[state,accepting] (a) [below right = of init] {$b$};
+    \path[->]
+    (init)
+    edge node [left] {$(0,1),(1,1)$} (b)
+    edge node [right] {$(1,0),(1,1)$} (a)
+    (b)
+    edge [loop left] node {$\Sigma^*$} ()
+    (a)
+    edge node {$(0,1),(1,1)$} (b)
+    edge [loop right] node {$(1,0),(1,1)$} ()
+    ;
+  \end{tikzpicture}
+\end{center}
+
 Eventuality automata :
 
 \begin{center}
@@ -123,25 +143,6 @@ Eventuality automata :
 \end{center}
 
 Complete automaton :
-
-\begin{center}
-  \begin{tikzpicture}[shorten >=1pt,node distance=4cm,on grid,auto]
-    \node[state,initial,accepting] (init) {$a$};
-    \node[state,accepting] (b) [below left = of init] {$c$};
-    \node[state,accepting] (a) [below right = of init] {$b$};
-    \path[->]
-    (init)
-    edge node [left] {$(0,1),(1,1)$} (b)
-    edge node [right] {$(1,0),(1,1),(a \until b)$} (a)
-    (b)
-    edge [loop left] node {$\Sigma^*$} ()
-    (a)
-    edge node {$(0,1),(1,1)$} (b)
-    edge [loop right] node {$(1,0),(1,1),(a \until b)$} ()
-    ;
-  \end{tikzpicture}
-\end{center}
-
 
 \begin{center}
 \begin{tikzpicture}[shorten >=1pt,node distance=3cm,on grid,auto]
@@ -198,28 +199,63 @@ $\bot \vee a \equiv a$) :
   \end{forest}
 \end{center}
 
-Automata :
+Eventuality automaton for ($\top \until a$)
+
+\begin{center}
+  \begin{tikzpicture}[shorten >=1pt,node distance=5cm,on grid,auto]
+    \node[state,accepting,initial] (q0) {$a'$};
+    \node[state] (q1) [right = of q0] {$b'$};
+    \path[->]
+    (q0)
+    edge [loop above] node {$\Sigma^*$} ()
+    edge [bend left] node {$(0)$} (q1)
+    (q1)
+    edge [loop above] node {$\Sigma^*$} ()
+    edge [bend left] node {$(1)$} (q0)
+    ;
+  \end{tikzpicture}
+\end{center}
+
+Local automaton :
 
 \begin{center}
 \begin{tikzpicture}[shorten >=1pt,node distance=5cm,on grid,auto]
     \node[state,initial,accepting] (init) {};
-	\node[state,accepting] (a) [below left = of init] {$a,X(\neg (\top \until (\neg (\top \until a))))$};
-	\node[state,accepting] (b) [below right = of init] {$X(\top \until a) \disj X(\neg(\top \until (\neg (\top \until a))))$};
+    \node[state,accepting] (a) [below left = of init] {$a,X(\neg (\top \until (\neg (\top \until a))))$};
+    \node[state,accepting] (b) [below right = of init] {$X(\top \until a) \disj X(\neg(\top \until (\neg (\top \until a))))$};
     \path[->]
     (init)
-    edge node[above] {$(1)$} (a)
-    edge node {} (b)
-	(a)
-	edge [bend left] node {} (b)
-	edge [loop left] node {$(1)$} ()
-	(b)
-	edge [bend left] node {} (a)
-	edge [loop right] node {} ()    
+    edge node[left] {$(1)$} (a)
+    edge node {$(0)$} (b)
+    (a)
+    edge [bend left] node {$(0)$} (b)
+    edge [loop left] node {$(1)$} ()
+    (b)
+    edge [bend left] node {$(1)$} (a)
+    edge [loop right] node [left] {$(0)$} ()    
 	;
   \end{tikzpicture}
 \end{center}
 
-\newpage
+Complete automaton
+\begin{center}
+  \begin{tikzpicture}
+    \node[state,initial,accepting] (init) {$a$};
+    \node[state,accepting] (a) [below left = of init] {$b$};
+    \node[state] (b) [below right = of init] {$c$};
+    \path[->]
+    (init)
+    edge node[above] {$(1)$} (a)
+    edge node {$(0)$} (b)
+    (a)
+    edge [bend left] node [above] {$(0)$} (b)
+    edge [loop left] node {$(1)$} ()
+    (b)
+    edge [bend left] node [above] {$(1)$} (a)
+    edge [loop right] node {$(0)$} ()    
+    ;
+  \end{tikzpicture}
+\end{center}
 
 \section*{Exercice 2}
 

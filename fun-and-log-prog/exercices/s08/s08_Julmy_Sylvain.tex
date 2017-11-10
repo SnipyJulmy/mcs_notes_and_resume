@@ -1,0 +1,72 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath}
+\usepackage{fullpage}
+\usepackage[cache=false]{minted}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\newminted{prolog}{frame=single, framesep=6pt,
+  breaklines=true,fontsize=\scriptsize,linenos}
+\newmintedfile{prolog}{frame=single, framesep=6pt,
+  breaklines=true,fontsize=\scriptsize}
+\newmintinline{prolog}{}
+\newcommand{\ex}[3]{\prologfile[firstline=#1,lastline=#2]{#3.pl}}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    Functional and Logic Programming\
+    Fall 2017
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  S07 : Prolog (Introduction)
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Le Peutrec Stephane
+    
+    Assistant : Lauper Jonathan
+  \end{flushleft}
+
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercise 1 : Fibonacci}
+
+\ex{9}{18}{ex1}
+
+\section*{Exercise 2}
+
+\subsection*{myLength}
+\ex{10}{14}{ex2}
+
+\subsection*{myAppend}
+\ex{17}{20}{ex2}
+
+\subsection*{myLast}
+\ex{23}{25}{ex2}
+
+\newpage
+
+\subsection*{myReverse}
+\ex{28}{35}{ex2}
+
+\subsection*{mySelect}
+\ex{38}{41}{ex2}
+
+\subsection*{atoms}
+\ex{44}{49}{ex2}
+
+
+\end{document}
+
+%%% Local Variables:
+%%% TeX-command-extra-options: "-shell-escape"
+%%% mode: latex
+%%% End:
