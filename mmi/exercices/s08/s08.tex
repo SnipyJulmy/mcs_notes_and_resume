@@ -1,0 +1,170 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath}
+\usepackage{fullpage}
+\usepackage{tikz}
+
+\usetikzlibrary{graphs,graphs.standard}
+
+\makeatletter
+\pgfmathdeclarefunction{alpha}{1}{%
+  \pgfmathint@{#1}%
+  \edef\pgfmathresult{\pgffor@alpha{\pgfmathresult}}%
+}
+
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{color}
+
+\newcommand*{\contract}[2]{contraction of $#1$ with $#2$}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    Mathematical Methods for Computer Science 1\
+    Fall 2017
+  }
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  Series 7
+  \vspace*{1.4cm}
+
+  Sylvain Julmy
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+\end{center}
+
+\section*{\texttt{1}}
+
+\subsection*{(a)}
+
+In order to show that $\{\rightarrow,\neg\}$ is complete, we have to found the
+equivalent formula of $a \vee b$ and $a \wedge b$ ($\neg a$ and $a \rightarrow b$
+are trivial...).
+
+\subsubsection*{$a \vee b$}
+
+\begin{gather*}
+  (\neg a) \rightarrow b = (\neg \neg a) \vee b = a \vee b
+\end{gather*}
+
+and the truth table to validate the result :
+
+\begin{center}
+  \begin{tabular}{@{ }c@{ }@{ }c | c@{ }@{ }c@{ }@{ }c@{ }@{ }c@{ }@{ }c@{ }@{ }c}
+    a & b &  & $\neg$ & a & $\rightarrow$ & b & \\
+    \hline 
+    T & T &  & F & T & \textcolor{red}{T} & T & \\
+    T & F &  & F & T & \textcolor{red}{T} & F & \\
+    F & T &  & T & F & \textcolor{red}{T} & T & \\
+    F & F &  & T & F & \textcolor{red}{F} & F & \\
+  \end{tabular}
+\end{center}
+
+\subsubsection*{$a \wedge b$}
+
+\begin{align*}
+  \neg (a \rightarrow \neg b) &= \neg (\neg a \vee \neg b) \\
+                              & = \neg \neg (a \wedge b) \\
+                              &= (a \wedge b)
+\end{align*}
+
+and the truth table to validate the result :
+
+\begin{center}
+  \begin{tabular}{@{ }c@{ }@{ }c | c@{ }@{}c@{}@{ }c@{ }@{ }c@{ }@{ }c@{ }@{ }c@{ }@{}c@{ }}
+    a & b & $\neg$ & ( & a & $\rightarrow$ & $\neg$ & b & )\\
+    \hline 
+    T & T & \textcolor{red}{T} &  & T & F & F & T & \\
+    T & F & \textcolor{red}{F} &  & T & T & T & F & \\
+    F & T & \textcolor{red}{F} &  & F & T & F & T & \\
+    F & F & \textcolor{red}{F} &  & F & T & T & F & \\
+  \end{tabular}
+\end{center}
+
+\subsection*{(b)}
+
+In order to show that $\{\uparrow\}$ is complete, we have to found the
+equivalent formula of $a \rightarrow b$ and $\neg a$, because we just showed
+that $\{\neg,\rightarrow\}$ is complete.
+
+We know that $a \uparrow b \leftrightarrow \neg (a \wedge b)$.
+
+\subsubsection*{$\neg a$}
+
+\[
+  a \uparrow a = \neg (a \wedge a) = \neg a
+\]
+
+and the truth table to validate the result :
+\begin{center}
+  \begin{tabular}{@{ }c | c@{ }@{}c@{}@{ }c@{ }@{ }c@{ }@{ }c@{ }@{}c@{ }}
+    a & $\neg$ & ( & a & $\&$ & a & )\\
+    \hline 
+    T & \textcolor{red}{F} &  & T & T & T & \\
+    F & \textcolor{red}{T} &  & F & F & F & \\
+  \end{tabular}
+\end{center}
+
+\subsubsection*{$a \rightarrow b$}
+
+\begin{align*}
+  a \rightarrow b &= \neg a \vee b\\
+                  &= \neg \neg (\neg a \vee b)\\
+                  &= \neg (a \wedge \neg b)\\
+                  &= \neg (a \wedge \underbrace{\neg (b \wedge b)}_{b \uparrow b})\\
+                  &= \underbrace{\neg (a \wedge (b \uparrow b))}_{a \uparrow (b \uparrow b)}\\
+                  &= a \uparrow (b \uparrow b)
+\end{align*}
+
+and the truth table to validate the result :
+
+\begin{center}
+  \begin{tabular}{@{ }c@{ }@{ }c | c@{ }@{ }c@{ }@{ }c@{ }@{}c@{}@{ }c@{ }@{ }c@{ }@{ }c@{ }@{}c@{}@{ }c}
+    a & b &  & a & $\uparrow$ & ( & b & $\uparrow$ & b & ) & \\
+    \hline 
+    T & T &  & T & \textcolor{red}{T} &  & T & F & T &  & \\
+    T & F &  & T & \textcolor{red}{F} &  & F & T & F &  & \\
+    F & T &  & F & \textcolor{red}{T} &  & T & F & T &  & \\
+    F & F &  & F & \textcolor{red}{T} &  & F & T & F &  & \\
+  \end{tabular}
+\end{center}
+
+\section*{\texttt{2}}
+
+\subsection*{(a)}
+
+\subsection*{(b)}
+
+\section*{\texttt{3}}
+
+\subsection*{(a)}
+
+\subsection*{(b)}
+
+\subsection*{(c)}
+
+\section*{\texttt{4}}
+
+\subsection*{(a)}
+
+\subsection*{(b)}
+
+\subsection*{(c)}
+
+\section*{\texttt{5}}
+
+\subsection*{(a)}
+
+\subsection*{(b)}
+
+\section*{\texttt{6}}
+
+\end{document}

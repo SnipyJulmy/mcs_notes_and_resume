@@ -4,9 +4,13 @@
 
 go :-
     solve(Res),
-    writef("%q",[Res]).
+    writef("%q\n",[Res]),
+    hasFish(Res,Nat),
+    writef("The %q person holds the fish\n",[Nat]).
 
 % predicate that is building the uninstancied solutions for us
+% we use the following structure for the tupple :
+%  - (Nationality,Color,Drink,SmokeMark,Pet)
 persons(0,[]) :- !.
 persons(N,[(_Nationality,_Color,_Drink,_SmokeMark,_Pet)|T]) :-
     N1 is N - 1,
@@ -88,3 +92,6 @@ solve(Persons) :-
     hint14(Persons),
     hint15(Persons),
     question(Persons).
+
+hasFish([(Nat,_,_,_,fish)|_],Nat).
+hasFish([_|Xs],Nat) :- hasFish(Xs,Nat).
