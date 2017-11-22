@@ -33,7 +33,7 @@
   }
   \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
 
-  Series 7
+  Series 8
   \vspace*{1.4cm}
 
   Sylvain Julmy
@@ -139,32 +139,265 @@ and the truth table to validate the result :
 
 \section*{\texttt{2}}
 
+Note : we denote $\top$ the formula which represent $true$ and $\bot$ the
+formula which represent $false$ using the following equivalence :
+
+\begin{align*}
+  \top &= (\neg A \vee A) \\
+  \bot &= (\neg A \wedge A)
+\end{align*}
+
+We can also use the following equivalence :
+
+\[
+  (A \wedge B) \vee A \leftrightarrow A
+\]
+
+We can also use the following equivalence :
+
+\[
+  (A \wedge B) \vee A \leftrightarrow A
+\]
+
+and use thr truth table for proving the equivalence :
+
+\begin{center}
+  \begin{tabular}{@{ }c@{ }@{ }c | c@{ }@{}c@{}@{}c@{}@{ }c@{ }@{ }c@{ }@{ }c@{ }@{}c@{}@{ }c@{ }@{ }c@{ }@{}c@{}@{ }c@{ }@{ }c@{ }@{ }c}
+    a & b &  & ( & ( & a & $\&$ & b & ) & $\lor$ & a & ) & $\leftrightarrow$ & a & \\
+    \hline 
+    1 & 1 &  &  &  & 1 & 1 & 1 &  & 1 & 1 &  & \textcolor{red}{1} & 1 & \\
+    1 & 0 &  &  &  & 1 & 0 & 0 &  & 1 & 1 &  & \textcolor{red}{1} & 1 & \\
+    0 & 1 &  &  &  & 0 & 0 & 1 &  & 0 & 0 &  & \textcolor{red}{1} & 0 & \\
+    0 & 0 &  &  &  & 0 & 0 & 0 &  & 0 & 0 &  & \textcolor{red}{1} & 0 & \\
+  \end{tabular}
+\end{center}
+
 \subsection*{(a)}
 
+\begin{align*}
+  (p \rightarrow q) \wedge ((q \vee r) \rightarrow p) &= (\neg p \vee q) \wedge (\neg(q \vee r) \vee p) \\
+                                                      &= (\neg p \vee q) \wedge ((\neg q \wedge \neg r) \vee p)\\
+                                                      &= (\neg p \vee q) \wedge (p \vee \neg q) \wedge (p \vee \neg r)\\
+                                                      &= ((p \wedge (\neg p \vee q)) \vee (\neg q \wedge (\neg p \vee q))) \wedge (p \vee \neg r)\\
+                                                      &= (\underbrace{(p \wedge \neg p)}_{\bot} \vee (p \wedge q) \vee (\neg q \wedge \neg p) \vee \underbrace{(\neg q \wedge q)}_{\bot}) \wedge (p \vee \neg r)\\
+                                                      &= ((p \wedge q)\vee(\neg q \wedge \neg p)) \wedge (p \vee \neg r)\\
+                                                      &= ((p \vee \neg r) \wedge (\neg q \wedge \neg p)) \vee ((p \vee \neg r) \wedge (p \wedge q))\\
+                                                      &= \underbrace{(\neg q \wedge \neg p \wedge p)}_{\bot} \vee (\neg q \wedge \neg r \wedge \neg p)\vee \underbrace{(p \wedge q \wedge p)}_{p \wedge q} \vee (p \wedge q \wedge \neg r)\\
+                                                      &= (\neg q \wedge \neg r \wedge \neg p) \vee (p \wedge q) \vee (p \wedge q \wedge \neg r)\\
+                                                      &= (\neg q \wedge \neg r \wedge \neg p) \vee (p \wedge q)
+\end{align*}
+
 \subsection*{(b)}
+
+Truth table of $\phi = (p \rightarrow q) \wedge ((q \vee r) \rightarrow p)$ :
+
+\begin{center}
+  \begin{tabular}{@{ }c@{ }@{ }c@{ }@{ }c | c@{ }@{}c@{}@{ }c@{ }@{ }c@{ }@{ }c@{ }@{}c@{}@{ }c@{ }@{}c@{}@{}c@{}@{ }c@{ }@{ }c@{ }@{ }c@{ }@{}c@{}@{ }c@{ }@{ }c@{ }@{}c@{}@{ }c}
+    p & q & r &  & ( & p & $\rightarrow$ & q & ) & $\&$ & ( & ( & q & $\lor$ & r & ) & $\rightarrow$ & p & ) & \\
+    \hline 
+    1 & 1 & 1 &  &  & 1 & 1 & 1 &  & \textcolor{red}{1} &  &  & 1 & 1 & 1 &  & 1 & 1 &  & \\
+    1 & 1 & 0 &  &  & 1 & 1 & 1 &  & \textcolor{red}{1} &  &  & 1 & 1 & 0 &  & 1 & 1 &  & \\
+    1 & 0 & 1 &  &  & 1 & 0 & 0 &  & \textcolor{red}{0} &  &  & 0 & 1 & 1 &  & 1 & 1 &  & \\
+    1 & 0 & 0 &  &  & 1 & 0 & 0 &  & \textcolor{red}{0} &  &  & 0 & 0 & 0 &  & 1 & 1 &  & \\
+    0 & 1 & 1 &  &  & 0 & 1 & 1 &  & \textcolor{red}{0} &  &  & 1 & 1 & 1 &  & 0 & 0 &  & \\
+    0 & 1 & 0 &  &  & 0 & 1 & 1 &  & \textcolor{red}{0} &  &  & 1 & 1 & 0 &  & 0 & 0 &  & \\
+    0 & 0 & 1 &  &  & 0 & 1 & 0 &  & \textcolor{red}{0} &  &  & 0 & 1 & 1 &  & 0 & 0 &  & \\
+    0 & 0 & 0 &  &  & 0 & 1 & 0 &  & \textcolor{red}{1} &  &  & 0 & 0 & 0 &  & 1 & 0 &  & \\
+  \end{tabular}
+\end{center}
+
+We pick the row where $\phi = 1$ and we construct the DNF form :
+
+\begin{gather*}
+  (p \wedge q \wedge r) \vee (\neg p \wedge \neg q \wedge \neg r) \vee (p \wedge
+  q) \\ = \\ (\neg p \wedge \neg q \wedge \neg r) \vee (p \wedge
+  q)
+\end{gather*}
+
+Because
+
+\[
+  (p \wedge q \wedge r) \vee (p \wedge r) \leftrightarrow  (p \wedge r)
+\]
 
 \section*{\texttt{3}}
 
+Using De Morgan's law, $\neg(DNF) = CNF$ and $A$ is already in $DNF$.
+
 \subsection*{(a)}
+
+\[
+  A = (p \wedge q \wedge \neg r) \vee (p \wedge \neg q \wedge r) \vee (\neg p
+  \wedge \neg q \wedge \neg r)
+\]
+
+\begin{align*}
+  \neg A &= \neg((p \wedge q \wedge \neg r) \vee (p \wedge \neg q \wedge r) \vee (\neg p
+           \wedge \neg q \wedge \neg r))\\
+         &= (\neg(p \wedge q \wedge \neg r) \wedge \neg(p \wedge \neg q \wedge r) \wedge \neg(\neg p \wedge \neg q \wedge \neg r))\\
+         &= (\neg p \vee \neg q \vee r) \wedge (\neg p \vee q \vee \neg r) \wedge (p \vee q \vee r)
+\end{align*}
 
 \subsection*{(b)}
 
-\subsection*{(c)}
+We can turn out the formulation into the following formula :
+
+\begin{align*}
+         &(A \leftrightarrow B) && \text{$A$ is equivalent to $B$}\\
+  \wedge &(A \leftrightarrow (C \vee F)) && \text{$A$ contains a sub-formula $F$}\\
+  \wedge &(A \leftrightarrow (C \vee G)) && \text{$B$ is the sub-formula $A$ with $F$ replace by $B$}\\
+  \rightarrow &(G \leftrightarrow F) && \text{implies that $F$ is equivalent to $G$}
+\end{align*}
+
+Using the following truth table, we can see that the formula is not a tautology,
+because $F$ and $G$ can be different in the formula but $A$ and $B$ still
+remains equivalent.
+
+\begin{center}
+  \begin{tabular}{@{ }c@{ }@{ }c@{ }@{ }c@{ }@{ }c@{ }@{ }c | c@{ }@{}c@{}@{}c@{}@{ }c@{ }@{ }c@{ }@{ }c@{ }@{}c@{}@{ }c@{ }@{}c@{}@{}c@{}@{ }c@{ }@{ }c@{ }@{}c@{}@{ }c@{ }@{ }c@{ }@{ }c@{ }@{}c@{}@{}c@{}@{ }c@{ }@{}c@{}@{ }c@{ }@{ }c@{ }@{}c@{}@{ }c@{ }@{ }c@{ }@{ }c@{ }@{}c@{}@{}c@{}@{}c@{}@{}c@{}@{ }c@{ }@{}c@{}@{ }c@{ }@{ }c@{ }@{ }c@{ }@{}c@{}@{ }c}
+    A & B & C & F & G &  & ( & ( & A & $\leftrightarrow$ & B & ) & $\wedge$ & ( & ( & A & $\leftrightarrow$ & ( & C & $\vee$ & F & ) & ) & $\wedge$ & ( & B & $\leftrightarrow$ & ( & C & $\vee$ & G & ) & ) & ) & ) & $\rightarrow$ & ( & G & $\leftrightarrow$ & F & ) & \\
+    \hline 
+    1 & 1 & 1 & 1 & 1 &  &  &  & 1 & 1 & 1 &  & 1 &  &  & 1 & 1 &  & 1 & 1 & 1 &  &  & 1 &  & 1 & 1 &  & 1 & 1 & 1 &  &  &  &  & \textcolor{red}{1} &  & 1 & 1 & 1 &  & \\
+    1 & 1 & 1 & 1 & 0 &  &  &  & 1 & 1 & 1 &  & 1 &  &  & 1 & 1 &  & 1 & 1 & 1 &  &  & 1 &  & 1 & 1 &  & 1 & 1 & 0 &  &  &  &  & \textcolor{red}{0} &  & 0 & 0 & 1 &  & \\
+    1 & 1 & 1 & 0 & 1 &  &  &  & 1 & 1 & 1 &  & 1 &  &  & 1 & 1 &  & 1 & 1 & 0 &  &  & 1 &  & 1 & 1 &  & 1 & 1 & 1 &  &  &  &  & \textcolor{red}{0} &  & 1 & 0 & 0 &  & \\
+    1 & 1 & 1 & 0 & 0 &  &  &  & 1 & 1 & 1 &  & 1 &  &  & 1 & 1 &  & 1 & 1 & 0 &  &  & 1 &  & 1 & 1 &  & 1 & 1 & 0 &  &  &  &  & \textcolor{red}{1} &  & 0 & 1 & 0 &  & \\
+    1 & 1 & 0 & 1 & 1 &  &  &  & 1 & 1 & 1 &  & 1 &  &  & 1 & 1 &  & 0 & 1 & 1 &  &  & 1 &  & 1 & 1 &  & 0 & 1 & 1 &  &  &  &  & \textcolor{red}{1} &  & 1 & 1 & 1 &  & \\
+    1 & 1 & 0 & 1 & 0 &  &  &  & 1 & 1 & 1 &  & 0 &  &  & 1 & 1 &  & 0 & 1 & 1 &  &  & 0 &  & 1 & 0 &  & 0 & 0 & 0 &  &  &  &  & \textcolor{red}{1} &  & 0 & 0 & 1 &  & \\
+    1 & 1 & 0 & 0 & 1 &  &  &  & 1 & 1 & 1 &  & 0 &  &  & 1 & 0 &  & 0 & 0 & 0 &  &  & 0 &  & 1 & 1 &  & 0 & 1 & 1 &  &  &  &  & \textcolor{red}{1} &  & 1 & 0 & 0 &  & \\
+    1 & 1 & 0 & 0 & 0 &  &  &  & 1 & 1 & 1 &  & 0 &  &  & 1 & 0 &  & 0 & 0 & 0 &  &  & 0 &  & 1 & 0 &  & 0 & 0 & 0 &  &  &  &  & \textcolor{red}{1} &  & 0 & 1 & 0 &  & \\
+    1 & 0 & 1 & 1 & 1 &  &  &  & 1 & 0 & 0 &  & 0 &  &  & 1 & 1 &  & 1 & 1 & 1 &  &  & 0 &  & 0 & 0 &  & 1 & 1 & 1 &  &  &  &  & \textcolor{red}{1} &  & 1 & 1 & 1 &  & \\
+    1 & 0 & 1 & 1 & 0 &  &  &  & 1 & 0 & 0 &  & 0 &  &  & 1 & 1 &  & 1 & 1 & 1 &  &  & 0 &  & 0 & 0 &  & 1 & 1 & 0 &  &  &  &  & \textcolor{red}{1} &  & 0 & 0 & 1 &  & \\
+    1 & 0 & 1 & 0 & 1 &  &  &  & 1 & 0 & 0 &  & 0 &  &  & 1 & 1 &  & 1 & 1 & 0 &  &  & 0 &  & 0 & 0 &  & 1 & 1 & 1 &  &  &  &  & \textcolor{red}{1} &  & 1 & 0 & 0 &  & \\
+    1 & 0 & 1 & 0 & 0 &  &  &  & 1 & 0 & 0 &  & 0 &  &  & 1 & 1 &  & 1 & 1 & 0 &  &  & 0 &  & 0 & 0 &  & 1 & 1 & 0 &  &  &  &  & \textcolor{red}{1} &  & 0 & 1 & 0 &  & \\
+    1 & 0 & 0 & 1 & 1 &  &  &  & 1 & 0 & 0 &  & 0 &  &  & 1 & 1 &  & 0 & 1 & 1 &  &  & 0 &  & 0 & 0 &  & 0 & 1 & 1 &  &  &  &  & \textcolor{red}{1} &  & 1 & 1 & 1 &  & \\
+    1 & 0 & 0 & 1 & 0 &  &  &  & 1 & 0 & 0 &  & 0 &  &  & 1 & 1 &  & 0 & 1 & 1 &  &  & 1 &  & 0 & 1 &  & 0 & 0 & 0 &  &  &  &  & \textcolor{red}{1} &  & 0 & 0 & 1 &  & \\
+    1 & 0 & 0 & 0 & 1 &  &  &  & 1 & 0 & 0 &  & 0 &  &  & 1 & 0 &  & 0 & 0 & 0 &  &  & 0 &  & 0 & 0 &  & 0 & 1 & 1 &  &  &  &  & \textcolor{red}{1} &  & 1 & 0 & 0 &  & \\
+    1 & 0 & 0 & 0 & 0 &  &  &  & 1 & 0 & 0 &  & 0 &  &  & 1 & 0 &  & 0 & 0 & 0 &  &  & 0 &  & 0 & 1 &  & 0 & 0 & 0 &  &  &  &  & \textcolor{red}{1} &  & 0 & 1 & 0 &  & \\
+    0 & 1 & 1 & 1 & 1 &  &  &  & 0 & 0 & 1 &  & 0 &  &  & 0 & 0 &  & 1 & 1 & 1 &  &  & 0 &  & 1 & 1 &  & 1 & 1 & 1 &  &  &  &  & \textcolor{red}{1} &  & 1 & 1 & 1 &  & \\
+    0 & 1 & 1 & 1 & 0 &  &  &  & 0 & 0 & 1 &  & 0 &  &  & 0 & 0 &  & 1 & 1 & 1 &  &  & 0 &  & 1 & 1 &  & 1 & 1 & 0 &  &  &  &  & \textcolor{red}{1} &  & 0 & 0 & 1 &  & \\
+    0 & 1 & 1 & 0 & 1 &  &  &  & 0 & 0 & 1 &  & 0 &  &  & 0 & 0 &  & 1 & 1 & 0 &  &  & 0 &  & 1 & 1 &  & 1 & 1 & 1 &  &  &  &  & \textcolor{red}{1} &  & 1 & 0 & 0 &  & \\
+    0 & 1 & 1 & 0 & 0 &  &  &  & 0 & 0 & 1 &  & 0 &  &  & 0 & 0 &  & 1 & 1 & 0 &  &  & 0 &  & 1 & 1 &  & 1 & 1 & 0 &  &  &  &  & \textcolor{red}{1} &  & 0 & 1 & 0 &  & \\
+    0 & 1 & 0 & 1 & 1 &  &  &  & 0 & 0 & 1 &  & 0 &  &  & 0 & 0 &  & 0 & 1 & 1 &  &  & 0 &  & 1 & 1 &  & 0 & 1 & 1 &  &  &  &  & \textcolor{red}{1} &  & 1 & 1 & 1 &  & \\
+    0 & 1 & 0 & 1 & 0 &  &  &  & 0 & 0 & 1 &  & 0 &  &  & 0 & 0 &  & 0 & 1 & 1 &  &  & 0 &  & 1 & 0 &  & 0 & 0 & 0 &  &  &  &  & \textcolor{red}{1} &  & 0 & 0 & 1 &  & \\
+    0 & 1 & 0 & 0 & 1 &  &  &  & 0 & 0 & 1 &  & 0 &  &  & 0 & 1 &  & 0 & 0 & 0 &  &  & 1 &  & 1 & 1 &  & 0 & 1 & 1 &  &  &  &  & \textcolor{red}{1} &  & 1 & 0 & 0 &  & \\
+    0 & 1 & 0 & 0 & 0 &  &  &  & 0 & 0 & 1 &  & 0 &  &  & 0 & 1 &  & 0 & 0 & 0 &  &  & 0 &  & 1 & 0 &  & 0 & 0 & 0 &  &  &  &  & \textcolor{red}{1} &  & 0 & 1 & 0 &  & \\
+    0 & 0 & 1 & 1 & 1 &  &  &  & 0 & 1 & 0 &  & 0 &  &  & 0 & 0 &  & 1 & 1 & 1 &  &  & 0 &  & 0 & 0 &  & 1 & 1 & 1 &  &  &  &  & \textcolor{red}{1} &  & 1 & 1 & 1 &  & \\
+    0 & 0 & 1 & 1 & 0 &  &  &  & 0 & 1 & 0 &  & 0 &  &  & 0 & 0 &  & 1 & 1 & 1 &  &  & 0 &  & 0 & 0 &  & 1 & 1 & 0 &  &  &  &  & \textcolor{red}{1} &  & 0 & 0 & 1 &  & \\
+    0 & 0 & 1 & 0 & 1 &  &  &  & 0 & 1 & 0 &  & 0 &  &  & 0 & 0 &  & 1 & 1 & 0 &  &  & 0 &  & 0 & 0 &  & 1 & 1 & 1 &  &  &  &  & \textcolor{red}{1} &  & 1 & 0 & 0 &  & \\
+    0 & 0 & 1 & 0 & 0 &  &  &  & 0 & 1 & 0 &  & 0 &  &  & 0 & 0 &  & 1 & 1 & 0 &  &  & 0 &  & 0 & 0 &  & 1 & 1 & 0 &  &  &  &  & \textcolor{red}{1} &  & 0 & 1 & 0 &  & \\
+    0 & 0 & 0 & 1 & 1 &  &  &  & 0 & 1 & 0 &  & 0 &  &  & 0 & 0 &  & 0 & 1 & 1 &  &  & 0 &  & 0 & 0 &  & 0 & 1 & 1 &  &  &  &  & \textcolor{red}{1} &  & 1 & 1 & 1 &  & \\
+    0 & 0 & 0 & 1 & 0 &  &  &  & 0 & 1 & 0 &  & 0 &  &  & 0 & 0 &  & 0 & 1 & 1 &  &  & 0 &  & 0 & 1 &  & 0 & 0 & 0 &  &  &  &  & \textcolor{red}{1} &  & 0 & 0 & 1 &  & \\
+    0 & 0 & 0 & 0 & 1 &  &  &  & 0 & 1 & 0 &  & 0 &  &  & 0 & 1 &  & 0 & 0 & 0 &  &  & 0 &  & 0 & 0 &  & 0 & 1 & 1 &  &  &  &  & \textcolor{red}{1} &  & 1 & 0 & 0 &  & \\
+    0 & 0 & 0 & 0 & 0 &  &  &  & 0 & 1 & 0 &  & 1 &  &  & 0 & 1 &  & 0 & 0 & 0 &  &  & 1 &  & 0 & 1 &  & 0 & 0 & 0 &  &  &  &  & \textcolor{red}{1} &  & 0 & 1 & 0 &  & \\
+  \end{tabular}
+\end{center}
 
 \section*{\texttt{4}}
 
 \subsection*{(a)}
 
+$(p \rightarrow q) \rightarrow ((p \rightarrow \neg q) \rightarrow \neg p)$ is a
+tautology :
+
+\begin{align*}
+  (p \rightarrow q) \rightarrow ((p \rightarrow \neg q) \rightarrow \neg p)
+  &= (\neg p \vee q) \rightarrow ((\neg p \vee \neg q) \rightarrow \neg p) \\
+  &= (\neg p \vee q) \rightarrow (\neg (\neg p \vee \neg q) \vee \neg p) \\
+  &= (\neg p \vee q) \rightarrow ((p \wedge q) \vee \neg p) \\
+  &= (\neg p \vee q) \rightarrow (\underbrace{(\neg p \vee p)}_{\top} \wedge (\neg p \vee q)) \\
+  &= (\neg p \vee q) \rightarrow (\neg p \vee q) \\
+  &= \top
+\end{align*}
+
+$A \rightarrow A$ is a tautology :
+
+\[
+  A \rightarrow A = \neg A \vee A = \top
+\]
+
+So $(\neg p \vee q)$ can be subsitute by $A$, then we would have $A \rightarrow A$. 
+
 \subsection*{(b)}
 
+$\neg(p \rightarrow q) \vee (\neg p \vee q)$ is a tautology :
+
+\begin{align*}
+  \neg(p \rightarrow q) \vee (\neg p \vee q)
+  &= \neg(\neg p \vee q) \vee (\neg p \vee q)\\
+  &= (\neg \neg p \wedge \neg q) \vee (\neg p \vee q)\\
+  &= (p \wedge \neg q) \vee (\neg p \vee q)\\
+\end{align*}
+
+Here, we put $A = (p \wedge \neg q)$, so $\neg A = \neg(p \wedge \neg q) = (\neg
+p \vee \neg \neg q) = (\neg p \vee q)$. So we have $A \vee \neg A$ (by
+subsitution) and this is a tautology.
+
 \subsection*{(c)}
+
+$\phi = (p \vee q \vee r) \wedge (p \vee q \vee \neg s)$ is not a tautology. For
+example, the following interpretation $I$ does not satisfies the formula :
+
+\[
+  I =
+  \{
+  p \mapsto \bot,
+  q \mapsto \bot,
+  r \mapsto \bot,
+  s \mapsto \top
+  \}
+\]
+
+\[
+  \phi^I =  \underbrace{(\bot \vee \bot \vee \bot)}_{\bot} \wedge
+  \underbrace{(\bot \vee \bot \vee \neg \top)}_{\bot} = \bot \wedge \bot = \bot
+\]
 
 \section*{\texttt{5}}
 
 \subsection*{(a)}
 
+\[
+(\neg p \wedge \neg q \wedge \neg r) \vee (\neg p \wedge q \wedge r) \vee (p \wedge q \wedge r)
+\]
+
+We can transform $(\neg p \wedge q \wedge r) \vee (p \wedge q \wedge r)$
+into $(q \wedge r)$, because if $p$ is $true$, we don't look at $(\neg p \wedge
+q \wedge r)$ because it would be $false$ anyway and if $p$ is $false$, we don't
+look at $(p \wedge q \wedge r)$ because it would be false anyway.
+
+\[
+(\neg p \wedge \neg q \wedge \neg r) \vee (q \wedge r)
+\]
+
+We can't simplify this anymore.
+
 \subsection*{(b)}
 
-\section*{\texttt{6}}
+\[
+  (\neg p \vee \neg q \vee \neg r) \wedge (\neg p \vee q \vee r) \wedge (p \vee q \vee r)
+\]
 
+We can use the same principle as before, if $p$ is $true$, $(p \vee q \vee r)$
+would be $true$ and $(\neg p \vee q \vee r)$ would be transform to $(q \vee r)$,
+else if $p$ is $false$, $(\neg p \vee q \vee r)$ would be $true$ and $(p \vee q
+\vee r)$ would be equal to $(q \vee r)$.
+
+
+\[
+  (\neg p \vee \neg q \vee \neg r) \wedge (p \vee q)
+\]
+
+\subsection*{(c)}
+
+We can use the following function $\phi$, we denote the arguments of $\phi$ by
+$\lambda = \{\underbrace{a,b,\dots}_{|\lambda|}\}$) :
+
+\[
+  \phi(\lambda) = \bigwedge_{\alpha \in \lambda} \alpha = a \wedge b \wedge c
+  \wedge \cdots
+\]
+
+The DNF form of such a formula can't be less than $|\lambda|$, because each
+variable needs to appear in the DNF form. If one of the variable would be false,
+the whole formula is going to be false.
 \end{document}

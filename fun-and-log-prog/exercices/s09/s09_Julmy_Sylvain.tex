@@ -1,0 +1,86 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath}
+\usepackage{fullpage}
+\usepackage[cache=false]{minted}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\newminted{prolog}{frame=single, framesep=6pt,
+  breaklines=true,fontsize=\scriptsize,linenos}
+\newmintedfile{prolog}{frame=single, framesep=6pt,
+  breaklines=true,fontsize=\scriptsize}
+\newmintinline{prolog}{}
+\newcommand{\ex}[3]{\prologfile[firstline=#1,lastline=#2]{#3.pl}}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    Functional and Logic Programming\
+    Fall 2017
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  S09 : Prolog (Introduction)
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Le Peutrec Stephane
+    
+    Assistant : Lauper Jonathan
+  \end{flushleft}
+
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercise 1}
+
+\subsection*{insert}
+\ex{10}{13}{ex1}
+
+\subsection*{mergeLists}
+\ex{16}{24}{ex1}
+
+\subsection*{reverseRec}
+\ex{27}{38}{ex1}
+
+\newpage
+
+\subsection*{myMin}
+\ex{41}{49}{ex1}
+
+\section*{Exercise 2}
+
+\subsection*{createLA}
+\ex{9}{13}{ex2}
+
+\subsection*{valuesLA}
+\ex{15}{17}{ex2}
+
+\section*{Exercise 3}
+
+\subsection*{sum\_list}
+\ex{10}{18}{ex3}
+
+\subsection*{reverseRec}
+\ex{21}{32}{ex3}
+
+\subsection*{myMin}
+\ex{35}{45}{ex3}
+
+\subsection*{fibonacci}
+\ex{47}{55}{ex3}
+
+\section*{Exercise 4}
+\ex{9}{36}{ex4}
+
+\end{document}
+
+%%% Local Variables:
+%%% TeX-command-extra-options: "-shell-escape"
+%%% mode: latex
+%%% End:

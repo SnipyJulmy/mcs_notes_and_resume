@@ -1,0 +1,142 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath,amssymb}
+\usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage[cache=false]{minted}
+
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{color}
+
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+\makeatletter
+\pgfmathdeclarefunction{alpha}{1}{%
+  \pgfmathint@{#1}%
+  \edef\pgfmathresult{\pgffor@alpha{\pgfmathresult}}%
+}
+
+\newcommand*{\until}{U}
+\newcommand*{\disj}{\ ,\ }
+\newcommand*{\A}{\square}  % Always
+\newcommand*{\D}{\diamondsuit} % eventually
+
+\newcommand*{\Pq}{(\top,\bot)}
+\newcommand*{\pQ}{(\bot,\top)}
+\newcommand*{\PQ}{(\top,\top)}
+\newcommand*{\pq}{(\bot,\bot)}
+
+\usemintedstyle{tango}
+
+\newminted[promelacode]{C}{
+  frame=single,
+  framesep=6pt,
+  breaklines=true,
+  fontsize=\scriptsize
+}
+
+\newmintinline[promelainline]{C}{breaklines=true,fontsize=\small}
+
+\newmintedfile{c}{frame=single, framesep=6pt, breaklines=true,fontsize=\scriptsize}
+\newcommand{\ex}[3]{\cfile[firstline=#1,lastline=#2]{ex#3.pml}}
+
+% tikz
+\usepackage{tikz}
+\usetikzlibrary{snakes}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2.5pt}
+
+\begin{document}
+
+\begin{center}
+\Large{
+    Verification of Cyber-Physical System\\
+    Fall 2017
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  Exercice Sheet 6
+
+  \vspace*{1.4cm}
+
+  Author : Sylvain Julmy
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Ultes-Nitsche Ulrich
+    
+    Assistant : Prisca Dotti
+  \end{flushleft}
+
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercice 1}
+
+\subsection*{(1)}
+
+The task $A_x$ is always executable, but if $x$ is even, it may be possible that
+$A_x$ would never change again and only $A_y$ is going to be executed. So $A_x$
+is not strongly fair.
+
+That is an extreme case, if we assume that the extreme case would not appear,
+$A_x$ is strongly fair, because it would always be executable and would always
+be executed in the future.
+
+\subsection*{(2)}
+
+The task $A_y$ would always be executable, but it may be possible that only
+$A_x$ is going to be executed so $A_Y$ would never be executed again.
+
+That is an extreme case, if we assume that the extreme case would not appear,
+$A_y$ would always be executable and would always be executed in the future.
+
+\subsection*{(3)}
+
+The execution is weakly fair with respect to the task $A_x$, because $A_x$ would
+always be executable, and (by assuming the extreme case won't appear) going to
+be executed.
+
+\subsection*{(4)}
+
+The execution is weakly fair with respect to the task $A_y$, because $A_y$ would
+always be executable, and (by assuming the extreme case won't appear) going to
+be executed.
+
+\section*{Exercice 2}
+
+\subsection*{(1)}
+
+There is no garantee that the value of $x$ would eventually exceeds $5$ (the
+system could always execute the task $Process_2$ and never $Process_1$). In
+order to garantee that, we need to add a strong fairness for the task
+$Process_1$. We don't have to add any kind of fairness to the task $Process_2$
+(if we have to, we could add a weak fairness for task $Process_2$).
+
+\subsection*{(2)}
+
+There is no garantee that the value of $x$ would eventually exceeds $5$ (the
+system could always execute the task $Process_1$ and never $Process_2$). In
+order to garantee that, we need to add a strong fairness for the task
+$Process_2$ and a weak fairness to the task $Process_1$. So $Process_1$ would be
+executed at least one time and then $y$ would increase in order to exceeds $5$.
+
+\subsection*{(3)}
+
+There is no garantee that the values $x$ and $y$ would become equal in the
+execution. In order to garantee that, we have to add a strong fairness
+assumption for both task $Process_1$ and $Process_2$. So it would exist an
+infinite amount of execution in which $x==y$ would holds at a certain time.
+
+
+\end{document}
