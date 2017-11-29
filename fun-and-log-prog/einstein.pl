@@ -6,7 +6,8 @@ go :-
     solve(Res),
     writef("%q\n",[Res]),
     hasFish(Res,Nat),
-    writef("The %q person holds the fish\n",[Nat]).
+    writef("The %q person holds the fish\n",[Nat]),
+    !.
 
 % predicate that is building the uninstancied solutions for us
 % we use the following structure for the tupple :
@@ -25,72 +26,72 @@ getPerson(N,[_|XS],P) :-
 question([(_,_,_,_,fish)|_]).
 question([_|XS]) :- question(XS).
 
-hint1([(english,red,_,_,_)|_]).
-hint1([_|XS]) :- hint1(XS).
+info1([(english,red,_,_,_)|_]).
+info1([_|XS]) :- info1(XS).
 
-hint2([(swedish,_,_,_,dog)|_]).
-hint2([_|XS]) :- hint2(XS).
+info2([(swedish,_,_,_,dog)|_]).
+info2([_|XS]) :- info2(XS).
 
-hint3([(danish,_,tea,_,_)|_]).
-hint3([_|XS]) :- hint3(XS).
+info3([(danish,_,tea,_,_)|_]).
+info3([_|XS]) :- info3(XS).
 
-hint4([(_,green,_,_,_),(_,white,_,_,_)|_]).
-hint4([_|XS]) :- hint4(XS).
+info4([(_,green,_,_,_),(_,white,_,_,_)|_]).
+info4([_|XS]) :- info4(XS).
 
-hint5([(_,green,coffee,_,_)|_]).
-hint5([_|XS]) :- hint5(XS).
+info5([(_,green,coffee,_,_)|_]).
+info5([_|XS]) :- info5(XS).
 
-hint6([(_,_,_,pallmall,bird)|_]).
-hint6([_|XS]) :- hint6(XS).
+info6([(_,_,_,pallmall,bird)|_]).
+info6([_|XS]) :- info6(XS).
 
-hint7([(_,yellow,_,dunhill,_)|_]).
-hint7([_|XS]) :- hint7(XS).
+info7([(_,yellow,_,dunhill,_)|_]).
+info7([_|XS]) :- info7(XS).
 
-hint8(Persons) :-
+info8(Persons) :-
     getPerson(3,Persons,(_,_,milk,_,_)).
 
-hint9(Persons) :-
+info9(Persons) :-
     getPerson(1,Persons,(norwegian,_,_,_,_)).
 
-hint10([(_,_,_,blend,_),(_,_,_,_,cat)|_]).
-hint10([(_,_,_,_,cat),(_,_,_,blend,_)|_]).
-hint10([_|XS]) :- hint10(XS).
+info10([(_,_,_,blend,_),(_,_,_,_,cat)|_]).
+info10([(_,_,_,_,cat),(_,_,_,blend,_)|_]).
+info10([_|XS]) :- info10(XS).
 
-hint11([(_,_,_,_,horse),(_,_,_,dunhill,_)|_]).
-hint11([(_,_,_,dunhill,_),(_,_,_,_,horse)|_]).
-hint11([_|XS]) :- hint11(XS).
+info11([(_,_,_,_,horse),(_,_,_,dunhill,_)|_]).
+info11([(_,_,_,dunhill,_),(_,_,_,_,horse)|_]).
+info11([_|XS]) :- info11(XS).
 
-hint12([(_,_,beer,bluemaster,_)|_]).
-hint12([_|XS]) :- hint12(XS).
+info12([(_,_,beer,bluemaster,_)|_]).
+info12([_|XS]) :- info12(XS).
 
-hint13([(german,_,_,prince,_)|_]).
-hint13([_|XS]) :- hint13(XS).
+info13([(german,_,_,prince,_)|_]).
+info13([_|XS]) :- info13(XS).
 
-hint14([(norwegian,_,_,_,_),(_,blue,_,_,_)|_]).
-hint14([(_,blue,_,_,_),(norwegian,_,_,_,_)|_]).
-hint14([_|XS]) :- hint14(XS).
+info14([(norwegian,_,_,_,_),(_,blue,_,_,_)|_]).
+info14([(_,blue,_,_,_),(norwegian,_,_,_,_)|_]).
+info14([_|XS]) :- info14(XS).
 
-hint15([(_,_,_,blend,_),(_,_,water,_,_)|_]).
-hint15([(_,_,water,_,_),(_,_,_,blend,_)|_]).
-hint15([_|XS]) :- hint15(XS).
+info15([(_,_,_,blend,_),(_,_,water,_,_)|_]).
+info15([(_,_,water,_,_),(_,_,_,blend,_)|_]).
+info15([_|XS]) :- info15(XS).
 
 solve(Persons) :-
     persons(5,Persons),
-    hint1(Persons),
-    hint2(Persons),
-    hint3(Persons),
-    hint4(Persons),
-    hint5(Persons),
-    hint6(Persons),
-    hint7(Persons),
-    hint8(Persons),
-    hint9(Persons),
-    hint10(Persons),
-    hint11(Persons),
-    hint12(Persons),
-    hint13(Persons),
-    hint14(Persons),
-    hint15(Persons),
+    info1(Persons),
+    info2(Persons),
+    info3(Persons),
+    info4(Persons),
+    info5(Persons),
+    info6(Persons),
+    info7(Persons),
+    info8(Persons),
+    info9(Persons),
+    info10(Persons),
+    info11(Persons),
+    info12(Persons),
+    info13(Persons),
+    info14(Persons),
+    info15(Persons),
     question(Persons).
 
 hasFish([(Nat,_,_,_,fish)|_],Nat).

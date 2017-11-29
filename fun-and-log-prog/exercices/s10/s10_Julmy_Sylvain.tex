@@ -1,0 +1,74 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath}
+\usepackage{fullpage}
+\usepackage[cache=false]{minted}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\newminted{prolog}{frame=single, framesep=6pt,
+  breaklines=true,fontsize=\scriptsize,linenos}
+\newmintedfile{prolog}{frame=single, framesep=6pt,
+  breaklines=true,fontsize=\scriptsize}
+\newmintinline{prolog}{}
+\newcommand{\ex}[3]{\prologfile[firstline=#1,lastline=#2]{#3.pl}}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    Functional and Logic Programming\
+    Fall 2017
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  S10 : Prolog (DCG)
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Le Peutrec Stephane
+    
+    Assistant : Lauper Jonathan
+  \end{flushleft}
+
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercise 1}
+
+\subsection*{(1)}
+\ex{10}{13}{ex1}
+
+\subsection*{(2)}
+\ex{16}{18}{ex1}
+
+\subsection*{(3)}
+\ex{21}{28}{ex1}
+
+\section*{Exercise 2}
+\ex{9}{15}{ex2}
+
+\newpage
+
+\section*{Exercise 3}
+\ex{9}{51}{ex3}
+
+\newpage
+
+\section*{Exercise 4}
+
+\section*{(a)}
+\ex{10}{14}{ex4}
+
+\section*{(b)}
+\ex{17}{30}{ex4}
+
+\end{document}
+
+%%% Local Variables:
+%%% TeX-command-extra-options: "-shell-escape"
+%%% mode: latex
+%%% End:

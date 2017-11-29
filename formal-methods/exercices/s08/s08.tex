@@ -1,0 +1,139 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath}
+\usepackage{fullpage}
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{color}
+
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\newcommand*{\equal}{=}
+\newcommand*{\Pc}{\mathcal{P}}
+\newcommand*{\NPc}{$\mathcal{NP}$}
+\newcommand*{\NPCc}{$\mathcal{NPC}$}
+\newcommand*{\NPcp}{$\mathcal{NP}$-complete }
+\newcommand*{\NPce}{$\mathcal{NP}$-completeness }
+\newcommand*{\N}{NAE-$4$-SAT }
+
+\begin{document}
+
+\begin{center}
+  \large{
+    Formal Methods\\
+    Fall 2017
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  S08
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Ultes-Nitsche Ulrich
+
+    Assistant : Christophe Stammet
+  \end{flushleft}
+
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  Submitted by Sylvain Julmy
+  
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercise 1}
+
+In order to show that $4$TA-SAT is \NPcp, we first have to show that $4$TA-SAT is in
+$\mathcal{NP}$, then we proof that $4$TA-SAT is \NPcp by reducing it in
+polynomial time to the known \NPcp problem SAT.
+
+\subsection*{$4$TA-SAT is in $\mathcal{NP}$}
+
+We can construct a non-deterministic Turing Machine that solve the $4$TA-SAT
+problem in polynomial time. The TM can check all the truth assignments to the
+propositional formula in parallel and find $4$ evaluation of the formula in
+polynomial time.
+
+\subsection*{$4$TA-SAT is \NPcp}
+
+In order to use an $4$TA-SAT algorithm to solve SAT, we are going to transform a
+formula $phi$ which is in CNF and the input of the SAT algorithm. $4$TA-SAT is
+$true$ if and only if there are $4$ different interpretations which satisfies
+$\phi$.
+
+We use the following transformation, where $phi^\prime$ is the transformed
+formula $phi$ for the $4$TA-SAT algorithm :
+
+\[
+  \phi^\prime = \phi \vee (x \wedge y)
+\]
+
+Were $x$ and $y$ are two new variables that does not occur in $\phi$.
+
+Now we consider the following case :
+\begin{itemize}
+\item $\phi$ is not satisfiable, then the $4$TA-SAT algorithm would find only
+  $1$ case where $\phi^\prime$ is satisfiable, where $x = true$ and $y = true$,
+  then there would be only $1$ satisfiable formula and the $4$TA-SAT would
+  return $false$
+\item only one interpretation satisfies $\phi$, then the $4$TA-SAT would find
+  $4$ different ways of satisfying $\phi$. $I$ is the interpretation that
+  satisfies $\phi$, then $\phi^\prime$ would be satisfied by the four following
+  interpretation :
+  \begin{itemize}
+  \item $I^\prime = I \cup (\{x \mapsto false, y \mapsto false\})$
+  \item $I^\prime = I \cup (\{x \mapsto false, y \mapsto true\})$
+  \item $I^\prime = I \cup (\{x \mapsto true, y \mapsto false\})$
+  \item $I^\prime = I \cup (\{x \mapsto true, y \mapsto true\})$
+  \end{itemize}
+\end{itemize}
+
+The reduction of $\phi$ to $\phi^\prime$ is in polynomial time because we just
+add two variables.
+
+\section*{Exercise 2}
+
+In order to show that \N is \NPcp, we first show that \N is in \NPc, then we
+proof that the $3$-SAT is reducible to \N in a polynomial time. Because $3$-SAT
+is \NPcp, therefore \N would be \NPcp too.
+
+\subsection*{\N is in $\mathcal{NP}$}
+
+\N is in $\mathcal{NP}$ since we can every clause in polynomial time with a 
+non-deterministic Turing Machine, we check if the interpretation is satisfiable
+(polynomial time) and if the interpretation does not contain a clause where all
+of her literals are $true$ (polynomial time).
+
+\subsection*{\N is \NPcp}
+
+In order to reduce $3$-SAT to \N, we transform a $3$-SAT formula $\phi$ into an
+equivalent ones which is accepted by the \N problem.
+
+For each clause $(\alpha_i \vee \alpha_j \vee \alpha_k)$ of $\phi$, we represent it by a new \N
+clause $(\beta_i,\beta_j,\beta_k,\lambda)$ which is the input of the \N algorithm.
+
+Each $\alpha_i$ variable of $\phi$ is represented by a variable $\beta_i$ in the
+transformed formula $\phi^\prime$. $\alpha_i$ would be $true$ if $\beta_i \neq \lambda$ and false
+otherwise. The clause $(\beta_i,\beta_j,\beta_k,\lambda)$ is satisfied only if one of the
+$\beta$ is different from $\lambda$, so if we found a satisfying interpretation of
+$\phi^\prime$, the $\lambda$ variable would make it correct w.r.t the \N constraint.
+
+Then, $\phi$ is satisfiable if and only if $phi^\prime$ is satisfiable, because
+$\lambda$ is shared with all the clauses of \N.
+
+The transformation is polynomial because we just use the same variable of each
+clause and add a new one (always the same).
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% End:

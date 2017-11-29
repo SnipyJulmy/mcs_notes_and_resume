@@ -83,6 +83,28 @@
 
 \section*{Exercice 1}
 
+\textbf{Corrections} : We consider only one particular execution. An execution
+is strongly fair or weakly fair with respect to some task, if in that execution
+the task satisfies :
+\begin{itemize}
+\item $\D \A en \rightarrow \A \D ex$ weakly fair
+\item $\A \D en \rightarrow \A \D ex$ strongly fair
+\end{itemize}
+
+\begin{itemize}
+\item Always enabled $\rightarrow$ task has to be executed $\infty$ often
+\item Enabled finitely many times or never $\rightarrow$ is weakly fair or
+  strongly fair w.r.t. the task
+\item Enabled alternaively $\rightarrow$
+  \begin{itemize}
+  \item weakly fair $true$
+  \item strongly fair $true$ only if the task is executed $\infty$ many times
+  \end{itemize}
+\end{itemize}
+
+Model w.f./s.f. w.r.t. some task $\leftrightarrow$ $\forall$ execution w.f./s.f.
+is $true$.
+
 \subsection*{(1)}
 
 The task $A_x$ is always executable, but if $x$ is even, it may be possible that
@@ -92,6 +114,7 @@ is not strongly fair.
 That is an extreme case, if we assume that the extreme case would not appear,
 $A_x$ is strongly fair, because it would always be executable and would always
 be executed in the future.
+
 
 \subsection*{(2)}
 
