@@ -6,6 +6,12 @@
 \usepackage{sourcecodepro}
 \usepackage{amsmath}
 \usepackage{amsthm}
+\usepackage{fullpage}
+
+\newcommand*{\alc}{$\mathcal{ALC}$ }
+\newcommand*{\sso}{\sqsubseteq}
+\newcommand*{\tb}{\mathcal{T}}
+\newcommand*{\ab}{\mathcal{A}}
 
 \title{Resume : Description Logic}
 
@@ -113,5 +119,57 @@ attends^I &= \{(h,p4),(m,p4)\}
 \end{align*}
 
 Note that isn't a model of the previous example of a $TBox$.
+
+\chapter{A Basic Description Logic}
+
+\section{TBox}
+
+\newtheorem{GCI}{Definition}[section]
+\begin{GCI}
+  For $C$ and $D$ possibly compound \alc concepts, an expression of the form $C
+  \sso D$ is called an \alc \textit{general concept inclusion} and abbreviated
+  GCI. We use $C \equiv D$ for $C \sso D, D \sso C$.
+  \begin{itemize}
+  \item A finite set of GCI is called an \alc TBox.
+  \item An interpretation $I$ satisfies a GCI $C \sso D$ if $C^I \subseteq D^I$.
+  \item An interpretation that satisfies each GCI in a TBox $\mathcal{T}$ is called a model of $\mathcal{T}$.
+  \end{itemize}
+\end{GCI}
+
+\begin{Lemma}
+  If $\tb \subseteq \tb'$ for two TBoxes $\tb$ and $\tb'$, then each model of
+  $\tb'$ is a model of $\tb$.
+\end{Lemma}
+
+\section{ABox}
+
+\newtheorem{ABOX}{Definition}[section]
+\begin{ABOX}
+  Let $\mathbf{I}$ be a set of \textit{individual names} disjoint from
+  $\mathbf{R}$ and $\mathbf{C}$. For $a,b \in \mathbf{I}$ individual names, $C$
+  a possibly compound \alc concept, and $r \in \mathbf{R}$ a role name, an
+  expression of the form :
+  \begin{itemize}
+  \item $a : C$ is called an \alc concept assertion
+  \item $(a,b) :r$ is called an \alc role assertion
+  \end{itemize}
+\end{ABOX}
+
+A finite set if \alc concept and role assertion is called an \alc ABox.
+
+An interpretation function $\cdot^I$ is additionally required to map every
+individual name $a\in \mathbf{I}$ ti and element $a^I \in \Delta^I$. An
+interpretation $I$ satisfies
+\begin{itemize}
+\item a concept assertion $a:C$ if $a^I \in C^I$
+\item a role assertion $(a,b) : r$ if $(a^I,b^I) \in r^I$
+\end{itemize}
+
+\newtheorem{KB}{Definition}[section]
+\begin{KB}
+  An \alc \textit{knowledge base} $\mathcal{K} = (\mathcal{T},\mathcal{A})$
+  consists of an \alc TBox $\tb$ and an \alc ABox $\ab$. An interpretation that
+  is both a model of $\tb$ and $\ab$ is called a model of $\mathcal{K}$.
+\end{KB}
 
 \end{document}

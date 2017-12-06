@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+bool signal;</declaration>
+	<template>
+		<name x="5" y="5">Sender</name>
+		<declaration>const int deltaT = 10000;
+const int deltaTHalf = deltaT/2;
+clock senderClock;
+int bitCount=0;
+bool preamble[64] = {1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,1};
+bool data[64] = {1,1,1,0,0,0,1,0,1,1,1,0,1,0,1,1,0,0,1,0,1,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0,1,1,0,0,0,0,0,0,1,1};
+bool crtBitToSend;
+
+void reset()
+{
+    senderClock := 0;
+}
+
+// return the next bit to send
+bool nextBit()
+{
+    int itr = bitCount % 64;
+    if(bitCount &gt; 127) return 1;
+    if(bitCount++ &lt; 64) {
+        return preamble[itr];
+    } else {
+        return data[itr];
+    }
+}
+
+void tick()
+{
+    signal := !signal;
+}</declaration>
+		<location id="id0" x="-1309" y="221">
+			<label kind="invariant" x="-1283" y="212">senderClock &lt;= deltaT</label>
+		</location>
+		<location id="id1" x="-527" y="221">
+			<label kind="invariant" x="-510" y="212">senderClock &lt;= deltaT</label>
+		</location>
+		<location id="id2" x="-901" y="221">
+			<label kind="invariant" x="-875" y="212">senderClock &lt;= deltaTHalf</label>
+		</location>
+		<location id="id3" x="-901" y="425">
+			<urgent/>
+		</location>
+		<init ref="id3"/>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id2"/>
+			<label kind="guard" x="-1198" y="263">senderClock &gt;= deltaT</label>
+			<label kind="assignment" x="-1181" y="297">tick(),
+crtBitToSend := nextBit(),
+reset()</label>
+			<nail x="-1275" y="289"/>
+			<nail x="-935" y="289"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="guard" x="-654" y="306">senderClock &gt;= deltaT</label>
+			<label kind="assignment" x="-850" y="297">tick(),
+crtBitToSend := nextBit(),
+reset()</label>
+			<nail x="-561" y="289"/>
+			<nail x="-867" y="289"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-1190" y="110">senderClock &gt;= deltaTHalf &amp;&amp;
+signal != crtBitToSend</label>
+			<label kind="assignment" x="-1122" y="161">tick()</label>
+			<nail x="-935" y="153"/>
+			<nail x="-1275" y="153"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-824" y="110">senderClock &gt;= deltaTHalf &amp;&amp;
+signal == crtBitToSend</label>
+			<nail x="-867" y="153"/>
+			<nail x="-714" y="153"/>
+			<nail x="-569" y="153"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id2"/>
+			<label kind="assignment" x="-1071" y="357">crtBitToSend:=nextBit(),
+signal:= !crtBitToSend,
+reset()</label>
+			<nail x="-901" y="323"/>
+		</transition>
+	</template>
+	<template>
+		<name>Receiver</name>
+		<declaration>clock receiverClock;
+
+// array to receive the data and compare at the end
+bool data[64] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+bool preamble[64] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+
+int crtBitToReceiveIndex = 0;
+double deltaT = 100.0;
+
+// learning rate
+double lr = 0.1;
+
+bool lastSignal;
+
+void reset()
+{
+    receiverClock := 0;
+}
+
+int bitCount = 0;
+
+// PRE lastSignal != signal
+void putBit(bool lastSignal,bool signal)
+{
+    bool bit;
+    int itr = bitCount % 64;
+
+    if(lastSignal &amp;&amp; !signal) {
+        bit = 1;
+    } else {
+        bit = 0;
+    }
+
+    if(bitCount &lt; 64)
+    {
+        preamble[itr] = bit;
+    }
+    else
+    {
+        data[itr] = bit;
+    }
+    bitCount++;
+}
+
+// update deltaT during the receive of the preamble
+void updateDeltaT(bool direction)
+{
+    if(direction)
+    { // need to decrease deltaT
+        deltaT := deltaT - deltaT * lr;
+    }
+    else
+    { // otherwise deltaT is to small
+        deltaT := deltaT + deltaT * lr;
+    }
+}</declaration>
+		<location id="id4" x="-1784" y="-17">
+		</location>
+		<location id="id5" x="-1987" y="-17">
+			<urgent/>
+		</location>
+		<init ref="id5"/>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id4"/>
+			<label kind="guard" x="-1853" y="76">lastSignal != signal &amp;&amp;
+deltaT &gt; receiverClock</label>
+			<label kind="assignment" x="-1853" y="119">putBit(lastSignal,signal),
+updateDeltaT(0),
+reset()</label>
+			<nail x="-1870" y="68"/>
+			<nail x="-1700" y="68"/>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id4"/>
+			<label kind="guard" x="-1853" y="-204">lastSignal != signal &amp;&amp;
+deltaT &lt;= receiverClock</label>
+			<label kind="assignment" x="-1853" y="-170">putBit(lastSignal,signal),
+updateDeltaT(1),
+reset()</label>
+			<nail x="-1870" y="-119"/>
+			<nail x="-1700" y="-119"/>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id4"/>
+			<label kind="assignment" x="-1954" y="-8">lastSignal := signal,
+reset()</label>
+		</transition>
+	</template>
+	<system>system Sender,Receiver;
+    </system>
+	<queries>
+	</queries>
+</nta>

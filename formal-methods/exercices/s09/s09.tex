@@ -1,0 +1,203 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath}
+\usepackage{fullpage}
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{color}
+
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\newcommand*{\equal}{=}
+\newcommand*{\Pc}{\mathcal{P}}
+\newcommand*{\NPc}{$\mathcal{NP}$}
+\newcommand*{\NPCc}{$\mathcal{NPC}$}
+\newcommand*{\NPcp}{$\mathcal{NP}$-complete }
+\newcommand*{\NPce}{$\mathcal{NP}$-completeness }
+\newcommand*{\N}{NAE-$4$-SAT }
+
+\begin{document}
+
+\begin{center}
+  \large{
+    Formal Methods\\
+    Fall 2017
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  S09
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Ultes-Nitsche Ulrich
+
+    Assistant : Christophe Stammet
+  \end{flushleft}
+
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  Submitted by Sylvain Julmy
+  
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercise 1}
+
+\subsection*{\texttt{(1)}}
+
+\[
+  \phi = \forall e.(S(e) \to \exists d.(P(d)))
+\]
+
+\begin{itemize}
+\item The scope of $\forall e$ is $F[e] = S(e) \to \exists d.(P(d))$
+\item The scope of $\exists d$ is $F[d] = P(d)$
+\item There is no free variable
+\item The formula $\phi$ is closed, because $e$ is bound in $F[e]$ by the
+  $\forall$ quantifier and $d$ is bound in $F[d]$ by the $\exists$ quantifier
+\end{itemize}
+
+\subsection*{\texttt{(2)}}
+
+\[
+  \phi = \forall e.P(a,e) \to \forall e.P(b,e)
+\]
+
+\begin{itemize}
+\item The scope of $\forall e.P(a,e)$ is $F[e] = P(a,e)$
+\item The scope of $\forall e.P(b,e)$ is $F[e]' = P(b,e)$
+\item $a$ and $b$ are free variables
+\item The formula $\phi$ is not closed because $a$ and $b$ are free variables
+\end{itemize}
+
+\subsection*{\texttt{(3)}}
+
+\[
+  \phi = \exists x.(S(x,b) \wedge \forall y.(S(y,b) \to (x = y)))
+\]
+
+\begin{itemize}
+\item The scope of $\exists x$ is $F[x] = S(x,b) \wedge \forall y.(S(y,b) \to (x = y))$
+\item The scope of $\forall y$ is $F[y] = S(y,b) \to (x = y)$
+\item $x$ is a free variables in $\phi$
+\item The formula $\phi$ is not closed because $x$ is a free variable
+\end{itemize}
+
+\section*{Exercise 2}
+
+\subsection*{\texttt{(1)}}
+
+``For all successfull exam, we are going to make a party one day''.
+
+\subsection*{\texttt{(2)}}
+
+``If anna passes any exam, bill would pass that exam too''.
+
+\subsection*{\texttt{(3)}}
+
+``Bill has a sister and if anyone is the sister of Bill, this is the same
+person''.
+
+\vspace*{0.3cm}
+
+Maybe one can argue that ``Bill has only one sister'', because Bill can't have
+less than $1$ sister, and all the person that are a sister of Bill is the same
+person.
+
+\section*{Exercise 3}
+
+The only part that differ from the three given formula is the type of quantifier
+used in front of their scope. So each formula is solved the same ways and only
+after we indicates which formula is true or not.
+
+\begin{gather*}
+  I \lhd \{x = anna, y = anna \} \overset{?}{\models} \phi \\
+  \longrightarrow \\
+  cat(anna,anna) = cat(anna,anna) \vee cat(anna,anna) = cat(anna,anna) \Leftrightarrow \\
+  annaanna = annaanna \vee annaanna = annaanna \Leftrightarrow \\
+  true \vee true \Leftrightarrow \\
+  true
+\end{gather*}
+
+\begin{gather*}
+  I \lhd \{x = anna, y = bob \} \overset{?}{\models} \phi \\
+  \longrightarrow \\
+  cat(anna,bob) = cat(anna,anna) \vee cat(anna,bob) = cat(bob,bob) \Leftrightarrow \\
+  annabob = annaanna \vee annabob = bobbob \Leftrightarrow \\
+  false \vee false \Leftrightarrow \\
+  false
+\end{gather*}
+
+\begin{gather*}
+  I \lhd \{x = bob, y = anna \} \overset{?}{\models} \phi \\
+  \longrightarrow \\
+  cat(bob,anna) = cat(bob,bob) \vee cat(bob,anna) = cat(anna,anna) \Leftrightarrow \\
+  bobanna = bobbob \vee bobanna = annaanna \Leftrightarrow \\
+  false \vee false \Leftrightarrow \\
+  false
+\end{gather*}
+
+\begin{gather*}
+  I \lhd \{x = bob, y = bob \} \overset{?}{\models} \phi \\
+  \longrightarrow \\
+  cat(bob,bob) = cat(bob,bob) \vee cat(bob,bob) = cat(bob,bob) \Leftrightarrow \\
+  bobbob = bobbob \vee bobbob = bobbob \Leftrightarrow \\
+  true \vee true \Leftrightarrow \\
+  true
+\end{gather*}
+
+In resume, we have the following :
+
+\begin{itemize}
+\item $I \lhd \{x = anna, y = anna \} \models \phi$
+\item $I \lhd \{x = anna, y = bob \} \not\models \phi$
+\item $I \lhd \{x = bob, y = anna \} \not\models \phi$
+\item $I \lhd \{x = bob, y = bob \} \models \phi$
+\end{itemize}
+
+\subsection*{\texttt{(1)}}
+
+\[
+  \phi = \forall x. \forall y. ((cat(x,y) = cat(x,x)) \vee (cat(x,y) = cat(y,y)))
+\]
+
+$\phi$ is not true under the interpretation $I$.
+
+\subsection*{\texttt{(2)}}
+
+\[
+  \phi = \forall x. \exists y. ((cat(x,y) = cat(x,x)) \vee (cat(x,y) = cat(y,y)))
+\]
+
+$\phi$ is not true under the interpretation $I$ because we can't find a $x$
+such that for all $x$, $\phi$ is true.
+
+\subsection*{\texttt{(3)}}
+
+\[
+  \phi = \exists x. \exists y. ((cat(x,y) = cat(x,x)) \vee (cat(x,y) = cat(y,y)))
+\]
+
+$\phi$ is true under the interpretation $I$ for the following assignement :
+
+\begin{itemize}
+\item $I \lhd \{x = anna, y = anna \} \models \phi$
+\item $I \lhd \{x = bob, y = bob \} \models \phi$
+\end{itemize}
+
+
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% End:

@@ -1,0 +1,401 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{fullpage}
+\usepackage{tikz}
+
+\usetikzlibrary{graphs,graphs.standard}
+
+\makeatletter
+\pgfmathdeclarefunction{alpha}{1}{%
+  \pgfmathint@{#1}%
+  \edef\pgfmathresult{\pgffor@alpha{\pgfmathresult}}%
+}
+
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{color}
+\usepackage{nd3}
+
+\newcommand*{\contract}[2]{contraction of $#1$ with $#2$}
+
+\newcommand*{\MP}{Modus Ponens }
+\newcommand*{\MPr}[2]{\MP of \ref{#1} and \ref{#2}}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    Mathematical Methods for Computer Science 1\
+    Fall 2017
+  }
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  Series 10
+  \vspace*{1.4cm}
+
+  Sylvain Julmy
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+\end{center}
+
+\section*{\texttt{1}}
+
+\subsection*{\texttt{(a)}}
+
+\begin{prooftree}
+  \AxiomC{$p,q \vdash p$}
+  \AxiomC{$p,q \vdash q$}
+  \BinaryInfC{$p,q \vdash p \wedge q$}
+  \UnaryInfC{$p \vdash q \to (p \wedge q)$}
+  \UnaryInfC{$\vdash p \to (q \to (p \wedge q))$}
+\end{prooftree}
+
+$\vdash p \to (q \to (p \wedge q))$ is a tautology.
+
+\subsection*{\texttt{(b)}}
+
+\begin{prooftree}
+  \AxiomC{$p \vdash q$}
+  \UnaryInfC{$ p \vdash (p \to q), q$}
+  \UnaryInfC{$ p \vdash (p \to q) \wedge q$}
+  \AxiomC{$p,q \vdash q$}
+  \UnaryInfC{$q \vdash (p \to q) , q$}
+  \UnaryInfC{$q \vdash (p \to q) \vee q$}
+  \BinaryInfC{$(p \vee q) \vdash (p \to q) \vee q$}
+  \UnaryInfC{$\vdash (p \vee q) \to ((p \to q) \vee q)$}
+\end{prooftree}
+
+$\vdash (p \vee q) \to ((p \to q) \vee q)$ is falsifiable under the
+interpretation
+
+\[
+  I = \{
+  q \mapsto false,
+  p \mapsto true
+  \}
+\]
+
+\subsection*{\texttt{(c)}}
+
+\begin{prooftree}
+  \AxiomC{$q,p \vdash q,p$}
+  \UnaryInfC{$ p \vdash p,q,\neg q$}
+  \UnaryInfC{$ p \neg p \vdash q \neg q$}
+  \UnaryInfC{$ p \vdash q,\neg p \to \neg q$}
+  \UnaryInfC{$\vdash p \to q, \neg p \to \neg q$}
+  \UnaryInfC{$ \vdash (p \to q) \vee (\neg p \to \neg q)$}
+\end{prooftree}
+
+$\vdash (p \to q) \to ((q \to \neg r) \to \neg p)$ is a tautology.
+
+\section*{\texttt{2}}
+
+\subsection*{\texttt{(a)}}
+
+\begin{prooftree}
+  \AxiomC{$ s,p \vdash r,p$}
+  \AxiomC{$ s,q \vdash r,p$}
+  \BinaryInfC{$ s,p \vee q \vdash r,p$}
+  \AxiomC{$p \vdash r,p,q$}
+  \AxiomC{$q \vdash r,p,q$}
+  \BinaryInfC{$ p \vee q \vdash r,p,q$}
+  \BinaryInfC{$ q \to s,p \vee q \vdash r,p$}
+  \AxiomC{$r, p \vdash r, q$}
+  \AxiomC{$r, q \vdash r, q$}
+  \BinaryInfC{$ r, p \vee q \vdash r, q$}
+  \AxiomC{$r, s , p \vdash r$}
+  \AxiomC{$r, s , q \vdash r$}
+  \BinaryInfC{$ r, s , p \vee q \vdash r$}
+  \BinaryInfC{$ r, q \to s,p \vee q \vdash r$}
+  \BinaryInfC{$ p \to r, q \to s,p \vee q \vdash r$}
+  \UnaryInfC{$ p \to r, q \to s \vdash (p \vee q) \to r$}
+  \UnaryInfC{$ p \to r \vdash (q \to s) \to ((p \vee q) \to r)$}
+  \UnaryInfC{$\vdash (p \to r) \to ((q \to s) \to ((p \vee q) \to r))$}
+\end{prooftree}
+
+We use the following leaves to construct the CNF $s,q \vdash r,p$ all the other
+leaves are axioms. So the CNF form of $(p \to r) \to ((q \to s) \to ((p \vee q)
+\to r))$ is
+
+\[
+  (r \vee p \vee \neg s \vee \neg q)
+\]
+
+\subsection*{\texttt{(b)}}
+
+\begin{prooftree}
+  \AxiomC{$p, \vdash p$}
+  \UnaryInfC{$p, \vdash p, p$}
+  \AxiomC{$p, \neg r \vdash p$}
+  \BinaryInfC{$p, p \to \neg r \vdash p$}
+  \AxiomC{$p, q, \vdash p$}
+  \AxiomC{$p, q, \vdash r$}
+  \UnaryInfC{$p, q, \neg r \vdash$}
+  \BinaryInfC{$p, q, p \to \neg r \vdash$}
+  \BinaryInfC{$p, p \to q, p \to \neg r \vdash$}
+  \UnaryInfC{$ p \to q, p \to \neg r \vdash \neg p$}
+  \UnaryInfC{$ p \to q \vdash  (p \to \neg r) \to \neg p$}
+  \UnaryInfC{$ \vdash (p \to q) \to ((p \to \neg r) \to \neg p)$}
+\end{prooftree}
+
+We use the following leaves to construct the CNF $p,q \vdash r$ all the other
+leaves are axioms. So the CNF form of $(p \to q) \to ((p \to \neg r) \to \neg
+p)$ is
+
+\[
+  \neg p \vee \neg q \vee r
+\]
+
+\newpage
+
+\section*{\texttt{3}}
+
+\subsection*{\texttt{$ p \leftrightarrow q \equiv (p \to q) \vee (q \to p)$}}
+
+Using the truth table
+
+\begin{tabular}{@{ }c@{ }@{ }c | c@{ }@{}c@{}@{ }c@{ }@{ }c@{ }@{ }c@{ }@{}c@{}@{ }c@{ }@{}c@{}@{ }c@{ }@{ }c@{ }@{ }c@{ }@{}c@{}@{ }c}
+p & q &  & ( & p & $\to$ & q & ) & $\wedge$ & ( & q & $\to$ & p & ) & \\
+\hline 
+T & T &  &  & T & T & T &  & \textcolor{red}{T} &  & T & T & T &  & \\
+T & F &  &  & T & F & F &  & \textcolor{red}{F} &  & F & T & T &  & \\
+F & T &  &  & F & T & T &  & \textcolor{red}{F} &  & T & F & F &  & \\
+F & F &  &  & F & T & F &  & \textcolor{red}{T} &  & F & T & F &  & \\
+\end{tabular}
+
+In order to falsify $p \leftrightarrow q$, we have to satisfy $p$
+and falsify $q$, or satisfy $q$ and falsify $p$ :
+
+\begin{prooftree}
+  \AxiomC{$p, \Gamma \vdash q, \Delta$}
+  \AxiomC{$q, \Gamma \vdash p, \Delta$}
+  \BinaryInfC{$ \Gamma \vdash p \leftrightarrow q, \Delta$}
+\end{prooftree}
+
+In order to satisfy $p \leftrightarrow q$, we have to satisfy $p$
+and satisfy $q$, or falsify $q$ and falsify $p$ :
+
+\begin{prooftree}
+  \AxiomC{$p,q,\Gamma \vdash \Delta$}
+  \AxiomC{$\Gamma \vdash p,q,\Delta$}
+  \BinaryInfC{$ p \leftrightarrow q, \Gamma \vdash \Delta$}
+\end{prooftree}
+
+\subsection*{\texttt{$ p \oplus q \equiv (p \wedge \neg q) \vee (\neg p \wedge
+    q)$}}
+
+Using the truth table
+
+\begin{tabular}{@{ }c@{ }@{ }c | c@{ }@{}c@{}@{ }c@{ }@{ }c@{ }@{ }c@{ }@{ }c@{ }@{}c@{}@{ }c@{ }@{}c@{}@{ }c@{ }@{ }c@{ }@{ }c@{ }@{ }c@{ }@{}c@{}@{ }c}
+p & q &  & ( & p & $\wedge$ & $\neg$ & q & ) & $\vee$ & ( & $\neg$ & p & $\wedge$ & q & ) & \\
+\hline 
+T & T &  &  & T & F & F & T &  & \textcolor{red}{F} &  & F & T & F & T &  & \\
+T & F &  &  & T & T & T & F &  & \textcolor{red}{T} &  & F & T & F & F &  & \\
+F & T &  &  & F & F & F & T &  & \textcolor{red}{T} &  & T & F & T & T &  & \\
+F & F &  &  & F & F & T & F &  & \textcolor{red}{F} &  & T & F & F & F &  & \\
+\end{tabular}
+
+In order to falsify $p \leftrightarrow q$, we have to satisfy $p$
+and satisfy $q$, or falsify $q$ and falsify $p$ :
+
+\begin{prooftree}
+  \AxiomC{$p,q, \Gamma \vdash \Delta$}
+  \AxiomC{$ \Gamma \vdash p,q, \Delta$}
+  \BinaryInfC{$ \Gamma \vdash p \oplus q, \Delta$}
+\end{prooftree}
+
+In order to satisfy $p \leftrightarrow q$, we have to satisfy $p$
+and falsify $q$, or falsify $q$ and satisfy $p$ :
+
+\begin{prooftree}
+  \AxiomC{$p,\Gamma \vdash q,\Delta$}
+  \AxiomC{$q,\Gamma \vdash p\Delta$}
+  \BinaryInfC{$ p \oplus q, \Gamma \vdash \Delta$}
+\end{prooftree}
+
+\section*{\texttt{4}}
+
+\subsection*{\texttt{(a)}}
+In order to minimize the number of vertices in an expanded deduction tree, one
+need to apply the inference rule that are not splitting the deduction tree in
+multiple branches.
+
+For example, the inference rule
+
+\begin{prooftree}
+  \AxiomC{$ A,\Gamma \vdash \Delta$}
+  \AxiomC{$ B,\Gamma \vdash \Delta$}
+  \BinaryInfC{$A \vee B, \Gamma \vdash \Delta$}
+\end{prooftree}
+
+creates two vertices from one. So one need to apply (when he have the choice),
+at first, the inference rule that are not creating such split. The idea is to
+split the tree in multiple branches only if we don't have the choice.
+
+\subsection*{\texttt{(b)}}
+
+For this, we only consider the following set of connectives : $C = \{\wedge, \vee,
+\neg, \to, \leftrightarrow, \oplus\}$
+
+The proof is by induction on the structure of the formula.
+
+In the base case, the formula $\phi$ has only one connective :
+
+\begin{itemize}
+\item $p \wedge q$
+  \begin{itemize}
+  \item To satisfy the formula, we have to satisfy $p$ and satisfy $q$, so only one leaf/branch is created.
+  \item To falsify the formula, we have to falsify $p$ or falsify $q$, so two leaves/branches are created.
+  \end{itemize}
+\item $p \vee q$ 
+  \begin{itemize}
+  \item To satisfy the formula, we have to satisfy $p$ or satisfy $q$, so two leaves/branches are created.
+  \item To falsify the formula, we have to falsify $p$ and falsify $q$, so only one leaf/branch is created.
+  \end{itemize}
+\item $\neg p$ 
+  \begin{itemize}
+  \item To satisfy the formula, we have to falsify $p$, so only one leaf/branch is created.
+  \item To falsify the formula, we have to satisfy $p$, so only one leaf/branch is created.
+  \end{itemize}
+\item $p \to q$ 
+  \begin{itemize}
+  \item To satisfy the formula, we have to falsify $p$ or satisfy $q$, so two leaves/branches are created.
+  \item To falsify the formula, we have to satisfy $p$ and falsify $q$, so only one leaf/branch is created.
+  \end{itemize}
+\item $p \leftrightarrow q$ 
+  \begin{itemize}
+  \item To satisfy the formula, we have to satisfy or falsify $p$ and $q$ at the same time, so two leaves/branches are created.
+  \item To falsify the formula, we have to either falsify $p$ and satisfy $q$ or satisfy $p$ and falsify $q$, so two leaves/branches are created.
+  \end{itemize}
+\item $p \oplus q$ 
+  \begin{itemize}
+  \item To satisfy the formula, we have to either falsify $p$ and satisfy $q$ or satisfy $p$ and falsify $q$, so two leaves/branches are created.
+  \item To falsify the formula, we have to satisfy or falsify $p$ and $q$ at the same time, so two leaves/branches are created.
+  \end{itemize}
+\end{itemize}
+
+For the induction step, at any point in the construction of the expanded
+deduction tree, we have have one connective from $C$. In the worst case, at each
+step in the tree we encounter either $\leftrightarrow$ or $\oplus$. For both of
+them, the tree is splited into two branches both the left handside and the right
+handside of the connective are keept in both branch. So, in the worst case, the
+number of vertices at each height of the tree is doubled, so we would have $2^m$
+leaves at the end, where $m$ is the number of connective in $\phi$.
+
+\subsection*{\texttt{(c)}}
+
+In order to have exactly $2^m$ leaves in a formula $\phi$, we use the connective
+$\leftrightarrow$, and we construct the formula using the following function $f :
+\mathbb{N} \to \Phi$, where $\Phi$ is a formula in propositional logic :
+
+\[
+  f(n) = \left\{\begin{array}{lr}
+    x_i} \leftrightarrow x_j},& \text{for } n = 0 \\
+    f(n-1) \leftrightarrow f(n-1),& \text{for } n > 0
+     \end{array}\right\}
+ \]
+
+ where all the variables $x_i$ and $x_j$ are different in the formula $\Phi$.
+ So, for example, the formula $\Phi$ constructed from $f(3)$ is the following :
+
+ \begin{align*}
+   f(2) &= f(1) \leftrightarrow f(1) \\
+        &= (f(0) \leftrightarrow f(0)) \leftrightarrow (f(0) \leftrightarrow f(0)) \\
+        &= ((x_0 \leftrightarrow x_1) \leftrightarrow (x_2 \leftrightarrow x_3)) \leftrightarrow ((x_4 \leftrightarrow x_5) \leftrightarrow (x_6 \leftrightarrow x_7)) \\
+ \end{align*}
+
+And the deduction tree for such of a formula has $2^m$ leaves, because the
+connective $\leftrightarrow$ always split the deduction into two parts and
+always keep both side of the formula, so at each step in the deduction tree, we
+double the number of path from the root to a leaf.
+
+\subsection*{\texttt{(d)}}
+
+The formula $p \to q$ contains $1$ connective $\to$ and has $1$ leaves :
+
+\begin{prooftree}
+  \AxiomC{$p \vdash q$}
+  \UnaryInfC{$\vdash p \to q$}
+\end{prooftree}
+
+More generally, a formula such $\vdash (A \to (B \to (C \to \cdots))) \to \lambda$ would
+produce a tree with $m$ leaves, where $m$ is the number of connective $\to$ :
+
+\begin{prooftree}
+  \AxiomC{$\vdash A$}
+  \AxiomC{$\vdash B$}
+  \AxiomC{$\vdash C$}
+  \AxiomC{$\vdash \cdots$}
+  \BinaryInfC{$C \to \cdots \vdash$}
+  \BinaryInfC{$B \to (C \to \cdots) \vdash $}
+  \BinaryInfC{$A \to (B \to (C \to \cdots)) \vdash \lambda$}
+  \UnaryInfC{$\vdash (A \to (B \to (C \to \cdots))) \to \lambda $}
+\end{prooftree}
+
+for example, with $5$ connective $\to$ :
+
+\begin{prooftree}
+  \AxiomC{$\vdash A$}
+  \AxiomC{$\vdash B$}
+  \AxiomC{$\vdash C$}
+  \AxiomC{$\vdash D, \lambda$}
+  \AxiomC{$E \vdash \lambda$}
+  \BinaryInfC{$\vdash (D \to E),  \lambda$}
+  \BinaryInfC{$C \to (D \to E) \vdash \lambda$}
+  \BinaryInfC{$B \to (C \to (D \to E)) \vdash \lambda$}
+  \BinaryInfC{$A \to (B \to (C \to (D \to E))) \vdash \lambda$}
+  \UnaryInfC{$\vdash (A \to (B \to (C \to (D \to E)))) \to \lambda$}
+\end{prooftree}
+
+\subsection*{\texttt{(e)}}
+
+For a given formula, the number of leaves in the deduction tree is the same.
+
+At any step of the construction of the deduction tree, when we have a choice, no
+matter which formula we infer, we have, at a certain point, to infer the one we
+didn't choose. So the variable would appear during the process. The point is
+that separate sub-formula can't interact with each other. For example, we could
+have the following step in our deduction tree :
+
+\[
+  \Gamma \vdash A \to B, C \to D, \Delta
+\]
+
+no matter if we infer $A \to B$ or $C \to D$, we have to infer each of them at
+some point, and the formula $A \to B$ can't interact with the formula $C \to D$
+and then modify the construction of the deduction tree.
+
+So an expanded deduction tree is not unique, but the leaves would always be the
+same no matter the construction process we use. So the number of leaves remains
+the same.
+
+\section*{\texttt{5}}
+
+\subsection*{\texttt{(a)}}
+
+If every satisfiable set of formula $\Gamma$ is consistent, then our proof system is
+sound.
+
+First, all of those formulas owns a common model, so, under this model, any
+formula is a tautology. We assume that this model holds at any point in order to
+prove the soundness of our proof systems.
+
+Let $A_0,A_1,\dots,A_n$ be a formal proof in our system. We need to show that
+$A_n$ is a tautology. $A_k$ is a tautology for all $k$, if $C_k$ is an axiom,
+then we are done. Otherwise, $C_k = B$, $C_i = A$ and $C_j = A \to B$ where $i,j
+< k$. By induction assumption, they are tautologies, then from $A$ and $A \to
+B$, by Modus Ponens, we deduce $B$.
+
+Then we assume $B$ is not a tautology, we found an assignement that falsify $B$
+so this assignement satisfy $A$ and falsify $A \to B$, this is a contradiction
+that $A \to B$  being a tautology.
+
+\end{document}

@@ -81,109 +81,160 @@
   \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
 \end{center}
 
-\section*{Exercice 1}
+\section*{Sender}
 
-The two timed automaton from figures \ref{fig:processA} and \ref{fig:processB}
-are an implementation with \texttt{UPPAAL} of the \texttt{Promela} model given
-in exercice sheet :
+The idea to implement the sender, is to create a generic sender no matter how
+many bit we send. We just indicates the bit to send and the automaton will
+switch the signal value w.r.t. the current bit to send.
 
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=0.6\textwidth]{figures/ex1_a}
-  \caption{Process A}
-  \label{fig:processA}
-\end{figure}
+The figures \ref{fig:sender} illustrate the times automaton design for the
+sender. Basically, the automaton wait in the central state for
+$\frac{\Delta^T}{2}$ and will move to the next state depending on the current
+signal value and the next bit to send.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.6\textwidth]{figures/ex1_b}
-  \caption{Process B}
-  \label{fig:processB}
+  \includegraphics[width=0.9\textwidth]{figures/sender}
+  \caption{\label{fig:sender} Sender automaton design}
 \end{figure}
 
-Both process use the same concept and only the variable used are different. At
-first, we start in an state that is unreachable from the other states of the
-automaton, this state is used in order to initiliase the automaton variables.
+If the signal value is the same as the next bit to send, we have to tick
+before moving to either the left or right state.
 
-The second state reached is representing the wait of a process, and only when
-the corresponding property for each process holds, the transition can be taken.
+Then both state do the same thing by ticking the signal, reseting the clock and
+computing the next bit to send.
 
-The state named $CS$ is representing the critical section for each process, and
-none of those can access the critical section at the same time.
+The following listing is the implementation of the various function use for the
+sender automaton.
 
-The incoming state from $CS$ is representing the transition from \verb|x=false|
-and \verb|x=true| in process $A$, we have to use such an additional state
-because we have to represent the possibility that $B$ is making progress between
-the two assignment \verb|x=false| and \verb|x=true| (the same holds for process
-$B$ w.r.t. process $A$).
+\begin{promelacode}
+const int deltaT = 10000;
+const int deltaTHalf = deltaT/2;
+clock senderClock;
+int bitCount=0;
 
-We also use the following declaration (listing \ref{lst:declaration}) and
-composition (listing \ref{lst:composition}) for the system :
+bool preamble[64] = {
+    1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,
+    1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,
+    1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,
+    1,0,1,0,1,0,1,0,1,1};
 
-\begin{listing}[h]
+bool data[64] = {
+    1,1,1,0,0,0,1,0,1,1,1,0,1,0,1,1,0,0,
+    1,0,1,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,
+    1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0,
+    1,1,0,0,0,0,0,0,1,1};
+
+bool crtBitToSend;
+
+void reset()
+{
+    senderClock := 0;
+}
+
+// return the next bit to send
+bool nextBit()
+{
+    int itr = bitCount % 64;
+    if(bitCount > 127) return 1;
+    if(bitCount++ < 64) {
+        return preamble[itr];
+    } else {
+        return data[itr];
+    }
+}
+
+void tick()
+{
+    signal := !signal;
+}
+\end{promelacode}
+
+\newpage
+
+\section*{Receiver}
+
+The receiver is not finish yet, but the idea is the following :
+
+\begin{itemize}
+\item Initialize $\Delta^t$ to a random value,not equals to $0$
+\item During the preamble period, we adjust $\Delta^T$ with a specific learning
+  rate (like $0.1$)
+\item Detect the double $1$ bit which indicates the end of the preamble
+\item Receive the data
+\end{itemize}
+
+\begin{figure}[ht]
   \centering
+  \includegraphics[width=0.7\textwidth]{figures/receiver}
+  \caption{\label{fig:receiver} Receiver automaton design}
+\end{figure}
+
+The following listing is the implementation of the various function and
+variables use by the sender.
+
+\newpage
+
 \begin{promelacode}
-bool x,y,t;
+clock receiverClock;
+
+// array to receive the data and compare at the end
+bool data[64] = {
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0};
+
+bool preamble[64] = {
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0};
+
+int crtBitToReceiveIndex = 0;
+double deltaT = 100.0;
+
+// learning rate
+double lr = 0.1;
+
+bool lastSignal;
+
+void reset()
+{
+    receiverClock := 0;
+}
+
+int bitCount = 0;
+
+// PRE lastSignal != signal
+void putBit(bool lastSignal,bool signal) {
+    bool bit;
+    int itr = bitCount % 64;
+
+    if(lastSignal && !signal) {
+        bit = 1;
+    } else {
+        bit = 0;
+    }
+
+    if(bitCount < 64) {
+        preamble[itr] = bit;
+    }
+    else {
+        data[itr] = bit;
+    }
+    bitCount++;
+}
+
+// update deltaT during the receive of the preamble
+void updateDeltaT(bool direction) {
+    if(direction) { // need to decrease deltaT
+        deltaT := deltaT - deltaT * lr;
+    }
+    else { // otherwise deltaT is to small
+        deltaT := deltaT + deltaT * lr;
+    }
+}
 \end{promelacode}
-  \caption{Declarations}
-  \label{lst:declaration}
-\end{listing}
-
-\begin{listing}[H]
-\centering
-\begin{promelacode}
-// Place template instantiations here.
-A = ProcessA();
-B = ProcessB();
-// List one or more processes to be composed into a system.
-system A,B;
-\end{promelacode}
-\caption{Composition}
-\label{lst:composition}
-\end{listing}
-
-In order to verify our system, we could use the verifier with the formula
-
-\begin{verbatim}
-A[] not(A.CS and B.CS)
-\end{verbatim}
-
-which verify that for all possible path (\verb|A|), this is always the case
-(\verb|[]|) that \verb|A| and \verb|B| are not in the critical section at the
-same time (\verb|p.CS| where \verb|p| is the corresponding process).
-
-\section*{Exercice 2}
-
-$x$ is a clock of the system, at each step, the clock would either be $0$ or
-greater than $2$, the transition from $Idle$ to $Taken$ of process $B$ is taken
-only when receiving something from chanel $reset$, then the only possible
-transition after receiving something is the one from $Taken$ to $Idle$, where
-the clock is reset.
-
-The only constraint we have is that $x$ have to be greater or equals to $2$ in
-order to send/receive from the $reset$ chanel.
-
-Then, we want to modify the model in order to have the clock reset only when the
-clock value is either $2$ or $3$.
-
-\subsection*{Model proposition 1}
-
-With the first proposition, we add the invariant $x \leq 3$ to the state
-$loop$, so the system have to leave the state when $x \leq 3$ would become
-$false$.
-
-This proposition meet the requirement, because when $x$ would become higher than
-$3$, the system is forced to leave the $Idle$ state and no deadlock is possible.
-
-\subsection*{Model proposition 2}
-
-With the second proposition, we modified the guard of the $reset$ send from $x
-\geq 2$ to $x \geq 2\ \ \&\&\ \ x \leq 3$. It means that the clock can be reset
-only if $x$ is between $2$ and $3$.
-
-This proposition does not meet the requirement, because when $x$ would become
-higher than $3$, the system is not forced to leave the $Idle$ state. If the
-state is not leave, the system will entire in a deadlock because there is no
-available transition.
 
 \end{document}
