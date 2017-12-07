@@ -1,0 +1,83 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{fullpage}
+\usepackage{tikz}
+
+\usetikzlibrary{graphs,graphs.standard}
+
+\makeatletter
+\pgfmathdeclarefunction{alpha}{1}{%
+  \pgfmathint@{#1}%
+  \edef\pgfmathresult{\pgffor@alpha{\pgfmathresult}}%
+}
+
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{color}
+\usepackage{nd3}
+
+\newcommand*{\contract}[2]{contraction of $#1$ with $#2$}
+
+\newcommand*{\MP}{Modus Ponens }
+\newcommand*{\MPr}[2]{\MP of \ref{#1} and \ref{#2}}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    Mathematical Methods for Computer Science 1\
+    Fall 2017
+  }
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  Series 11
+  \vspace*{1.4cm}
+
+  Sylvain Julmy
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+\end{center}
+
+\section*{\texttt{1}}
+
+\subsection*{\texttt{(a)}}
+
+\subsection*{\texttt{(b)}}
+
+\subsection*{\texttt{(c)}}
+
+\subsection*{\texttt{(d)}}
+
+\section*{\texttt{2}}
+
+\subsection*{\texttt{(a)}}
+
+\subsection*{\texttt{(b)}}
+
+\subsection*{\texttt{(c)}}
+
+\section*{\texttt{3}}
+
+\subsection*{\texttt{(a)}}
+
+\subsection*{\texttt{(b)}}
+
+\subsection*{\texttt{(c)}}
+
+\section*{\texttt{4}}
+
+\subsection*{\texttt{(a)}}
+
+\subsection*{\texttt{(b)}}
+
+\section*{\texttt{5}}
+
+\end{document}
