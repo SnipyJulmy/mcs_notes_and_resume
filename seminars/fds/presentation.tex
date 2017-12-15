@@ -1,0 +1,154 @@
+\documentclass[11pt,handout]{beamer}
+
+\usepackage{tcolorbox}
+\usepackage{minted}
+\usepackage{pdfpages}
+\usepackage{sourcecodepro}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{fullpage}
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{color}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+
+\usetikzlibrary{calc}
+
+\graphicspath{{img/}}
+
+\usetheme{CambridgeUS}
+\setbeamertemplate{\insertframenumber/\inserttotalframenumber}
+
+\title[Computer Chess]{Bisimulation Minimization and Symbolic Model Checking}
+\author{Sylvain Julmy}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}[fragile]
+  \frametitle{Bisimulation minimization}
+  \begin{figure}[h]
+  \centering
+  \fbox{\input{tikz/fds_seminar_1.pgf}}
+  \caption{Initial state}
+  \label{fig:bisimulation_minimization_1}
+\end{figure}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Bisimulation minimization}
+  \begin{figure}[h]
+  \centering
+  \fbox{\input{tikz/fds_seminar_2.pgf}}
+  \caption{Initial partition block}
+  \label{fig:bisimulation_minimization_2}
+\end{figure}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Bisimulation minimization}
+  \begin{figure}[h]
+  \centering
+  \fbox{\input{tikz/fds_seminar_3.pgf}}
+  \caption{Computation of equivalence classes}
+  \label{fig:bisimulation_minimization_3}
+\end{figure}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Bisimulation minimization}
+  \begin{figure}[h]
+  \centering
+  \fbox{\input{tikz/fds_seminar_4.pgf}}
+  \caption{Final system to model check}
+  \label{fig:bisimulation_minimization_4}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{BFH}
+  BFH, like LY, selects reachable blocks to stabilize but differ in how to
+  stabilize a block.
+
+  \pause
+  \vspace*{0.5cm}
+  
+  BFH stabilize a block w.r.t. all the other blocks (either reachable or
+  unreachable).
+  
+  \pause
+  \vspace*{0.5cm}
+  
+  The algorithm become simplier but unnecessary work is done.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{BFH - Algorithm}
+  \begin{algorithmic}[1]
+    \State $S := \emptyset$ List of stable block
+    \State $R := \{[init]_p\}$ List of reachable block
+    \While{$R \neq S$}
+    \State Select a reachable, but unstable block $X$
+    \State Stabilize $X$ w.r.t. every block in the partition
+    \If{No new blocks are created}
+    \State Add $X$ to $S$
+    \State Block reachable from $X$ are added to $R$
+    \Else
+    \State Add new the new blocks to the partition
+    \State Update the initial block
+    \State Remove from $S$ the blocks that becomes unstable
+    \EndIf
+    \EndWhile
+  \end{algorithmic}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{BFH - New Algorithm}
+  \begin{algorithmic}[1]
+    \State $I := [init]_p$
+    \State Mark the bad block
+    \While{$I$ is not marked}
+    \State Stabilize $I$
+    \If{No new blocks are created}
+    \If{$post_p(I) \setminus \{I\} = \emptyset$}
+    \State Signal safety violation
+    \Else
+    \State Break
+    \EndIf
+    \Else
+    
+    \EndIf
+    \EndWhile
+    \If{$I$ is marked}
+    \State Signal safety violation
+    \EndIf
+  \end{algorithmic}
+\end{frame}
+
+\begin{frame}
+  \frametitle{BFH - Termination}
+  As in LY, BFH could terminate when a second block becomes reachable.
+  
+  \pause
+  \vspace*{0.5cm}
+
+  Correctly determine violations of invariants but not as soon as they occur.
+\end{frame}
+
+\begin{frame}
+  \frametitle{BFH - Termination}
+
+  The algorthim may traverse a path from the bad block to the initial state
+  before the initial block becomes stable.
+
+  \pause
+  \vspace*{0.5cm}
+
+  Thus, the algorithm take more iteration to terminate.
+\end{frame}
+
+\end{document}

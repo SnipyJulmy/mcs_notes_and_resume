@@ -7,6 +7,9 @@
 \usepackage{prooftrees}
 \usepackage{color}
 
+%%% Tikz
+\usetikzlibrary{calc}
+
 \setlength{\parindent}{0pt}
 
 \newcommand*{\equal}{=}
@@ -23,5 +26,50 @@
 states.
 
 \term{partition} : a set of disjoint block that cover the state-space.
+
+\section{Overview}
+
+The bisimulation minimization algorithm has $4$ steps :
+\begin{itemize}
+\item Start with a sets of bad and good states.
+\item Break those state into initial partition.
+\item Compute the equivalence classes inside each partition.
+\item Use equivalence classes as new state to check.
+\end{itemize}
+
+\begin{figure}[h]
+  \centering
+  \fbox{\input{tikz/fds_seminar_1.pgf}}
+  \caption{Initial state}
+  \label{fig:bisimulation_minimization_1}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \fbox{\input{tikz/fds_seminar_2.pgf}}
+  \caption{Initial block partition}
+  \label{fig:bisimulation_minimization_2}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \fbox{\input{tikz/fds_seminar_3.pgf}}
+  \caption{Computation of equivalence classes}
+  \label{fig:bisimulation_minimization_3}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \fbox{\input{tikz/fds_seminar_4.pgf}}
+  \caption{Final system to model-check}
+  \label{fig:bisimulation_minimization_4}
+\end{figure}
+
+\section{BFH Algorithm}
+
+Like LY, BFH selects reachable blocks to stabilize, but do not stabilize a block
+the same way as LY.
+
+\section{PT Algorithm}
 
 \end{document}
