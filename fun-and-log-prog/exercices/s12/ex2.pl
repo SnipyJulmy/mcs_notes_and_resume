@@ -56,7 +56,7 @@ hint5(P) :- color(I,green,P), nationality(I,N,P), drink(N,coffee,P).
 
 hint6(P) :- color(I,yellow,P), nationality(I,N,P), smoke(N,kool,P).
 
-hint7(P) :- color(Iw,white,P), color(Ig,green,P), (Iw is Ig + 1).
+hint7(P) :- color(Iw,white,P), color(Ig,green,P), (Iw is Ig - 1 ; Iw is Ig + 1).
 
 hint8(P) :- hasAnimal(spain,dog,P).
 
@@ -106,7 +106,4 @@ solve :-
     question2(P,Nzebra),
     writef("%q drink water\n",[Nwater]),
     writef("%q has a zebra\n",[Nzebra]),
-    writef("+--------------------+\n",[]),
-    writef("%q\n%q\n%q\n%q\n%q\n",P),
-    writef("+--------------------+\n",[]),
     !.

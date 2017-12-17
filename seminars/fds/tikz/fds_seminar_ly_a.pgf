@@ -1,0 +1,12 @@
+\begin{tikzpicture}[->,shorten >=1pt,auto,node distance=2cm,
+                thick,main node/.style={circle,draw,font=\bfseries}]
+	\node[main node] (1) {$B_{0}$};
+	\node[main node] (2) [above right of = 1] {$B_1$};
+	\node[main node] (3) [below right of = 1] {$B_2$};
+	\node[main node] (4) [below right of = 2] {$B_3$};
+
+	\path
+	(1) edge [bend right] node {} (2)
+	(1) edge [bend left] node {} (3)
+;
+\end{tikzpicture}

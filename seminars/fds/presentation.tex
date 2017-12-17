@@ -29,126 +29,213 @@
 
 \maketitle
 
-\begin{frame}[fragile]
-  \frametitle{Bisimulation minimization}
-  \begin{figure}[h]
-  \centering
-  \fbox{\input{tikz/fds_seminar_1.pgf}}
-  \caption{Initial state}
-  \label{fig:bisimulation_minimization_1}
-\end{figure}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Bisimulation minimization}
-  \begin{figure}[h]
-  \centering
-  \fbox{\input{tikz/fds_seminar_2.pgf}}
-  \caption{Initial partition block}
-  \label{fig:bisimulation_minimization_2}
-\end{figure}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Bisimulation minimization}
-  \begin{figure}[h]
-  \centering
-  \fbox{\input{tikz/fds_seminar_3.pgf}}
-  \caption{Computation of equivalence classes}
-  \label{fig:bisimulation_minimization_3}
-\end{figure}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Bisimulation minimization}
-  \begin{figure}[h]
-  \centering
-  \fbox{\input{tikz/fds_seminar_4.pgf}}
-  \caption{Final system to model check}
-  \label{fig:bisimulation_minimization_4}
-\end{figure}
+\begin{frame}
+  \frametitle{LY}
+  The Lee-Yannakakis algorithm
 \end{frame}
 
 \begin{frame}
-  \frametitle{BFH}
-  BFH, like LY, selects reachable blocks to stabilize but differ in how to
-  stabilize a block.
+  \frametitle{LY - idea}
+  \begin{itemize}
+  \item Stabilize only reachable blocks.
+  \item Reachable block use a representative that has to bee reachable.
+  \item The first state is the representative for the initial block.
+  \item To find new reachable state, we look for transition from representative
+    of reachable state to state from unreachable block.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{LY - idea}
+  Two loops :
+  \begin{itemize}
+  \item Search new reachable blocks
+  \item Stabilize reachable but unstable blocks
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{LY - termination}
+  With the exception of the initial block, all new blocks created by the
+  algorithm have paths to the bad block.
+\end{frame}
+
+\begin{frame}
+  \frametitle{LY - termination}
+  Therefore, when a second block becomes reachable, the algorithm should raise a
+  violation and terminate.
+\end{frame}
+
+\begin{frame}
+  \frametitle{LY - new algorithm}
+  Basic idea\footnote{Very similar to BR} :
+  \begin{itemize}
+  \item Search new reachable blocks.
+  \item Stabilize reachable but unstable blocks.
+  \item When a second block becomes reachable $\to$ raise a violation.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{LY - search}
+  To search for new reachable block, the algorithm is searching from all the
+  successor of the initial state if one of those is in a different block.
 
   \pause
-  \vspace*{0.5cm}
-  
-  BFH stabilize a block w.r.t. all the other blocks (either reachable or
-  unreachable).
-  
-  \pause
-  \vspace*{0.5cm}
-  
-  The algorithm become simplier but unnecessary work is done.
+  \vspace*{1cm}
+
+  The algorithm also determine if the initial block has to be stabilize or not.
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{BFH - Algorithm}
+  \frametitle{LY - search}
+  \begin{itemize}
+  \item Let $D$ be the set of all possible reachable state from the initial
+    block $B$, $D := post(B)$.
+  \item For each $C$ which contains a state from $post(init)$
+    \begin{itemize}
+    \item $B \neq C \to \text{ raise violation}$
+    \item $B \cap pre(C) \neq B \to B \text{ is not stable}$
+    \item $D := D - C$
+    \end{itemize}
+    \item $D \neq \emptyset \to B \text{ is not stable}$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{LY - stabilization}
   \begin{algorithmic}[1]
-    \State $S := \emptyset$ List of stable block
-    \State $R := \{[init]_p\}$ List of reachable block
-    \While{$R \neq S$}
-    \State Select a reachable, but unstable block $X$
-    \State Stabilize $X$ w.r.t. every block in the partition
-    \If{No new blocks are created}
-    \State Add $X$ to $S$
-    \State Block reachable from $X$ are added to $R$
-    \Else
-    \State Add new the new blocks to the partition
-    \State Update the initial block
-    \State Remove from $S$ the blocks that becomes unstable
-    \EndIf
+    \While{$B$ is not stable}
+    \State{Mark $B$ as stable}
+    \State{Create a new block with the states that reach outside of the current
+      initial block}
+    \State{The remaining state are the new initial block}
     \EndWhile
   \end{algorithmic}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{BFH - New Algorithm}
-  \begin{algorithmic}[1]
-    \State $I := [init]_p$
-    \State Mark the bad block
-    \While{$I$ is not marked}
-    \State Stabilize $I$
-    \If{No new blocks are created}
-    \If{$post_p(I) \setminus \{I\} = \emptyset$}
-    \State Signal safety violation
-    \Else
-    \State Break
-    \EndIf
-    \Else
+% \begin{frame}[fragile]
+%   \frametitle{Bisimulation minimization}
+%   \begin{figure}[h]
+%   \centering
+%   \fbox{\input{tikz/fds_seminar_1.pgf}}
+%   \caption{Initial state}
+%   \label{fig:bisimulation_minimization_1}
+% \end{figure}
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Bisimulation minimization}
+%   \begin{figure}[h]
+%   \centering
+%   \fbox{\input{tikz/fds_seminar_2.pgf}}
+%   \caption{Initial partition block}
+%   \label{fig:bisimulation_minimization_2}
+% \end{figure}
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Bisimulation minimization}
+%   \begin{figure}[h]
+%   \centering
+%   \fbox{\input{tikz/fds_seminar_3.pgf}}
+%   \caption{Computation of equivalence classes}
+%   \label{fig:bisimulation_minimization_3}
+% \end{figure}
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{Bisimulation minimization}
+%   \begin{figure}[h]
+%   \centering
+%   \fbox{\input{tikz/fds_seminar_4.pgf}}
+%   \caption{Final system to model check}
+%   \label{fig:bisimulation_minimization_4}
+% \end{figure}
+% \end{frame}
+
+
+
+% \begin{frame}
+%   \frametitle{BFH}
+%   BFH, like LY, selects reachable blocks to stabilize but differ in how to
+%   stabilize a block.
+
+%   \pause
+%   \vspace*{0.5cm}
+  
+%   BFH stabilize a block w.r.t. all the other blocks (either reachable or
+%   unreachable).
+  
+%   \pause
+%   \vspace*{0.5cm}
+  
+%   The algorithm become simplier but unnecessary work is done.
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{BFH - Algorithm}
+%   \begin{algorithmic}[1]
+%     \State $S := \emptyset$ List of stable block
+%     \State $R := \{[init]_p\}$ List of reachable block
+%     \While{$R \neq S$}
+%     \State Select a reachable, but unstable block $X$
+%     \State Stabilize $X$ w.r.t. every block in the partition
+%     \If{No new blocks are created}
+%     \State Add $X$ to $S$
+%     \State Block reachable from $X$ are added to $R$
+%     \Else
+%     \State Add new the new blocks to the partition
+%     \State Update the initial block
+%     \State Remove from $S$ the blocks that becomes unstable
+%     \EndIf
+%     \EndWhile
+%   \end{algorithmic}
+% \end{frame}
+
+% \begin{frame}[fragile]
+%   \frametitle{BFH - New Algorithm}
+%   \begin{algorithmic}[1]
+%     \State $I := [init]_p$
+%     \State Mark the bad block
+%     \While{$I$ is not marked}
+%     \State Stabilize $I$
+%     \If{No new blocks are created}
+%     \If{$post_p(I) \setminus \{I\} = \emptyset$}
+%     \State Signal safety violation
+%     \Else
+%     \State Break
+%     \EndIf
+%     \Else
     
-    \EndIf
-    \EndWhile
-    \If{$I$ is marked}
-    \State Signal safety violation
-    \EndIf
-  \end{algorithmic}
-\end{frame}
+%     \EndIf
+%     \EndWhile
+%     \If{$I$ is marked}
+%     \State Signal safety violation
+%     \EndIf
+%   \end{algorithmic}
+% \end{frame}
 
-\begin{frame}
-  \frametitle{BFH - Termination}
-  As in LY, BFH could terminate when a second block becomes reachable.
+% \begin{frame}
+%   \frametitle{BFH - Termination}
+%   As in LY, BFH could terminate when a second block becomes reachable.
   
-  \pause
-  \vspace*{0.5cm}
+%   \pause
+%   \vspace*{0.5cm}
 
-  Correctly determine violations of invariants but not as soon as they occur.
-\end{frame}
+%   Correctly determine violations of invariants but not as soon as they occur.
+% \end{frame}
 
-\begin{frame}
-  \frametitle{BFH - Termination}
+% \begin{frame}
+%   \frametitle{BFH - Termination}
 
-  The algorthim may traverse a path from the bad block to the initial state
-  before the initial block becomes stable.
+%   The algorthim may traverse a path from the bad block to the initial state
+%   before the initial block becomes stable.
 
-  \pause
-  \vspace*{0.5cm}
+%   \pause
+%   \vspace*{0.5cm}
 
-  Thus, the algorithm take more iteration to terminate.
-\end{frame}
+%   Thus, the algorithm take more iteration to terminate.
+% \end{frame}
 
 \end{document}
