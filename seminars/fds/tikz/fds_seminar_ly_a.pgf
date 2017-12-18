@@ -1,12 +1,35 @@
-\begin{tikzpicture}[->,shorten >=1pt,auto,node distance=2cm,
+\newcommand*{\con}[2]{(#1) edge [bend left] node {} (#2)}
+\begin{tikzpicture}[->,shorten >=1pt,auto,node distance=1.3cm,
                 thick,main node/.style={circle,draw,font=\bfseries}]
-	\node[main node] (1) {$B_{0}$};
-	\node[main node] (2) [above right of = 1] {$B_1$};
-	\node[main node] (3) [below right of = 1] {$B_2$};
-	\node[main node] (4) [below right of = 2] {$B_3$};
+	\node[main node] (0) {$G_{0}$};
+	\node[main node] (1) [below of = 0] {$G_1$};
+	\node[main node] (2) [below of = 1] {$G_2$};
+	\node[main node] (3) [below of = 2] {$G_3$};
+	\node[main node] (4) [right of = 1] {$G_4$};
+	\node[main node] (5) [right of = 2] {$G_5$};
+	\node[main node] (6) [right of = 3] {$G_6$};
+	\node[main node] (7) [right of = 4] {$G_7$};
+	\node[main node] (8) [below of = 7] {$G_8$};
+	\node[main node] (9) [below of = 8] {$G_9$};
+	
+	\node[main node] (B3) [right of = 7] {$B_{3}$};
+	\node[main node] (B2) [above of = B3] {$B_{2}$};
+	\node[main node] (B1) [above of = B2] {$B_{1}$};
+	\node[main node] (B4) [below of = B3] {$B_{4}$};
+	\node[main node] (B5) [below of = B4] {$B_{5}$};
+	\node[main node] (B6) [below of = B5] {$B_{6}$};
 
 	\path
-	(1) edge [bend right] node {} (2)
-	(1) edge [bend left] node {} (3)
+	\con{1}{0} \con{0}{1}
+	\con{2}{3}
+	\con{3}{6}
+	\con{1}{2}
+	\con{2}{5}
+	\con{B1}{B2} \con{B2}{B3} \con{B3}{B5} \con{B3}{B4} \con{B5}{B6}
+	\con{B6}{9} \con{B5}{9} \con{B3}{7} \con{B3}{B2}
+	(4) edge [loop] node {} ()
+	\con{1}{4} \con{4}{7} \con{5}{7}
+	\con{8}{B4}
+	\con{6}{8}
 ;
 \end{tikzpicture}

@@ -89,17 +89,60 @@
 
 \begin{frame}[fragile]
   \frametitle{LY - search}
-  \begin{itemize}
-  \item Let $D$ be the set of all possible reachable state from the initial
-    block $B$, $D := post(B)$.
-  \item For each $C$ which contains a state from $post(init)$
-    \begin{itemize}
-    \item $B \neq C \to \text{ raise violation}$
-    \item $B \cap pre(C) \neq B \to B \text{ is not stable}$
-    \item $D := D - C$
-    \end{itemize}
-    \item $D \neq \emptyset \to B \text{ is not stable}$
-  \end{itemize}
+  \begin{algorithmic}
+    \State{$D := post(B)$}
+    \ForAll{$\langle {C,q} \rangle \in post(init)$}
+    \If{$B \neq C$}
+    \State{raise violation}
+    \EndIf
+    \If{$B \cap pre(C) \neq B$} \Comment{Not all predecessor of $B$ are in $B$}
+    \State{$B$ is not stable}
+    \EndIf
+    \State{$D := D - C$}
+    \EndFor
+    \If{$D \neq \emptyset$} \Comment{$post(init) = \emptyset$}
+    \State{$B$ is not stable}
+    \EndIf
+  \end{algorithmic}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{LY - search}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{align*}
+        & queue := \emptyset \\
+        & partition = \{B, Bad\} \\
+        & init = G_0 \\
+        & B = \{G_0,\dots,G_9\}\\
+        & Bad = \{B_1,\dots,B_6\} \\
+        & block_{init} = \langle B,init \rangle \\
+        & D = post(B) = \{ G_0,\dots,G_8,B_4\}
+      \end{align*}
+    \end{column}
+    \begin{column}{0.5\textwidth}%
+      \input{./tikz/fds_seminar_ly_a.pgf}
+    \end{column}
+  \end{columns}
+\end{frame}
+  
+\begin{frame}[fragile]
+  \frametitle{LY - search}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{align*}
+        & post(init) = \{G_1\} \\
+        & \langle {C,q} \rangle = \langle {B,init} \rangle \\
+        & pre(C) = \{ G_0,\dots,G_6,B_3,B_5,B_6 \} \\
+        & B \cap pre(C) =  \{G_0,\dots,G_6\} \\
+        & \to enqueue(\langle {B,init} \rangle) \\
+        & D_1 = D - C = \emptyset
+      \end{align*}
+    \end{column}
+    \begin{column}{0.5\textwidth}%
+      \input{./tikz/fds_seminar_ly_a.pgf}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -107,135 +150,310 @@
   \begin{algorithmic}[1]
     \While{$B$ is not stable}
     \State{Mark $B$ as stable}
-    \State{Create a new block with the states that reach outside of the current
-      initial block}
-    \State{The remaining state are the new initial block}
+    \State{Compute the frontier of $B$}
+    \State{Let $B'$ the state of $B$ that can only reach $B$}
+    \State{Let $B''$ the state of $B$ that can reach a bad block}
+    \If{$\emptyset \neq B' \cap pre(B') \neq B'$ or $\emptyset \neq B' \cap pre(B'')
+      \neq B'$}
+    \State{Mark $B$ as unstable}
+    \EndIf
     \EndWhile
   \end{algorithmic}
 \end{frame}
 
-% \begin{frame}[fragile]
-%   \frametitle{Bisimulation minimization}
-%   \begin{figure}[h]
-%   \centering
-%   \fbox{\input{tikz/fds_seminar_1.pgf}}
-%   \caption{Initial state}
-%   \label{fig:bisimulation_minimization_1}
-% \end{figure}
-% \end{frame}
+\begin{frame}[fragile]
+  \frametitle{LY - stabilization}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      Iteration 1
+      \begin{align*}
+        & init = G_0 \\
+        & partition = \{ \{G0,\dots,G_9\},\{B_1,\dots,B_6\} \} \\
+        & B = \{G0,\dots,G_9\} \\
+        & pre(B) = \{ G_0,\dots,G_6,B_3,B_5,B_6\}\\
+        & post(B) = \{G_0,\dots,G_8,B_4\}
+      \end{align*}
+    \end{column}
+    \begin{column}{0.5\textwidth}%
+      \input{./tikz/fds_seminar_ly_a.pgf}
+    \end{column}
+  \end{columns}
+\end{frame}
 
-% \begin{frame}[fragile]
-%   \frametitle{Bisimulation minimization}
-%   \begin{figure}[h]
-%   \centering
-%   \fbox{\input{tikz/fds_seminar_2.pgf}}
-%   \caption{Initial partition block}
-%   \label{fig:bisimulation_minimization_2}
-% \end{figure}
-% \end{frame}
+\begin{frame}[fragile]
+  \frametitle{LY - stabilization}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      Iteration 1
+      \begin{align*}
+        & B'_1 = B \cap pre(B) = \{G_0,\dots,G_5\} \\
+        & B'_2 = pre(post(B) - B) = pre(\{B_4\}) = \{G_8\} \\
+        & B' = B'_1 - B'_2 = \{G_0,\dots,G_5\} \\
+        & B'' = B - B' = \{G_6,\dots,G_9\} \\
+        & partition = \{B,Bad,\{G_6,\dots,G_9\} \} \\
+        & B := B' = \{G_0,\dots,G_5\}
+      \end{align*}
+    \end{column}
+    \begin{column}{0.5\textwidth}%
+      \input{./tikz/fds_seminar_ly_a.pgf}
+    \end{column}
+  \end{columns}
+\end{frame}
 
-% \begin{frame}[fragile]
-%   \frametitle{Bisimulation minimization}
-%   \begin{figure}[h]
-%   \centering
-%   \fbox{\input{tikz/fds_seminar_3.pgf}}
-%   \caption{Computation of equivalence classes}
-%   \label{fig:bisimulation_minimization_3}
-% \end{figure}
-% \end{frame}
+\begin{frame}[fragile]
+  \frametitle{LY - stabilization}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      Iteration 1
+      \begin{align*}
+        & B := B' = \{G_0,\dots,G_5\} \\
+        & pre(B) = \{G_0,G_1,G_2,G_4\} \\
+        & B'' = \{G_6,\dots,G_9\} \\
+        & pre(B'') = \{G_3,G_4,G_5,B_3,G_6,B_5,B_6\} \\
+        & B \cap pre(B) \neq B \neq \emptyset \\
+        & \to enqueue(\langle {B,init} \rangle) \\
+        & post(init) \cap B'' = \{G_1\} \cap \{G_6,\dots,G_9\} = \emptyset
+      \end{align*}
+    \end{column}
+    \begin{column}{0.5\textwidth}%
+      \input{./tikz/fds_seminar_ly_a.pgf}
+    \end{column}
+  \end{columns}
+\end{frame}
 
-% \begin{frame}[fragile]
-%   \frametitle{Bisimulation minimization}
-%   \begin{figure}[h]
-%   \centering
-%   \fbox{\input{tikz/fds_seminar_4.pgf}}
-%   \caption{Final system to model check}
-%   \label{fig:bisimulation_minimization_4}
-% \end{figure}
-% \end{frame}
+\begin{frame}[fragile]
+  \frametitle{LY - stabilization}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      Iteration 2
+      \begin{align*}
+        & init = G_0 \\
+        & partition = \{B,Bad,\{G_6,\dots,G_9\} \} \\
+        & B = \{G_0,\dots,G_5\} \\
+        & pre(B) = \{G_0,G_1,G_2,G_4\}\\
+        & post(B) = \{G_0,\dots,G_8\}
+      \end{align*}
+    \end{column}
+    \begin{column}{0.5\textwidth}%
+      \input{./tikz/fds_seminar_ly_a.pgf}
+    \end{column}
+  \end{columns}
+\end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{LY - stabilization}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      Iteration 2
+      \begin{align*}
+        & B'_1 = B \cap pre(B) = \{G_0,G_1,G_2,G_4\} \\
+        & B'_2 = pre(post(B) - B) = pre(\{G_6,G_7,G_8\}) \\
+        & B'_2 = \{G_3,G_4,G_5,G_6,B_3\} \\
+        & B' = B'_1 - B'_2 = \{G_0,G_1,G_2\} \\
+        & B'' = B - B' = \{G_4\} \\
+        & partition = \{B,Bad,\{G_6,\dots,G_9\},\{G_4\}\} \\
+        & B := B' = \{G_0,G_1,G_2\}
+      \end{align*}
+    \end{column}
+    \begin{column}{0.5\textwidth}%
+      \input{./tikz/fds_seminar_ly_a.pgf}
+    \end{column}
+  \end{columns}
+\end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{LY - stabilization}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      Iteration 2
+      \begin{align*}
+        & B := B' = \{G_0,G_1,G_2\} \\
+        & pre(B) = \{G_0,G_1\} \\
+        & B'' = \{G_4\} \\
+        & pre(B'') = \{G_1,G_4\} \\
+        & B \cap pre(B) \neq B \neq \emptyset \\
+        & \to enqueue(\langle {B,init} \rangle) \\
+        & post(init) \cap B'' = \{G_1\} \cap \{G_4\} = \emptyset
+      \end{align*}
+    \end{column}
+    \begin{column}{0.5\textwidth}%
+      \input{./tikz/fds_seminar_ly_a.pgf}
+    \end{column}
+  \end{columns}
+\end{frame}
 
-% \begin{frame}
-%   \frametitle{BFH}
-%   BFH, like LY, selects reachable blocks to stabilize but differ in how to
-%   stabilize a block.
+\begin{frame}[fragile]
+  \frametitle{LY - stabilization}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      Iteration 3
+      \begin{align*}
+        & init = G_0 \\
+        & partition = \{B,Bad,\{G_6,\dots,G_9\},\{G_4\}\} \\
+        & B := \{G_0,G_1,G_2\} \\
+        & pre(B) = \{G_0,G_1\} \\
+        & post(B) = \{G_0,\dots,G_5\}
+      \end{align*}
+    \end{column}
+    \begin{column}{0.5\textwidth}%
+      \input{./tikz/fds_seminar_ly_a.pgf}
+    \end{column}
+  \end{columns}
+\end{frame}
 
-%   \pause
-%   \vspace*{0.5cm}
+\begin{frame}[fragile]
+  \frametitle{LY - stabilization}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      Iteration 3
+      \begin{align*}
+        & B'_1 = B \cap pre(B) = \{ G_0,G_1\} \\
+        & B'_2 = pre(post(B) - B) = pre(G_3,G_4,G_5)  \\
+        & B'_2 =  \{G_1,G_2,G_4\} \\
+        & B' = B'_1 - B'_2 = \{G_0\} \\
+        & B'' = B - B' = \{G_1,G_2\} \\
+        % & partition = \{B,Bad,\{G_6,\dots,G_9\},\{G_3\},\{G_1,G_2\}\} \\
+        & B := B' = \{G_0\}
+      \end{align*}
+    \end{column}
+    \begin{column}{0.5\textwidth}%
+      \input{./tikz/fds_seminar_ly_a.pgf}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{LY - stabilization}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      Iteration 3
+      \begin{align*}
+        & B := B' = \{G_0\} \\
+        & pre(B) = \{G_1\} \\
+        & B'' = \{G_1,G_2\} \\
+        & pre(B'') = \{G_0,G_1\} \\
+        & B \cap pre(B) = \emptyset \\
+        & B \cap pre(B'') = \{G_0\} = B \\
+        & \to \text{ don't enqueue !} \\
+        & post(init) \cap B'' = \{G_1\} \cap \{G_2\} = \{G_1\} \\
+        & \to \text{ raise violation !}
+      \end{align*}
+    \end{column}
+    \begin{column}{0.5\textwidth}%
+      \input{./tikz/fds_seminar_ly_a.pgf}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{LY - complexity}
+  \[
+    (n-1) * 5M + 4I + 3D + 4E
+  \]
+
+  where
+
+  \begin{itemize}
+  \item $n$ : number of BR iterations
+  \item $M$ : number of image iterations
+  \item $I$ : number of intersection operations
+  \item $D$ : number of set difference operations
+  \item $E$ : number of equality check
+  \item $U$ : number of union operations
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{BFH}
+  The Bouajjani-Fernandez-Halbwachs algorithm
+\end{frame}
+
+\begin{frame}
+  \frametitle{BFH - idea}
+  \begin{itemize}
+  \item BFH, like LY, selects reachable blocks to stabilize but differ in how to
+    stabilize a block.
+  \item BFH stabilize a block w.r.t. all the other blocks (either reachable or
+    unreachable).
+  \item The algorithm become simplier but unnecessary work is done.
+  \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{BFH - termination}
+  As in LY, BFH could terminate when a second block becomes reachable.
   
-%   BFH stabilize a block w.r.t. all the other blocks (either reachable or
-%   unreachable).
-  
-%   \pause
-%   \vspace*{0.5cm}
-  
-%   The algorithm become simplier but unnecessary work is done.
-% \end{frame}
+  The algorithm correctly determine violations of invariants but not as soon as
+  they occur.
+\end{frame}
 
-% \begin{frame}[fragile]
-%   \frametitle{BFH - Algorithm}
-%   \begin{algorithmic}[1]
-%     \State $S := \emptyset$ List of stable block
-%     \State $R := \{[init]_p\}$ List of reachable block
-%     \While{$R \neq S$}
-%     \State Select a reachable, but unstable block $X$
-%     \State Stabilize $X$ w.r.t. every block in the partition
-%     \If{No new blocks are created}
-%     \State Add $X$ to $S$
-%     \State Block reachable from $X$ are added to $R$
-%     \Else
-%     \State Add new the new blocks to the partition
-%     \State Update the initial block
-%     \State Remove from $S$ the blocks that becomes unstable
-%     \EndIf
-%     \EndWhile
-%   \end{algorithmic}
-% \end{frame}
+\begin{frame}
+  \frametitle{BFH - termination}
+  The algorthim may traverse a path from the bad block to the initial state
+  before the initial block becomes stable.
 
-% \begin{frame}[fragile]
-%   \frametitle{BFH - New Algorithm}
-%   \begin{algorithmic}[1]
-%     \State $I := [init]_p$
-%     \State Mark the bad block
-%     \While{$I$ is not marked}
-%     \State Stabilize $I$
-%     \If{No new blocks are created}
-%     \If{$post_p(I) \setminus \{I\} = \emptyset$}
-%     \State Signal safety violation
-%     \Else
-%     \State Break
-%     \EndIf
-%     \Else
-    
-%     \EndIf
-%     \EndWhile
-%     \If{$I$ is marked}
-%     \State Signal safety violation
-%     \EndIf
-%   \end{algorithmic}
-% \end{frame}
+  Thus, the algorithm take more iteration to terminate.
+\end{frame}
 
-% \begin{frame}
-%   \frametitle{BFH - Termination}
-%   As in LY, BFH could terminate when a second block becomes reachable.
-  
-%   \pause
-%   \vspace*{0.5cm}
+\begin{frame}[fragile]
+  \frametitle{BFH - new Algorithm}
+  \begin{algorithmic}[1]
+    \State Mark the bad block
+    \State{$I = [init]_p$}
+    \While{$I$ is not marked}
+    \State{$N := split(I,p)$}
+    \If{$N = \{I\}$}
+    \State{\textbf{if} $post(I) - I \neq \emptyset$ $\to$ violation, \textbf{else} break}
+    \Else
+    \State{$p := (p - \{I\}) \cup N$}
+    \State{$I := [init]_p$}
+    \EndIf
+    \EndWhile
+    \If{$I$ is marked}
+    \State Signal safety violation
+    \EndIf
+  \end{algorithmic}
+\end{frame}
 
-%   Correctly determine violations of invariants but not as soon as they occur.
-% \end{frame}
+\begin{frame}[fragile]
+  \frametitle{BFH - new algorthim (split)}
+  \begin{algorithmic}[1]
+    \Function{split}{$X$ : state, $p$ : partition}
+    \State{$N = \{X\}$}
+    \ForAll{$Y$ : block $ \in p$}
+    \State{$M := \emptyset$}
+    \ForAll{$W$ : state $ \in N$}
+    \State{$W_1 = W \cap pre(Y)$}
+    \If{$W_1 = W$ or $W_1 = \emptyset$}
+    \State{a}
+    \Else
+    \State{b}
+    \EndIf
+    \EndFor
+    \EndFor
+    \State{\Return $N$}
+    \EndFunction
+  \end{algorithmic}
+\end{frame}
 
-% \begin{frame}
-%   \frametitle{BFH - Termination}
+\begin{frame}
+  \frametitle{BFH - example}
+\end{frame}
 
-%   The algorthim may traverse a path from the bad block to the initial state
-%   before the initial block becomes stable.
+\begin{frame}
+  \frametitle{BFH - example}
+\end{frame}
 
-%   \pause
-%   \vspace*{0.5cm}
+\begin{frame}
+  \frametitle{BFH - example}
+\end{frame}
 
-%   Thus, the algorithm take more iteration to terminate.
-% \end{frame}
+\begin{frame}
+  \frametitle{Experimental comparisons}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Experimental comparisons}
+\end{frame}
 
 \end{document}
