@@ -11,6 +11,6 @@
 	\con{0}{1} \con{1}{0}
 	\con{1}{2} \con{2}{1}
 	\con{B0}{B1}
-	(2) edge [bend left] (B1)
+	(B1) edge [bend left] (2)
 ;
 \end{tikzpicture}

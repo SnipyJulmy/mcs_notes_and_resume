@@ -114,10 +114,10 @@
         & queue := \emptyset \\
         & partition = \{B, Bad\} \\
         & init = G_0 \\
-        & B = \{G_0,\dots,G_9\}\\
-        & Bad = \{B_1,\dots,B_6\} \\
+        & B = \{G_0,\dots,G_2\}\\
+        & Bad = \{B_0,B_1\} \\
         & block_{init} = \langle B,init \rangle \\
-        & D = post(B) = \{ G_0,\dots,G_8,B_4\}
+        & D = post(B) = \{ B,Bad \}
       \end{align*}
     \end{column}
     \begin{column}{0.5\textwidth}%
@@ -131,12 +131,12 @@
   \begin{columns}
     \begin{column}{0.5\textwidth}
       \begin{align*}
-        & post(init) = \{G_1\} \\
+        & post(init) = \{B\} \\
         & \langle {C,q} \rangle = \langle {B,init} \rangle \\
-        & pre(C) = \{ G_0,\dots,G_6,B_3,B_5,B_6 \} \\
-        & B \cap pre(C) =  \{G_0,\dots,G_6\} \\
-        & \to enqueue(\langle {B,init} \rangle) \\
-        & D_1 = D - C = \emptyset
+        & pre(C) = \{ B \} \\
+        & \{B\} \cap pre(C) = \{B\} == \{B\} \\
+        & D = \{B,Bad\} - \{B\} = Bad \\
+        & D \neq \emptyset \to enqueue(\langle {B,init} \rangle)
       \end{align*}
     \end{column}
     \begin{column}{0.5\textwidth}%
@@ -168,10 +168,10 @@
       Iteration 1
       \begin{align*}
         & init = G_0 \\
-        & partition = \{ \{G0,\dots,G_9\},\{B_1,\dots,B_6\} \} \\
-        & B = \{G0,\dots,G_9\} \\
-        & pre(B) = \{ G_0,\dots,G_6,B_3,B_5,B_6\}\\
-        & post(B) = \{G_0,\dots,G_8,B_4\}
+        & partition = \{B,Bad\} \\
+        & B = \{G_0,G_1,G_2\} \\
+        & pre(B) = \{B\} \\
+        & post(B) = \{B,Bad\}
       \end{align*}
     \end{column}
     \begin{column}{0.5\textwidth}%
@@ -186,12 +186,12 @@
     \begin{column}{0.5\textwidth}
       Iteration 1
       \begin{align*}
-        & B'_1 = B \cap pre(B) = \{G_0,\dots,G_5\} \\
-        & B'_2 = pre(post(B) - B) = pre(\{B_4\}) = \{G_8\} \\
-        & B' = B'_1 - B'_2 = \{G_0,\dots,G_5\} \\
-        & B'' = B - B' = \{G_6,\dots,G_9\} \\
-        & partition = \{B,Bad,\{G_6,\dots,G_9\} \} \\
-        & B := B' = \{G_0,\dots,G_5\}
+        & B'_1 = B \cap pre(B) = \{B\} \\
+        & B'_2 = pre(post(B) - B) = pre(\{ Bad \}) = \{B\} \\
+        & B' = B'_1 - B'_2 = \emptyset \\
+        & B'' = B - B' = B \\
+        & partition = \{B, Bad, B\} \\
+        & B := B' = \emptyset
       \end{align*}
     \end{column}
     \begin{column}{0.5\textwidth}%
@@ -206,137 +206,15 @@
     \begin{column}{0.5\textwidth}
       Iteration 1
       \begin{align*}
-        & B := B' = \{G_0,\dots,G_5\} \\
-        & pre(B) = \{G_0,G_1,G_2,G_4\} \\
-        & B'' = \{G_6,\dots,G_9\} \\
-        & pre(B'') = \{G_3,G_4,G_5,B_3,G_6,B_5,B_6\} \\
-        & B \cap pre(B) \neq B \neq \emptyset \\
-        & \to enqueue(\langle {B,init} \rangle) \\
-        & post(init) \cap B'' = \{G_1\} \cap \{G_6,\dots,G_9\} = \emptyset
-      \end{align*}
-    \end{column}
-    \begin{column}{0.5\textwidth}%
-      \input{./tikz/fds_seminar_ly_a.pgf}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{LY - stabilization}
-  \begin{columns}
-    \begin{column}{0.5\textwidth}
-      Iteration 2
-      \begin{align*}
-        & init = G_0 \\
-        & partition = \{B,Bad,\{G_6,\dots,G_9\} \} \\
-        & B = \{G_0,\dots,G_5\} \\
-        & pre(B) = \{G_0,G_1,G_2,G_4\}\\
-        & post(B) = \{G_0,\dots,G_8\}
-      \end{align*}
-    \end{column}
-    \begin{column}{0.5\textwidth}%
-      \input{./tikz/fds_seminar_ly_a.pgf}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{LY - stabilization}
-  \begin{columns}
-    \begin{column}{0.5\textwidth}
-      Iteration 2
-      \begin{align*}
-        & B'_1 = B \cap pre(B) = \{G_0,G_1,G_2,G_4\} \\
-        & B'_2 = pre(post(B) - B) = pre(\{G_6,G_7,G_8\}) \\
-        & B'_2 = \{G_3,G_4,G_5,G_6,B_3\} \\
-        & B' = B'_1 - B'_2 = \{G_0,G_1,G_2\} \\
-        & B'' = B - B' = \{G_4\} \\
-        & partition = \{B,Bad,\{G_6,\dots,G_9\},\{G_4\}\} \\
-        & B := B' = \{G_0,G_1,G_2\}
-      \end{align*}
-    \end{column}
-    \begin{column}{0.5\textwidth}%
-      \input{./tikz/fds_seminar_ly_a.pgf}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{LY - stabilization}
-  \begin{columns}
-    \begin{column}{0.5\textwidth}
-      Iteration 2
-      \begin{align*}
-        & B := B' = \{G_0,G_1,G_2\} \\
-        & pre(B) = \{G_0,G_1\} \\
-        & B'' = \{G_4\} \\
-        & pre(B'') = \{G_1,G_4\} \\
-        & B \cap pre(B) \neq B \neq \emptyset \\
-        & \to enqueue(\langle {B,init} \rangle) \\
-        & post(init) \cap B'' = \{G_1\} \cap \{G_4\} = \emptyset
-      \end{align*}
-    \end{column}
-    \begin{column}{0.5\textwidth}%
-      \input{./tikz/fds_seminar_ly_a.pgf}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{LY - stabilization}
-  \begin{columns}
-    \begin{column}{0.5\textwidth}
-      Iteration 3
-      \begin{align*}
-        & init = G_0 \\
-        & partition = \{B,Bad,\{G_6,\dots,G_9\},\{G_4\}\} \\
-        & B := \{G_0,G_1,G_2\} \\
-        & pre(B) = \{G_0,G_1\} \\
-        & post(B) = \{G_0,\dots,G_5\}
-      \end{align*}
-    \end{column}
-    \begin{column}{0.5\textwidth}%
-      \input{./tikz/fds_seminar_ly_a.pgf}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{LY - stabilization}
-  \begin{columns}
-    \begin{column}{0.5\textwidth}
-      Iteration 3
-      \begin{align*}
-        & B'_1 = B \cap pre(B) = \{ G_0,G_1\} \\
-        & B'_2 = pre(post(B) - B) = pre(G_3,G_4,G_5)  \\
-        & B'_2 =  \{G_1,G_2,G_4\} \\
-        & B' = B'_1 - B'_2 = \{G_0\} \\
-        & B'' = B - B' = \{G_1,G_2\} \\
-        % & partition = \{B,Bad,\{G_6,\dots,G_9\},\{G_3\},\{G_1,G_2\}\} \\
-        & B := B' = \{G_0\}
-      \end{align*}
-    \end{column}
-    \begin{column}{0.5\textwidth}%
-      \input{./tikz/fds_seminar_ly_a.pgf}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{LY - stabilization}
-  \begin{columns}
-    \begin{column}{0.5\textwidth}
-      Iteration 3
-      \begin{align*}
-        & B := B' = \{G_0\} \\
-        & pre(B) = \{G_1\} \\
-        & B'' = \{G_1,G_2\} \\
-        & pre(B'') = \{G_0,G_1\} \\
+        & B := B' = \emptyset \\
+        & pre(B) = \emptyset \\
+        & B'' = B \\
+        & pre(B'') = B \\
         & B \cap pre(B) = \emptyset \\
-        & B \cap pre(B'') = \{G_0\} = B \\
-        & \to \text{ don't enqueue !} \\
-        & post(init) \cap B'' = \{G_1\} \cap \{G_2\} = \{G_1\} \\
-        & \to \text{ raise violation !}
+        & B \cap pre(B'') = \emptyset \\
+        & \text{no enqueue !} \\
+        & post(init) \cap B'' = \{B\} \cap \{B\} = \{B\}\\
+        & \to \text{ raise safety violation !}
       \end{align*}
     \end{column}
     \begin{column}{0.5\textwidth}%
@@ -344,6 +222,49 @@
     \end{column}
   \end{columns}
 \end{frame}
+
+%%%%%%%%%%%%%
+
+\begin{frame}[fragile]
+  \frametitle{LY - search (2)}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{align*}
+        & queue := \emptyset \\
+        & partition = \{B, Bad\} \\
+        & init = G_0 \\
+        & B = \{G_0,\dots,G_2\}\\
+        & Bad = \{B_0,B_1\} \\
+        & block_{init} = \langle B,init \rangle \\
+        & D = post(B) = \{ B \}
+      \end{align*}
+    \end{column}
+    \begin{column}{0.5\textwidth}%
+      \input{./tikz/fds_seminar_ly_b.pgf}
+    \end{column}
+  \end{columns}
+\end{frame}
+  
+\begin{frame}[fragile]
+  \frametitle{LY - search (2)}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{align*}
+        & post(init) = \{B\} \\
+        & \langle {C,q} \rangle = \langle {B,init} \rangle \\
+        & pre(C) = \{ B , Bad\} \\
+        & \{B\} \cap pre(C) = \{B\} == \{B\} \\
+        & D = \{B\} - \{B\} = \emptyset \\
+        & \text{no safety violation, terminate}
+      \end{align*}
+    \end{column}
+    \begin{column}{0.5\textwidth}%
+      \input{./tikz/fds_seminar_ly_b.pgf}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+%%%%%%%%%%%%%
 
 \begin{frame}
   \frametitle{LY - complexity}
@@ -418,16 +339,16 @@
 \begin{frame}[fragile]
   \frametitle{BFH - new algorthim (split)}
   \begin{algorithmic}[1]
-    \Function{split}{$X$ : state, $p$ : partition}
+    \Function{split}{$X$ : block, $p$ : partition}
     \State{$N = \{X\}$}
     \ForAll{$Y$ : block $ \in p$}
     \State{$M := \emptyset$}
     \ForAll{$W$ : state $ \in N$}
     \State{$W_1 = W \cap pre(Y)$}
     \If{$W_1 = W$ or $W_1 = \emptyset$}
-    \State{a}
+    \State{$M := M \cup \{W\}$}
     \Else
-    \State{b}
+    \State{$M := M \cup \{W_1,W - W_1\}$}
     \EndIf
     \EndFor
     \EndFor
@@ -438,22 +359,155 @@
 
 \begin{frame}
   \frametitle{BFH - example}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      Init
+      \begin{align*}
+        & I = \{ B \} \\
+        & p = \{ B, Bad \} \\
+        & init = G_0
+      \end{align*}
+    \end{column}
+    \begin{column}{0.5\textwidth}%
+      \input{./tikz/fds_seminar_bfh_a.pgf}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \begin{frame}
   \frametitle{BFH - example}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      Iteration 1
+      \begin{align*}
+        & N = split(I,p) = ???
+      \end{align*}
+    \end{column}
+    \begin{column}{0.5\textwidth}%
+      \input{./tikz/fds_seminar_bfh_a.pgf}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \begin{frame}
   \frametitle{BFH - example}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      Iteration 1 - split(1)
+      \begin{align*}
+        & X = B , p = \{B, Bad\} \\
+        & N = \{B\}\\
+        & \text{foreach $Y \in p$} \to \\
+        & Y = B , M = \emptyset \\
+        & \text{foreach $W \in N$} \to \\
+        & W = B \\
+        & W_1 = W \cap pre(Y) = \{ B \} \\
+        & \to M := M \cup \{W\} = \emptyset \cup B = \{B\} \\
+        & N := M = \{B\}
+      \end{align*}
+    \end{column}
+    \begin{column}{0.5\textwidth}%
+      \input{./tikz/fds_seminar_bfh_a.pgf}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{BFH - example}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      Iteration 1 - split(2)
+      \begin{align*}
+        & X = B , p = \{B, Bad\} \\
+        & N = \{B\}\\
+        & \text{foreach $Y \in p$} \to \\
+        & Y = Bad , M = \emptyset \\
+        & \text{foreach $W \in N$} \to \\
+        & W = B \\
+        & W_1 = W \cap pre(Y) = B \\
+        & Y \text{ is marked} \to B\text{ is marked} \\
+        & \to M := M \cup \{W\} = \emptyset \cup \{B\} = \{B\} \\
+        & N := M = \{B\} \\
+        & return(B)
+      \end{align*}
+    \end{column}
+    \begin{column}{0.5\textwidth}%
+      \input{./tikz/fds_seminar_bfh_a.pgf}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{BFH - example}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      Iteration 1
+      \begin{align*}
+        & N = split(I,p) = \{B\} \\
+        & N = \{I\} \to post(I) - \{I\} = \{Bad\} \neq \emptyset \\
+        & \to \text{ raise safety violation !}
+      \end{align*}
+    \end{column}
+    \begin{column}{0.5\textwidth}%
+      \input{./tikz/fds_seminar_bfh_a.pgf}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{BFH - complexity}
+  \[
+    (M + I + 2E) * \frac{n^2 + 3n}{2} + n * D
+  \]
+
+  where
+
+  \begin{itemize}
+  \item $n$ : number of BR iterations
+  \item $M$ : number of image iterations
+  \item $I$ : number of intersection operations
+  \item $D$ : number of set difference operations
+  \item $E$ : number of equality check
+  \item $U$ : number of union operations
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Experimental comparisons}
+  Experimental comparisons
 \end{frame}
 
 \begin{frame}
   \frametitle{Experimental comparisons}
+
+  Lower bounds
+  
+  \begin{itemize}
+  \item BR : $n*(M + U + D + 2E + I)$
+  \item PT : $n * (2M + D + I + E)$
+  \item LY : $(n-1)*(5M + 4I  + 3D + 4E)$
+  \item BFH : $(M + I + 2E) * \frac{n^2 + 3n}{2} + n * D$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Experimental comparisons}
+  \begin{itemize}
+  \item BR has better time and memory usage (in almost all cases).
+  \item PT does surprisingly well w.r.t. LY and BFH
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Experimental comparisons}
+  ``That PT performs so well compared to BFH and LY suggests that minimization
+  algorithms tailored to verification settings should pay attention ti choosing ''
+\end{frame}
+
+\begin{frame}
+  \frametitle{Conclusion}
+  Bisimulation and Model Checking requires more resources than model checking
+  alone.
 \end{frame}
 
 \end{document}
