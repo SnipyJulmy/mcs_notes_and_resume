@@ -4,6 +4,8 @@
 \usepackage{fullpage}
 \usepackage{bussproofs}
 \usepackage{mathpartir}
+\usepackage{url}
+\usepackage{placeins}
 
 \usepackage{prooftrees}
 \newcommand*{\equal}{=}
@@ -32,7 +34,7 @@
   }
   
   \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
-  S11 : Prolog (DCG)
+  S12 : Prolog
   \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
 
   \begin{flushleft}
@@ -43,119 +45,106 @@
 
   \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
 \end{center}
-
 \section*{Exercise 1}
 
-\subsection*{(a)}
-\begin{forest}
-  for tree={s sep=30mm}
-  [$?- p(X).$
-  [$p(1)$,edge label={node[midway,above,font=\scriptsize]{$X \equal 1$}}
-  [$\square$]]
-  [$!$,edge label={node[midway,left,font=\scriptsize]{$X \equal 2$}}
-  [$\square$]]
-  [$cut$]
-  ]
-\end{forest}
+\subsection*{\texttt{myMap}}
+\ex{10}{16}{ex1}
 
-\subsection*{(b)}
-\begin{forest}
-  for tree={s sep=20mm}
-  [$?- p(X) \disj p(Y).$
-  [$ p(Y) $,edge label={node[midway,left,font=\scriptsize]{$X \equal 1$}}
-  [$\square$,edge label={node[midway,left,font=\scriptsize]{$Y \equal 1$}}]
-  [$!$,edge label={node[midway,left,font=\scriptsize]{$Y \equal 2$}} [$\square$]]
-  [$cut$]
-  ]
-  [$ ! \disj p(Y) $,edge label={node[midway,left,font=\scriptsize]{$X \equal2$}}
-  [$p(Y)$
-  [$\square$,edge label={node[midway,left,font=\scriptsize]{$Y \equal 1$}}]
-  [$!$,edge label={node[midway,left,font=\scriptsize]{$Y \equal 2$}} [$\square$]]
-  [$cut$
-  [$\square$]]
-  ]
-  ]
-  [$cut$]
-  ]
-\end{forest}
+\subsection*{\texttt{myPartition}}
+\ex{19}{28}{ex1}
 
-\subsection*{(c)}
-\begin{forest}
-  for tree={s sep=20mm}
-  [$?- p(X) \disj ! \disj p(Y).$
-  [$ ! \disj p(Y) $,edge label={node[midway,left,font=\scriptsize]{$X \equal 1$}}
-  [$p(Y)$
-  [$\square$,edge label={node[midway,left,font=\scriptsize]{$Y \equal 1$}}]
-  [$!$,edge label={node[midway,left,font=\scriptsize]{$Y \equal 2$}}]
-  [$cut$]
-  ]
-  ]
-  [$cut$]
-  [$cut$]
-  ]
-\end{forest}
+\subsection*{\texttt{filter}}
+\ex{31}{39}{ex1}
+
+\subsection*{\texttt{filterWithFindall}}
+\ex{42}{45}{ex1}
+
+\subsection*{\texttt{myIntersection}}
+\ex{48}{50}{ex1}
+
+\subsection*{Some utility predicats}
+\ex{52}{67}{ex1}
+
+\newpage
 
 \section*{Exercise 2}
 
-\subsection*{$separate/4$}
-\ex{42}{63}{ex2}
-
-\subsection*{$myUnion/4$}
-\ex{66}{85}{ex2}
+\ex{9}{73}{ex2_bis}
 
 \newpage
-
-\subsection*{$myIntersection/4$}
-\ex{88}{109}{ex2}
-
-\subsection*{$maxMin/4$}
-\ex{112}{154}{ex2}
-
-\newpage
-
-In addition, we use the following $go/1$ in order to simply visualize the search
-tree of the interpreter and show that each implementation reduce the number of
-search.
-
-\ex{9}{39}{ex2}
 
 \section*{Exercise 3}
 
-The following implementation of $myMax/3$
-\ex{15}{16}{ex3}
+We would use the following ebnf grammar for our ``grammar'' syntax :
 
-would fail for the query \verb|?- myMax(6,5,5)| :
+\begin{verbatim}
+grammar ::= rule grammar | rule
+rule ::= rule_name "->" rule_body
+rule_body ::= rule_body_part_rec "|" rule_body | rule_body_part_rec
+rule_body_part_rec ::= rule_body_part rule_body_part_rec | rule_body_part
+rule_body_part ::= rule_name | atomName
 
-\begin{forest}
-  for tree={s sep=20mm}
-  [$?- myMax(6 \disj 5 \disj 5).$
-  [$ \square $,edge label={node[midway,left,font=\scriptsize]{$X \equal 6 \disj Y
-      \equal 5$}}]
-  ]
-\end{forest}
+rule_name ::= "r_" anyChar*
+atomName ::= (lowerCase - "r") (anyChar - "_") lowerCase* | lowerCase anyChar*
 
-The interpreter would only explore one branch, because he can't unify
-$myMax(6,5,5)$ with $myMax(X,Y,X)$, so it would only explore the branch where we
-unify $myMax(6,5,5)$ with $myMax(Y,X,X)$ and then the maximal between $6$ and
-$5$ would be $5$, which is wrong.
+lowerCase ::= "a" | "b" | "c" | "d" | "e" | "f" | "g"
+            | "h" | "i" | "j" | "k" | "l" | "m" | "n"
+            | "o" | "p" | "q" | "r" | "s" | "t" | "u"
+            | "v" | "w" | "x" | "y" | "z"
 
-We should use the following implementation :
+anyChar ::= #x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]
+\end{verbatim}
 
-\ex{18}{19}{ex3}
+Note :
+\begin{itemize}
+\item The \verb|anyChar| rule correspond any Unicode character, excluding the
+  surrogate blocks, FFFE, and FFFF. It as been taken from
+  \url{https://www.w3.org/TR/xml/#NT-Char}.
+\item We use the Extended Backus-Naur Form (EBNF) to specify the syntax.
+\item The syntacic diagram are available from figure \ref{fig:grammar} to
+  \ref{fig:rule_name}.
+\item We don't show the diagram for the \verb|rule_name|, \verb|atomName| or \verb|lowerCase|.
+\end{itemize}
 
-\newpage
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.2\textwidth]{figures/grammar}
+  \caption{ENBF diagram for the rule ``grammar''}
+  \label{fig:grammar}
+\end{figure}
 
-\section*{Exercise 4}
-\ex{10}{27}{ex4}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/rule}
+  \caption{ENBF diagram for the rule ``rule''}
+  \label{fig:rule}
+\end{figure}
 
-\newpage
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.35\textwidth]{figures/rule_body_part_rec}
+  \caption{ENBF diagram for the rule ``rule\_body\_part\_rec''}
+  \label{fig:rule_body_part_rec}
+\end{figure}
 
-\section*{Exercise 5}
-\ex{9}{20}{ex5}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.3\textwidth]{figures/rule_body_part}
+  \caption{ENBF diagram for the rule ``rule\_body\_part''}
+  \label{fig:rule_body_part}
+\end{figure}
 
-We use the following $go/0$ predicate in order to ``test'' our implementation :
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.4\textwidth]{figures/rule_name}
+  \caption{ENBF diagram for the rule ``rule\_name''}
+  \label{fig:rule_name}
+\end{figure}
 
-\ex{22}{50}{ex5}
+\FloatBarrier
+
+\subsection*{Implementation}
+\ex{11}{62}{ex3}
 
 \end{document}
 
@@ -163,3 +152,4 @@ We use the following $go/0$ predicate in order to ``test'' our implementation :
 %%% TeX-command-extra-options: "-shell-escape"
 %%% mode: latex
 %%% End:
+Extended Backus-Naur Form

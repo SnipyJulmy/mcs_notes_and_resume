@@ -1,0 +1,243 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{etoolbox}
+\usepackage{sourcecodepro}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{fullpage}
+
+\title{Resume : Formal Methods}
+
+\setlength{\parindent}{0cm}
+
+\newcommand{\HTriple}[3]{\{#1\}\ #2 \ \{#3\}}
+
+\begin{document}
+
+\maketitle
+
+\chapter{Hoare Logic}
+
+\section{Hoare Triple}
+
+Logical formulas can be used to express information about program states. We
+called $\{P\}S\{Q\}$ a ``Hoare Triple'' :
+
+\begin{itemize}
+\item A precondition $P$ what can be assumed to be true before executing a
+  sequence of statements $S$.
+\item A postcondition $Q$ states what will be true after the execution of $S$.
+\end{itemize}
+
+We write $\{P\}S\{Q\}$ to indicate : if $P$ is true, then executing $S$ will
+make $Q$ true.
+
+We also use the notation $x'$ to denote the variable $x$ after the execution of
+$S$. For example
+
+\[
+  \{true\}\ x = x + 1;\ \{x' = x + 1\}
+\]
+
+is a valid Hoare Triple in which $x'$ is the value of $x$ after the execution
+of $S$. We can write any predicate in between any two lines of code (an
+assertion), we assume that such a predicate is the postcondition of the previous
+line and the precondition of the following line.
+
+\section{Correctness of Hoare Triple}
+
+We translate our program $S$ into a formula $\phi_S$ and then, we check
+
+\[
+  P \wedge \phi_S \to Q
+\]
+
+or, equivalently
+
+\[
+  \phi_S \to (P \to Q)
+\]
+
+So, for example, we turn the following Hoare Triple
+
+\[
+  \{x \neq 0\}\ x=1/x;\ x=1/x; \ \{x' = x\}
+\]
+
+into the following formula (also using the primed notation) :
+
+\[
+  \underbrace{x \neq 0}_P \wedge \underbrace{x'' = 1/x \wedge x' = 1/x''}_S \to \underbrace{x' = x}_Q
+\]
+
+Which is true by elementary arithmetic.
+
+\subsection{If Clauses}
+
+We turn
+
+\[
+  \{P\}\ if(condition)\ \{prog1\}\ else\ \{prog2\};\ \{Q\}
+\]
+
+into
+
+\[
+  \{P \wedge condition\}\ prog1 \ \{Q\}
+\]
+
+and
+
+\[
+  \{P \wedge \neg condition\}\ prog2 \ \{Q\}
+\]
+
+Both of those Hoare triple must be true for the if clause to be correct.
+
+\subsection{Loops Clauses}
+
+In order to check the total correctness of a program with loops, we have to
+check the partial correctness and the termination of the program. Such a program
+is in the following form :
+
+\[
+  \{P\}\ initialisation;\ while\ (condition)\ \{loop\ body\}; \ \{Q\}
+\]
+
+\subsubsection{Partial correctness}
+
+A loop invariant is a logical formula that is true
+\begin{itemize}
+\item before the loop,
+\item before each execution of the loop body,
+\item after each execution of the loop body,
+\item after the loop.
+\end{itemize}
+
+Then, from
+
+\[
+  \{P\}\ initialisation;\ while\ (condition)\ \{loop\ body\}; \ \{Q\}
+\]
+
+we get
+\[ \{P\}\ initialisation; \ \{inv\} \]
+\[ \{inv \wedge condition\}\ loop\ body; \ \{inv\} \]
+\[ \{inv \wedge \neg condition\}\ skip; \ \{Q\} \]
+
+\subsubsection{Termination}
+
+A loop variant is an integer-valued expression that
+\begin{itemize}
+\item is decreased at least by $1$ in each execution of the loop body,
+\item cannot go below $0$.
+\end{itemize}
+
+Then, from
+
+\[
+  \{P\}\ initialisation;\ while\ (condition)\ \{loop\ body\}; \ \{Q\}
+\]
+
+we get
+
+\[
+  \HTriple{int\ var \wedge var > 0}{loop\ body;}{var > var' \geq 0}
+\]
+
+\subsubsection{Example}
+
+\begin{align*}
+  \{n > 0 \wedge x = 1\}\ &sum = 1; \\
+                          &while\ (x < n)\ \{ \\
+                          &x = x + 1; \\
+                          & sum = sum + x; \\
+                          &\}; \{sum = n(n+1)/2\}
+\end{align*}
+
+For the invariant, we try $sum = x(x+1)/2$ and we get the following Hoare Triples :
+
+\[\HTriple{n > 0 \wedge x = 1}{sum = 1;}{sum = x(x+1)/2}\]
+\[\HTriple{sum = x(x+1)/2 \wedge x < n}{x = x+1;\ sum = sum + x}{sum =
+    x(x+1)/2}\]
+\[\HTriple{sum = x(x+1)/2 \wedge \neg(x < n)}{skip;}{sum = n(n+1)/2}\]
+
+\paragraph{(1) :} We obtain the following formula to prove :
+\[
+  n > 0 \wedge x = 1 \wedge sum = 1 \to sum = \frac{x(x+1)}{2}
+\]
+
+$1 = \frac{1 (1 + 1)}{2} = \frac{2}{2} = 1$
+
+\paragraph{(2) :} We obtain the following formula to prove :
+\[
+  sum = x(x+1)/2 \wedge x < n \wedge x' = x + 1 \wedge sum' = sum + x' \to sum' = x'(x'+1)/2
+\]
+
+\begin{align*}
+  & sum = \frac{x(x+1)}{2} \\
+  & x < n \\
+  & x' = x + 1 \\
+  & sum' = sum + x' = sum + x + 1 = \frac{x(x+1)}{2} + x + 1\\
+  & sum' = \frac{x'(x' + 1)}{2} \\
+  & \frac{x(x+1)}{2} + x + 1 = \frac{(x+1)(x+1+1)}{2} \\
+  & \frac{x(x+1)}{2} + x + 1 = \frac{x^2 + x}{2} + x + 1 = 0.5 x^2 + 1.5 x^2 + 1 \\
+  & \frac{(x+1)(x+1+1)}{2} = \frac{x^2 + 2 + 2x + x}{2} = \frac{x^2 + 3x + 2}{2} = 0.5 x^2 + 1.5 x + 1
+\end{align*}
+
+\paragraph{(3) :} We obtain the following formula to prove :
+\[
+  sum = \frac{x(x+1)}{2} \wedge x \geq n \to sum = \frac{n(n+1)}{2}
+\]
+
+Which is true because if $x = n$ then both side of the equation are equivalent.
+
+\paragraph{termination :} we try $n-x$ for the variant and we got the following
+formula :
+
+\begin{align*}
+  & int\ var\ \wedge \\
+  & var > 0\ \wedge \\
+  & x = 1\ \wedge \\
+  & n > 0\ \wedge \\
+  & var = n - x\ \wedge \\
+  & x' = x + 1\ \wedge \\
+  & sum' = sum + x'\ \wedge \\
+  & var' = n - x'\ \to \\
+  & var > var' \geq 0
+\end{align*}
+
+\[
+  var' = n - x' = n - x + 1
+\]
+
+\[
+  n - x > n - x - 1 \geq 0
+\]
+
+Termination is proved.
+
+\section{Weakness and Strength of Predicates}
+
+$P$ is weaker than $Q$ $\leftrightarrow$ $Q \to P$ ($\leftrightarrow$ stand for
+if and only if). true is the weakest predicate and false is the strongest one.
+
+If $P$ is weaker than $P'$ ($P' \to P$), then proving $\HTriple{P}{S}{Q}$
+guarantees the truth of $\HTriple{P'}{S}{Q}$.
+
+If $Q$ is stronger than $Q'$ ($Q \to Q'$), then proving $\HTriple{P}{S}{Q}$
+guarantees the truth of $\HTriple{P}{S}{Q'}$.
+
+
+\chapter{Propositional Logic}
+\chapter{Computability}
+\section{Undecidability of First-order Logic}
+\chapter{Complexity}
+\section{Cook's Theorem}
+\section{NP-completeness}
+\section{PSPACE-Completeness}
+\chapter{Polynomial Time Reductions}
+
+\end{document}

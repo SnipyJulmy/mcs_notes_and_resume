@@ -186,10 +186,69 @@ deduction lemma, we prove $\neg \exists x.(\neg \phi) \vdash \forall x.(\phi)$
   \ndl{}{$\forall x.(\phi)$}{\MPr{8}{9} \label{10}}
 \end{ND}
 
-\section*{\texttt{4, 5}}
+\section*{\texttt{4}}
 
-Due to exam preparation, I didn't have that much time to do the rest.
+\begin{align*}
+  \phi = & \forall x. (\forall y.( P(x,y) \wedge P(y,x) \to x = y)) \wedge && R \\
+         & \forall x. (\forall y.( P(x,y) \vee P(y,x) )) \wedge && S \\
+         & \forall x. (\forall y.( \forall z.( P(x,y) \wedge P(y,z) \to P(x,z) ))) \to && T \\
+         & \exists x.(\forall y.(P(x,y)))
+\end{align*}
 
-Thanks anyway for correcting exerices 1,2 and 3 !
+\subsection*{\texttt{(a)}}
+
+In order to falsify $\phi$, we have to satisfy $R \wedge S \wedge T$ and falsify
+$\exists x.(\forall y.(P(x,y)))$. So we have to satisfy $R$, satisfy $S$ and
+satisfy $T$ :
+
+\begin{align*}
+  & U = \mathbb{Z} \\
+  & P(x,y) \leftrightarrow \{(x,y) | x >= y\}
+\end{align*}
+
+$R$ is satisfy, because, for any $x$ and $y$, we have $x >= y$ and $y >= x$, and
+the only way satisfy this is to give the same value to $x$ and $y$.
+
+$S$ is satisfy, because for any $x$ and $y$ from $\mathbb{Z}$, either one is
+greater than the other or the invers.
+
+$T$ is satisfy, because the relation $>=$ is transitive, for any $x$, $y$ and
+$z$ from $\mathbb{Z}$, if $x >= y$ and $y >= z$, then $x >= z$.
+
+Finally, we falsify $\exists x.(\forall y.(P(x,y)))$, we pick $x=3$ (for example), then for
+any $y$ from $\mathbb{Z}$, we can't make $P(x,y)$ true, because if $x=3$, for
+the value of $y=4$, then $P(x,y)$ is not true, because $(3,4) \not\in P(x,y)$.
+
+Then we find a counter-example to $\phi$.
+
+\subsection*{\texttt{(b)}}
+
+This formula is true for a finite universe, because we can put $U = \{1\}$, then
+$R$, $S$ and $T$ are $true$ and $\exists x.(\forall y.(P(x,y)))$ is also $true$,
+because we just have to check if $P(1,1)$, which is $true$.
+
+\section*{\texttt{5}}
+
+In order to satisfy $S$ and $R$ but falsify $T$. To do this, we use a modified
+version of the rock, paper, scissors game. The predicate $P(x,y)$ is $true$ is
+$x$ beats $y$, we consider that $P(x,y)$ is $true$ if $x = y$. Then, we have
+
+\begin{align*}
+  & U = \{rock,paper,scissors\} \\
+  & P = \{ \\
+  & (rock,rock), \\
+  & (scissors,scissors), \\
+  & (paper,paper), \\
+  & (rock,scissors), \\
+  & (scissors,paper), \\
+  & (paper,rock) \\
+  & \}
+\end{align*}
+
+Then, $T$ is $true$ because $P(x,y)$ is $true$ if $x=y$. $R$ is also $true$,
+because either $x$ beats $y$ or $y$ beats $x$. But $T$ is $false$, because the
+relation $P$ is not transitive, for any $x$, $y$ and $z$, we would have $x =
+rock$, $y = scissors$ and $z = paper$ at one point. Then, $x$ beats $y$ is
+$true$, $y$ beats $z$ is $true$ but $x$ beats $z$ is $false$.
 
 \end{document}

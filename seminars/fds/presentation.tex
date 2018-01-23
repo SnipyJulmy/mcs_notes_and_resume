@@ -6,7 +6,6 @@
 \usepackage{sourcecodepro}
 \usepackage{graphicx}
 \usepackage{amsmath}
-\usepackage{fullpage}
 \usepackage{bussproofs}
 \usepackage{mathpartir}
 \usepackage{prooftrees}
@@ -19,15 +18,222 @@
 \graphicspath{{img/}}
 
 \usetheme{CambridgeUS}
-\setbeamertemplate{\insertframenumber/\inserttotalframenumber}
 
-\title[Computer Chess]{Bisimulation Minimization and Symbolic Model Checking}
-\author{Sylvain Julmy}
+\title[FDS Seminar]{Foundations of Dependable Systems Seminar : \\ 
+  Bisimulation and Model Checking}
+\author{Noé Zufferey, Sylvain Julmy}
 \date{\today}
 
 \begin{document}
 
 \maketitle
+
+%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+ \frametitle{Model Checking 1}
+ The paper focus on the checking of invariance properties.
+ A logical proposition is either true or false for each state.
+ Can the analysed state system reach a system that does not correspond to this logical proposition ?
+\end{frame}
+
+\begin{frame}
+ \frametitle{Model Checking 2} 
+ A model checker has to analyse the entire transition state spaces.
+ Some methods are used to reduce the size of the state space.
+ One of them is bisimilution minimization.
+ 
+ The paper study a model checking method which uses bisimilution minimization.
+ Minimized sytems are faster to check.
+\end{frame}
+
+\begin{frame}
+ \frametitle{Model Checking 3} 
+ A formal model for symbolic model checking can be : \\ \vspace{10pt}
+ 
+ $ \langle S, R, AP, L, init \rangle$
+ \begin{itemize}
+  \item $S$ : set of states
+  \item $R$ : the transitions over $S$
+  \item $AP$ : a set of atomic prposition
+  \item $L$ : $S \times AP$, set of pairs atomic prppositions and the states they are true with.
+  \item $init$ : the initial state
+ \end{itemize}
+
+\end{frame}
+
+\begin{frame}
+ \frametitle{Bisimilution minimization}
+ The purpose is to reduce the number of states.
+ Bisimulation minimization algorithms analyse a transition state space to find set of states
+ that are equivalent with a given logical proposition.
+ 
+ Both state systems, the first one and the minimization are bisimilar in respect with a logical proposition.
+ They can simulate each other for the model checking.
+\end{frame}
+
+\begin{frame}
+ \frametitle{Bisimilution minimization 2}
+ A common way to Minimize state systems is to split the state space in classes in which states have
+ the main behaviour regarding the logical prposition.
+ 
+ Then each class is repeatidly split into new classes until all states of a class agree on the type of their successor.
+\end{frame}
+
+\begin{frame}
+ \frametitle{Bisimilution minimization 3}
+ A naïve way to compute a bisimultation minimization is to repeatidly look for states that are not bisimilar and/or their succesor are not bisimilar.\\\\
+ \vspace{10pt}
+ \begin{align*}
+   & \exists ap \in AP \lnot (L(s_1, ap) \Leftrightarrow L(s_2, ap)) \lor \\
+   & \exists s'_1 R(s_1, s'_1) \land \lnot (\exists s'_2 (R(s_2, s'_2) \land B(s'_1, s'_2))) \lor \\
+   & \exists s'_2 R(s_2, s'_2) \land \lnot (\exists s'_1 (R(s_1, s'_1) \land B(s'_1, s'_2)))
+ \end{align*}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Bisimilution minimization 4}
+ The first line : \vspace{10pt}
+ 
+  $\exists ap \in AP \lnot (L(s_1, ap) \Leftrightarrow L(s_2, ap))$ \vspace{10pt}
+  
+  looks for states that are not directly bisimilar in respect with the logical prposition.
+  
+  The two last lines : \vspace{10pt}
+  
+  $\exists s'_1 R(s_1, s'_1) \land \lnot (\exists s'_2 (R(s_2, s'_2) \land B(s'_1, s'_2))) \lor
+  
+  \exists s'_2 R(s_2, s'_2) \land \lnot (\exists s'_1 (R(s_1, s'_1) \land B(s'_1, s'_2)))$ \vspace{10pt}
+  
+  look for states whose successors are not bisimilar.
+\end{frame}
+
+\begin{frame}
+ \frametitle{Bisimilution minimization 5}
+ The naïve algorithm takes into account the unreachable states.
+\end{frame}
+
+\begin{frame}
+ \frametitle{Terminology}
+ The paper difines a number of terms that are usefull when speaking of bisimulation minimization algorithms.
+\end{frame}
+
+\begin{frame}
+ \frametitle{Terminology 2}
+ \begin{itemize}
+  \item block : set of states
+  \item block's representative : the state that represent its whole blocks
+  \item partition : set of blocks
+  \item initial partition : partition of the two block (good and bad) that are used at the beggining of the algorithms
+  \item good block : initial block composed by states that satisfy the given invariant property
+  \item bad block : initial block composed by states that do not satisfy the given invariant property
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Terminology 3}
+ \begin{itemize}
+  \item refine : a partition $P_1$ refines a partition $P_2$ iff each blck of $P_1$ is contained in blocks of $P_2$
+  \item reachable : a state is reachable if their is an existing path between de initial state and this state. A block is reachable if containing a reachable state.
+  \item stable : a block $B_1$ is stable with a block $B_2$ iff every state in $B_1$ have transition with at least one state of $B_2$ or if no state in $B_1$ have transition with states in $B_2$
+  \item splitter : a splitter of a block is a block that the first black is not stable with
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+ \frametitle{Invariance checking}
+ The paper studies invariance checking. An invariance property is true iff every reachable state satisfies it.
+ Invariance checking can be executed in two ways
+ \begin{itemize}
+  \item forward reachability
+  \item backward reachability
+ \end{itemize}
+ Backward reachability (BR) is closely related to bisimilution minimization. 
+\end{frame}
+
+\begin{frame}
+ \frametitle{Backward reachability}
+ BR has two set of states. The frontier states $F$ that represent the new discovered states and the explored states $S$.
+ BR iterates the following equations : \vspace{10pt}
+ 
+ $F_0 = Bad
+ 
+ F_{i + 1} = pre(F_i) - S_i$ \vspace{10pt}
+ 
+ $S_0 = Bad
+ 
+ S_{i + 1} = pre(F_i) \cup S_i$ \vspace{10pt}
+ 
+ The iteration stop either if $F_i = \emptyset$ or if $init \in F_i$.
+\end{frame}
+
+\begin{frame}
+ \frametitle{Backward reachability 2}
+ The lower bound for BR is $n \cdot (M + U + D + 2E + I)$, with $n$ the number of iteration to terminate.
+ 
+ $n$ is the length of th shortest path between the initial state and a bad state or $n$ is the length of the longest acyclic state from a good state to a bad state.
+\end{frame}
+
+\begin{frame}
+ \frametitle{Algorithms}
+ The paper study 3 diferent algorithms that apply bisimulation minimization for symbolic model checking : \vspace{10pt}
+ 
+ \begin{itemize}
+  \item PT
+  \item BFH
+  \item LY
+ \end{itemize} \vspace{10pt}
+ 
+ Each algorithm has been modified for model checking purpose. The authors added termination condition since the invariance has been proven true or false.
+ \end{frame}
+
+\begin{frame}
+ \frametitle{PT algorithm}
+ PT stands for Paige-Tarjan.
+ 
+ PT stabilizes every block (reachable and unreachable). It selects splitters to stabize the system instead of block to split.
+
+ Two partition are used in PT. The current partition $Q$ and the previous partition $X$. $Q$ refines $X$. That basically means that $Q$ contains more blocks.
+ 
+ The algorithm repeatidly look for blocks of $X$ that contains states from multiple blocks of $Q$. This kind of blocks is called of compound block.
+ Then, the compound block is splitted.
+ 
+ A Block is marked if it contains a bad state. The algorithm fail if init is marked.
+\end{frame}
+
+\begin{frame}
+ \frametitle{PT algorithm 2}
+  The marking had been added to support early termination. If a splitter B is marked, every block that reach B is marked.
+  So, this PT algorithm contains at most 1 marked block (and if zero, it stop with violation)
+  
+  Furthermore, the algorithm never split a marked block, split a marked block is not helpful
+\end{frame}
+
+\begin{frame}
+ \frametitle{PT algorithm 3}
+  \begin{itemize}
+   \item Select a refining block.
+   \item Update X
+   \item Split the block containing elements that are predecessors of the splitter
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+ \frametitle{PT algorithm 4}
+\includegraphics{figures/algo_part1}
+\end{frame}
+
+\begin{frame}
+ \frametitle{PT algorithm 5}
+\includegraphics{figures/algo_part2}
+\end{frame}
+
+\begin{frame}
+ \frametitle{PT algorithm 5}
+The lower bound for PT is $n \cdot (2M + D + I + E)$, with n the number of while iterations
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
   \frametitle{LY}
@@ -38,7 +244,7 @@
   \frametitle{LY - idea}
   \begin{itemize}
   \item Stabilize only reachable blocks.
-  \item Reachable block use a representative that has to bee reachable.
+  \item Reachable block use a representative that has to be reachable.
   \item The first state is the representative for the initial block.
   \item To find new reachable state, we look for transition from representative
     of reachable state to state from unreachable block.
@@ -49,7 +255,7 @@
   \frametitle{LY - idea}
   Two loops :
   \begin{itemize}
-  \item Search new reachable blocks
+  \item Search new, reachable blocks
   \item Stabilize reachable but unstable blocks
   \end{itemize}
 \end{frame}
@@ -79,12 +285,12 @@
 \begin{frame}
   \frametitle{LY - search}
   To search for new reachable block, the algorithm is searching from all the
-  successor of the initial state if one of those is in a different block.
+  successors of the initial state if one of those is in a different block.
 
   \pause
   \vspace*{1cm}
 
-  The algorithm also determine if the initial block has to be stabilize or not.
+  The algorithm also determine if the initial block has to be stabilized or not.
 \end{frame}
 
 \begin{frame}[fragile]
@@ -95,7 +301,7 @@
     \If{$B \neq C$}
     \State{raise violation}
     \EndIf
-    \If{$B \cap pre(C) \neq B$} \Comment{Not all predecessor of $B$ are in $B$}
+    \If{$B \cap pre(C) \neq B$} \Comment{Not all predecessors of $B$ are in $B$}
     \State{$B$ is not stable}
     \EndIf
     \State{$D := D - C$}
@@ -296,7 +502,7 @@
     stabilize a block.
   \item BFH stabilize a block w.r.t. all the other blocks (either reachable or
     unreachable).
-  \item The algorithm become simplier but unnecessary work is done.
+  \item The algorithm become simpler but unnecessary work is done.
   \end{itemize} 
 \end{frame}
 
@@ -310,14 +516,14 @@
 
 \begin{frame}
   \frametitle{BFH - termination}
-  The algorthim may traverse a path from the bad block to the initial state
+  The algorithm may traverse a path from the bad block to the initial state
   before the initial block becomes stable.
 
-  Thus, the algorithm take more iteration to terminate.
+  Thus, the algorithm takes more iterations to terminate.
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{BFH - new Algorithm}
+  \frametitle{BFH - new algorithm}
   \begin{algorithmic}[1]
     \State Mark the bad block
     \State{$I = [init]_p$}
@@ -337,7 +543,7 @@
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{BFH - new algorthim (split)}
+  \frametitle{BFH - new algorithm (split)}
   \begin{algorithmic}[1]
     \Function{split}{$X$ : block, $p$ : partition}
     \State{$N = \{X\}$}
@@ -490,23 +696,56 @@
   \end{itemize}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Experimental comparisons}
-  \begin{itemize}
-  \item BR has better time and memory usage (in almost all cases).
-  \item PT does surprisingly well w.r.t. LY and BFH
-  \end{itemize}
+\begin{frame}[fragile]
+  \frametitle{Results}
+  \begin{figure}[t]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/experimental_comparison}
+    \caption{Experimental comparison of the various algorithms.}
+    \label{fig:experimental-comparison}
+  \end{figure}
 \end{frame}
 
 \begin{frame}
   \frametitle{Experimental comparisons}
-  ``That PT performs so well compared to BFH and LY suggests that minimization
-  algorithms tailored to verification settings should pay attention ti choosing ''
+  \begin{itemize}
+  \item BR has a better time and memory usage (in almost all cases).
+  \item PT does surprisingly well compared to LY and BFH
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{PT Optimisation}
+  \begin{figure}[t]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/pt_table}
+    \caption{The effect of not splitting marked blocks for PT.}
+    \label{fig:experimental-comparison}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Experimental comparisons}
+  ``That PT performs so well compared to BFH and LY suggests that minimisation
+  algorithms tailored to verification settings should pay attention to choosing. ''
 \end{frame}
 
 \begin{frame}
   \frametitle{Conclusion}
-  Bisimulation and Model Checking requires more resources than model checking
+  \begin{itemize}
+  \item Bisimulation is very useful : minimisation technique for model checking,
+    equivalence between transition systems, collapsing infinite-state systems.
+  \item Assumption : the big problem is from the algorithm, not from the
+    representation.
+  \item Minimisation and backward reachability are similar in the spirit of
+    testing invariant properties.
+  \item Creation of three new algorithms : PT, LY and BFH.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{What to retain ?}
+  Bisimulation and Model Checking require more resources than Model Checking
   alone.
 \end{frame}
 
