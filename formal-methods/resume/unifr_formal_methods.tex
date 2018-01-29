@@ -7,6 +7,11 @@
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{fullpage}
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage[tableaux]{prooftrees}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
 
 \title{Resume : Formal Methods}
 
@@ -14,10 +19,14 @@
 
 \newcommand{\HTriple}[3]{\{#1\}\ #2 \ \{#3\}}
 
-% For definition
+% For definition, theorem, ...
 \newtheorem*{mydef}{Definition}
-
 \newtheorem{theorem}{Theorem}
+
+% Inference rules
+\newenvironment{bprooftree}
+  {\leavevmode\hbox\bgroup}
+  {\DisplayProof\egroup}
 
 \begin{document}
 
@@ -309,7 +318,7 @@ A formula in propositional logic can be constructed as follows :
   $I$.
 \end{mydef}
 
-\begin{theorem}
+\begin{mydef}
   We have the following for $F$ and $G$ being a propositional variables :
   \begin{itemize}
   \item $I \models \top$
@@ -319,10 +328,477 @@ A formula in propositional logic can be constructed as follows :
   \item $ I \models (F)$ iff $I \models F$
   \item $ I \models \neg F$ iff $I \not\models F$
   \item $ I \models F \wedge G $ iff $I \models F$ and $I \models G$
+  \item $ I \models F \vee G $ iff $ I \models F $ or $I \models G$ or both
+  \item $ I \models F \to G $ iff $ I \not \models F $ or $I \models G$ or both
+  \item $ I \models F \leftrightarrow G $ iff $ I \models F \to G $ and $I
+    \models G \to F$
   \end{itemize}
-\end{theorem}
+\end{mydef}
 
+\section{Proof rules}
 
+\begin{mathpar}
+  \inferrule
+  {I \models \neg F}
+  {I \not \models F}
+  
+  \inferrule
+  {I \models \neg F}
+  {I \models F}
+
+  \inferrule
+  {I \models F \wedge G}
+  {I \models F \\\\ I \models G}
+
+  \inferrule
+  {I \not \models F \wedge G}
+  {I \not \models F \\ I \not \models G}
+  
+  \inferrule
+  {I \models F \vee G}
+  {I \models F \\ I \models G}
+
+  \inferrule
+  {I \not \models F \vee G}
+  {I \not \models F \\\\ I \not \models G}
+
+  \inferrule
+  {I \models F \to G}
+  {I \not \models F \\ I \models G}
+
+  \inferrule
+  {I \not \models F \to G}
+  {I \models F \\\\ I \not \models G}
+
+  \inferrule
+  {I \models F \leftrightarrow G}
+  {I \models F \wedge G \\ I \not \models F \vee G}
+  
+  \inferrule
+  {I \not \models F \leftrightarrow G}
+  {I \models \neg F \wedge G \\ I \models F \wedge \neg G}
+  
+  \inferrule
+  {I \models F \\\\ I \not \models F}
+  {I \models \top}
+\end{mathpar}
+
+\begin{mydef}
+  A propositional formula $F$ is \textbf{satisfiable} if and only if there exists an
+  interpretation $I$ such that $I \models F$.
+\end{mydef}
+
+\begin{mydef}
+  A propositional formula $F$ is \textbf{valid} if and only if for all interpretations
+  $I$, we have $I \models F$.
+\end{mydef}
+
+\begin{mydef}
+  $F$ is \textbf{valid} if and only if $\neg F$ is not satisfiable.
+\end{mydef}
+
+\begin{mydef}
+  $F$ is \textbf{satisfiable} if and only if $\neg F$ is not valid.
+\end{mydef}
+
+\paragraph{Example :} Prove the validity of $(P \wedge (P \to Q)) \to Q$ :
+
+We prove the satisfiability of $\neg((P \wedge (P \to Q)) \to Q)$ to prove the
+validity of $(P \wedge (P \to Q)) \to Q$.
+
+\begin{tableau}
+  {
+    line no sep= 2cm,
+    for tree={s sep'=10mm}
+  }
+  [I \models \neg((P \wedge (P \to Q)) \to Q), just={}
+  [I \not \models (P \wedge (P \to Q)) \to Q, just={}
+  [I \models P \wedge (P \to Q) \text{ and } I \not \models Q
+  [I \models P \text{ and } I \models P \to Q \text{ and } I \not \models Q
+  [I \models P \text{ and } I \not \models Q \text{ and } I \not \models P
+  [I \models \bot]
+  ]
+  [I \models P \text{ and } I \not \models Q \text{ and } I \models Q
+  [I \models \bot]
+  ]  ]  ]  ]  ]
+\end{tableau}
+
+$\neg((P \wedge (P \to Q)) \to Q)$ is not satisfiable, then $(P \wedge (P \to
+Q)) \to Q$ is valid.
+
+\section{Equivalence and Implication of Formulas}
+
+\begin{mydef}
+  Two formulas $F$ and $G$ are \textbf{equivalent} (written : $F \Leftrightarrow G$) if
+  and only if $F \leftrightarrow G$ is a valid formula.
+\end{mydef}
+
+\begin{mydef}
+  Formula $F$ \textbf{implies} formula $G$ (written $F \Rightarrow G$) if and
+  only if $F \to G$ is a valid formula.
+\end{mydef}
+
+\paragraph{Example :} Does $P \wedge (P \to Q)$ imply $Q$ ?
+
+We just prove that $(P \wedge (P \to Q)) \to Q$ is a valid formula, then $P
+\wedge (P \to Q) \Rightarrow Q$.
+
+\section{Substitutions}
+
+\begin{mydef}
+  A substitution $\sigma$ is a mapping from formulas to formulas :
+  $$ \{ F_1 \mapsto G_1, F_2 \mapsto G_2, \dots , F_n \mapsto G_n\} $$
+
+  We denote $\sigma$'s \textbf{domain} by $domain(\sigma) =
+  \{F_1,F_2,\dots,F_n\}$ and $\sigma$'s \textbf{range} by $range(\sigma) =
+  \{G_1,G_2,\dots,G_n\}$.
+
+  If the domain of $\sigma$ consists solely of single variables, then $\sigma$
+  is valled a \textbf{variable substitution}.
+\end{mydef}
+
+If we apply a substitution $\sigma = \{ F_1 \mapsto G_1, F_2 \mapsto G_2, \dots
+, F_n \mapsto G_n\}$ to formula $F$, written as $F_\sigma$, then each occurence
+of sub-formula $F_i$ in $F$ replaced by $G_i$.
+
+If $F$ contains sub-formulas $F_i$ and $F_j$ is larger than $F_i$, then we
+substitute $F_j$ first.
+
+If $\sigma$ is a variable substitution and $F$ is valid, then $F_\sigma$ is
+valid.
+
+If $F_i \Leftrightarrow G_i$ for all $i$, then $F \Leftrightarrow F_\sigma$.
+
+\paragraph{Example :} Prove the validity of
+\[
+  ((P \leftrightarrow \neg R) \wedge ((P \leftrightarrow \neg R) \to (P
+  \leftrightarrow \neg(R \wedge \neg Q)))) \to (P \leftrightarrow \neg(R \wedge
+  \neg Q))
+\]
+
+We use the following substitution
+\[
+  \sigma = \{ P \leftrightarrow \neg R \mapsto P, P \leftrightarrow \neg(R
+  \wedge \neg Q) \mapsto Q\}
+\]
+
+Then, we have
+
+\[
+  F_\sigma = (P \wedge (P \to Q)) \to Q
+\]
+
+which is a tautology.
+
+\begin{mydef}
+  A formula $F$ is in \textbf{negation formal-form}, if and only if negations
+  $\neg$ appear only directly in front of variables, i.e. they appear only in
+  literals, and the formulas contain only disjunctions and conjunctions.
+
+  We can use the following equivalences :
+
+  \begin{align*}
+    \neg \neg F &\Leftrightarrow F\\
+    \neg \top &\Leftrightarrow \bot\\
+    \neg \bot &\Leftrightarrow \top\\
+    \neg (F \wedge G)&\Leftrightarrow (\neg F \vee \neg G)\\
+    \neg (F \vee G)&\Leftrightarrow (\neg F \wedge \neg F)\\
+    F \to G &\Leftrightarrow \neg F \vee G\\
+    F \leftrightarrow G &\Leftrightarrow (F \to G) \wedge (G \to F)\\
+  \end{align*}
+\end{mydef}
+
+\begin{mydef}
+  A formula $F$ is in \textbf{disjunctive normal-form} if and only if it is in
+  negation normal-form and it is the disjunction ($\vee$) of conjunctions
+  ($\wedge$) :
+
+  $$ F = \bigvee_i \bigwedge_j L_{ij}$$
+
+  We can use the following additional equivalences :
+
+  \begin{align*}
+    (F \vee G) \wedge H &\Leftrightarrow (F \wedge H) \vee (G \wedge H) \\
+    F \wedge (G \vee H) &\Leftrightarrow (F \wedge G) \vee (F \wedge H)
+  \end{align*}
+\end{mydef}
+
+\begin{mydef}
+   A formula $F$ is in \textbf{conjunctive normal-form} if and only if it is in
+  negation normal-form and it is the conjunction ($\wedge$) of disjunctions
+  ($\vee$) :
+
+  $$ F = \bigwedge_i (\bigvee_j L_{ij})$$
+
+  We can use the following additional equivalences :
+
+  \begin{align*}
+    (F \wedge G) \vee H &\Leftrightarrow (F \vee H) \wedge (G \vee H) \\
+    F \vee (G \wedge H) &\Leftrightarrow (F \vee G) \wedge (F \vee H)
+  \end{align*} 
+\end{mydef}
+
+\paragraph{Example :} Turn $(P \wedge (P \to Q)) \to Q$ into CNF :
+
+\begin{align*}
+  (P \wedge (P \to Q)) \to Q &= \neg (P \wedge (P \to Q)) \vee Q \\
+                             &= (\neg P \vee \neg (P \to Q)) \vee Q\\
+                             &= (\neg P \vee \neg (\neg P \vee Q)) \vee Q\\
+                             &= (\neg P \vee (\neg \neg P \vee \neg Q)) \vee Q\\
+                             &= (\neg P \vee (P \vee \neg Q)) \vee Q\\
+                             &= \neg Q \vee Q\\
+                             &= \top
+\end{align*}
+
+\section{Deciding satisfiability}
+
+If formula $F$ contains $n$ propositional variables, then we can try out all
+value assignments to the variables to see whether or not $F$ is satisfiable. The
+truth table of such a construction will have size $O(2^n)$. However, we can
+check this more space efficiently :
+
+\begin{algorithmic}
+  \Function{SAT}{F}
+  \If{$F = \top$}
+  \State \Return $true$
+  \ElsIf{$F = \bot$}
+  \State \Return $false$
+  \Else
+  \State $P = choose\_vars(F)$
+  \State \Return $SAT(F\{P \mapsto \top\}) \vee SAT(F\{P \mapsto \bot\})$
+  \EndIf
+  \EndFunction
+\end{algorithmic}
+
+However, the $SAT$ method requires that the formula is in conjunctive
+normal-form, but turning a formula of the form
+$$
+\bigvee_{i=1}^n(P_i \wedge Q_i)
+$$
+
+is exponential.
+
+Instead of turning the formula $F$ into an equivalent formula in CNF, we turn it
+into an equisatisfiable formula $F'$ in CNF. An equisatisfiable formula $F'$ to
+$F$ is satisfiable if and only if $F$ is satisfiable (this is not equivalence).
+
+\begin{mydef}
+  Propositional variables $rep(F)$ that represent formula $F$ :
+  \begin{align*}
+    rep(\top) &= \top \\
+    rep(\bot) &= \bot \\
+    rep(P) &= P \text{ for variables $P$} \\
+    rep(F) &= P_F \text{ for all other formulas $F$}
+  \end{align*}
+\end{mydef}
+
+\begin{mydef}
+  Formulas $enc(F)$ that make sure that $rep(F)$ represents formulas $F$ :
+  \begin{align*}
+    enc(\top) &= \top\\
+    enc(\bot) &= \top\\
+    enc(P) &= \top\\
+    enc(\neg F) &= (\neg P_{\neg F} \vee \neg rep(F)) \wedge (P_{\neg F} \vee rep(F))\\
+    enc(F \wedge G) &= (\neg P_{F \wedge G} \vee rep(F)) \wedge (\neg P_{F \wedge G} \vee rep(G)) \wedge (P_{F \wedge G} \vee \neg rep(F) \vee \neg rep(G)) \\
+    enc(F \vee G) &= (P_{F \vee G} \vee \neg rep(F)) \wedge (P_{F \vee G} \vee \neg rep(G)) \wedge (\neg P_{F \vee G} \vee rep(F) \vee rep(G))\\
+    enc(F \to G) &= (P_{F \to G} \vee rep(F)) \wedge (P_{F \to G} \vee \neg rep(G)) \wedge (\neg P_{F \to G} \vee \neg rep(F) \vee rep(G))\\
+    enc(F \leftrightarrow G) &= (\neg P_{F \leftrightarrow G} \vee \neg rep(F) \vee rep(G)) \\
+              & \wedge (\neg P_{F \leftrightarrow G} \vee rep(F) \vee \neg rep(G)) \\
+              & \wedge (P_{F \leftrightarrow G} \vee rep(F) \vee rep(G)) \\
+              & \wedge (P_{F \leftrightarrow G} \vee \neg rep(F) \vee \neg rep(G)) \\
+  \end{align*}
+
+  Finally, we replace formula $F$ with the equisatisfiable formula
+
+  \[
+    rep(F) \wedge \bigwedge_{G \in sub\_formulas(F)} enc(G)
+  \]
+
+  where $sub\_formulas(F)$ is the set of all sub-formulas of $F$ including $F$ itself.
+\end{mydef}
+
+\begin{mydef}
+  Let $F$ be a formula in CNF, i.e. it is the conjunction of clauses
+  (disjunction of literals). Let $C_1$ and $C_2$ be two clauses in $F$ both
+  containing, but disagreeing on variable $P$.
+
+  Assume (without loss of generality) that $C_1$ contains $P$ in its positive
+  and $C_2$ contains $P$ in its negative form. We write $C_1[P]$ and $C_2[\neg
+  P]$.
+
+  Then we get the following rule, denote \textbf{resolution step} :
+
+  \[
+    \inferrule {C_1 \\ C_2} {C_1\{P \mapsto \bot\} \vee C_2\{\neg P \mapsto \bot\}}
+  \]
+
+  $C_1\{P \mapsto \bot\} \vee C_2\{\neg P \mapsto \bot\}$ is called the
+  resolvent of $C_1$ and $C_2$.
+\end{mydef}
+
+To check the satisfiability of a formula $F$
+\begin{itemize}
+\item As long as we can, we apply the resolution step.
+\item In case we ever derive $\bot$ in a resolution step, $F$ is not satisfiable.
+\item Otherwise, if no more resolution steps can be executed, $F$ is satisfiable.
+\end{itemize}
+
+\paragraph{Example :} Show that $\phi = (P \wedge (P \to Q)) \to Q$ is satisfiable by
+using the resolution steps.
+
+First, we turn $\phi$ into an equisatisfiable formula by using its represent :
+
+\begin{align*}
+  rep((P \wedge (P \to Q)) \to Q) &= P_1 \\
+  rep(P \wedge (P \to Q)) &= P_2 \\
+  rep(P \to Q) &= P_3 \\
+  rep(Q) &= Q \\
+  rep(P) &= P \\
+\end{align*}
+
+and its encoding :
+
+\begin{align*}
+  enc(\phi) &= rep(\phi) \wedge enc(P_1) \wedge enc(P_2) \wedge enc(P_3) \\
+  rep(\phi) &= P_1 \\
+  enc(P_1) &= (P_1 \vee P_2) \wedge (P_1 \vee \neg Q) \wedge (\neg P_1 \vee \neg P_2 \vee Q)\\
+  enc(P_2) &= (\neg P_2 \vee P) \wedge (\neg P_2 \vee P_3) \wedge (P_2 \vee \neg P \vee \neg P_3)\\
+  enc(P_3) &= (P3 \vee P) \wedge (P_3 \vee \neg Q) \wedge (\neg P_3 \vee \neg P \vee Q)\\
+  enc(\phi) &= P_1 \\
+            & \wedge (P_1 \vee P_2) \wedge (P_1 \vee \neg Q) \wedge (\neg P_1 \vee \neg P_2 \vee Q) \\
+            & \wedge (\neg P_2 \vee P) \wedge (\neg P_2 \vee P_3) \wedge (P_2 \vee \neg P \vee \neg P_3) \\
+            & \wedge (P3 \vee P) \wedge (P_3 \vee \neg Q) \wedge (\neg P_3 \vee \neg P \vee Q)
+\end{align*}
+
+Then we apply the resolution steps on :
+
+\begin{mathpar}
+  P_1 \wedge (P_1 \vee P_2) \wedge (P_1 \vee \neg Q) \wedge (\neg P_1 \vee \neg P_2 \vee Q)
+  \wedge (\neg P_2 \vee P) \wedge (\neg P_2 \vee P_3) \wedge (P_2 \vee \neg P \vee \neg P_3)
+  \wedge (P_3 \vee P) \wedge (P_3 \vee \neg Q) \wedge (\neg P_3 \vee \neg P \vee Q)
+\end{mathpar}
+
+\paragraph{Using $P_1$}
+\begin{mathpar}
+  \inferrule {
+  \inferrule
+  {P_1 \\ P_1 \vee P_2 \\ P_1 \vee \neg Q \\ \neg P_1 \vee \neg P_2 \vee Q}
+  {(\neg P_2 \vee Q) \wedge (P_2 \vee \neg P_2 \vee Q) \wedge (\neg P_2 \vee
+    Q \vee \neg Q)}
+  }{(\neg P_2 \vee Q)}
+\end{mathpar}
+
+\paragraph{Using $P_2$}
+\begin{mathpar}
+  \inferrule
+  {
+    \inferrule
+    {
+      \neg P_2 \vee Q \\ \neg P_2 \vee P \\ \neg P_2 \vee P_3 \\ P_2 \vee \neg P
+      \vee \neg P_3
+    }
+    {
+      (\neg P \vee \neg P_3 \vee Q) \wedge
+      (\neg P \vee \neg P_3 \vee P) \wedge
+      (\neg P \vee \neg P_3 \vee P_3)
+    }
+  }
+  {
+    (\neg P \vee \neg P_3 \vee Q)
+  }
+\end{mathpar}
+
+\paragraph{Using $P_3$}
+\begin{mathpar}
+    \inferrule
+    {
+      \inferrule
+      {
+        \neg P \vee \neg P_3 \vee Q \\
+        P_3 \vee P \\
+        P_3 \vee \neg Q
+      }
+      {
+        (\neg P \vee P \vee Q) \wedge
+        (\neg P \vee \neg Q \vee Q)
+      }
+    }
+    {
+      \top
+    }
+\end{mathpar}
+
+\begin{mydef}
+  The Boolean Constraint Propagation (BCP) on a formula $F$ uses \textbf{unit
+    resolution} (resolution against literals). Let $P$ be a propositional
+  variable, then we get the rules :
+  \begin{mathpar}
+    \begin{bprooftree}
+      \AxiomC{$P$}
+      \AxiomC{$C[\neg P]$}
+      \BinaryInfC{$C\{\neg P \mapsto \bot\}$}
+    \end{bprooftree}
+    \begin{bprooftree}
+      \AxiomC{$\neg P$}
+      \AxiomC{$C[P]$}
+      \BinaryInfC{$C\{ P \mapsto \bot\}$}
+    \end{bprooftree}
+  \end{mathpar}
+\end{mydef}
+
+Then we obtain the DPLL algorithm used in practice :
+
+\begin{algorithmic}
+  \Function{DPLL}{F}
+  \State $F' = BCP(F)$
+  \If{$F' = \top$}
+  \State \Return $true$
+  \ElsIf{$F' = \bot$}
+  \State \Return $false$
+  \Else
+  \State $P = choose\_vars(F')$
+  \State \Return $SAT(F'\{P \mapsto \top\}) \vee SAT(F'\{P \mapsto \bot\})$
+  \EndIf
+  \EndFunction
+\end{algorithmic}
+
+\paragraph{Example :} Show that $(P \wedge (P \to Q))\to Q$ is satisfiable by
+using DPLL.
+
+\begin{mathpar}
+  \textbf{DPLL}(
+  P_1 \wedge (P_1 \vee P_2) \wedge (P_1 \vee \neg Q) \wedge (\neg P_1 \vee \neg P_2 \vee Q)
+  \wedge (\neg P_2 \vee P) \wedge (\neg P_2 \vee P_3) \wedge (P_2 \vee \neg P \vee \neg P_3)
+  \wedge (P_3 \vee P) \wedge (P_3 \vee \neg Q) \wedge (\neg P_3 \vee \neg P \vee
+  Q)) = \textbf{BCP}(\dots) = \\ (\neg P_2 \vee Q) \wedge (P_1 \vee P_2) \wedge (P_1 \vee \neg Q)
+  \wedge (\neg P_2 \vee P) \wedge (\neg P_2 \vee P_3) \wedge (P_2 \vee \neg P \vee \neg P_3)
+  \wedge (P_3 \vee P) \wedge (P_3 \vee \neg Q) \wedge (\neg P_3 \vee \neg P \vee
+  Q) \\
+  \textbf{DPLL}(\dots [P_2 \mapsto \top]) =
+  \textbf{BCP}(
+  Q \wedge P \wedge P_3 \wedge
+  (P_1 \vee \neg Q) \wedge
+  (P_3 \vee P) \wedge
+  (P_3 \vee \neg Q) \wedge
+  (\neg P_3 \vee \neg P \vee Q)) = \\
+  \text(w.r.t. $\ Q$) P \wedge P_3 \wedge P_1 \wedge (P_3 \vee P) \wedge (\neg
+  P_3 \vee \neg P \vee = \\
+  \text(w.r.t. $\ P_3$) P \wedge P_1 \wedge (P_3 \wedge P) \wedge (\neg P \vee
+  Q) = \\
+  \text(w.r.t. $\ P$) P_1 \wedge (P_3 \vee P) \wedge Q = \\
+  \textbf{DPLL}(\dots [P_1 \mapsto \top]) = \\
+  \textbf{DPLL}(\dots [Q \mapsto \top]) = \\
+  \textbf{DPLL}(\dots [P_3 \mapsto \top]) = \\
+  \textbf{DPLL}(\dots [P \mapsto \top])
+\end{mathpar}
+
+$(P \wedge (P \to Q))\to Q$ is satisfiable with the interpretation
+\[
+  I = \{
+  P \mapsto \top,
+  Q \mapsto \top
+  \}
+\]
 
 \chapter{Computability}
 \section{Undecidability of First-order Logic}
