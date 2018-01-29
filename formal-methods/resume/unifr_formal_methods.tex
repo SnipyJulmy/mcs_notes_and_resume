@@ -14,6 +14,11 @@
 
 \newcommand{\HTriple}[3]{\{#1\}\ #2 \ \{#3\}}
 
+% For definition
+\newtheorem*{mydef}{Definition}
+
+\newtheorem{theorem}{Theorem}
+
 \begin{document}
 
 \maketitle
@@ -230,8 +235,95 @@ guarantees the truth of $\HTriple{P'}{S}{Q}$.
 If $Q$ is stronger than $Q'$ ($Q \to Q'$), then proving $\HTriple{P}{S}{Q}$
 guarantees the truth of $\HTriple{P}{S}{Q'}$.
 
+\paragraph{Example :} assume that we have proved
+
+\begin{align*}
+  & \{ x > 0 \} \\
+  & x = 1/x; \\
+  & \{ x' > 0 \} \\
+  & \{ x \neq 0\} \\
+  & \text{if}\ (x<0) \text{then}\ x = -x\ \text{else}\ x = x; \\
+  & \{ x' > 0 \}
+\end{align*}
+
+How to prove
+
+\begin{align*}
+  & \{ x > 0 \} \\
+  & x = 1/x; \\
+  & \text{if}\ (x<0) \text{then}\ x = -x\ \text{else}\ x = x; \\
+  & \{ x' > 0 \}
+\end{align*}
+
+We can assume that both of the assertion present in the first one are just
+replaced by the assertion $\{true\}$. Then, we would have
+$\HTriple{x>0}{x=1/x}{true}$ where $Q' = \{true\}$. From the first one, we can
+extract the Hoare Triple $\HTriple{x>0}{x=1/x}{x'>0 \wedge x\neq 0}$, where $Q =
+\{x'>0 \wedge x\neq 0\}$. $Q$ is stronger that $Q'$ and $\HTriple{P}{S}{Q}$ is
+proved, then $\HTriple{P}{S}{Q'}$ is proved too.
 
 \chapter{Propositional Logic}
+
+A formula in propositional logic can be constructed as follows :
+\begin{itemize}
+\item $\top$ (true), $\bot$ (false) and propositional variables
+  ($q,p,m,m,\dots$) are formulas of propositional logic.
+\item if $F$ and $G$ are formulas of propositional logic, then so are :
+  \begin{itemize}
+  \item $(F)$
+  \item $\neg F$
+  \item $F \wedge G$
+  \item $F \vee G$
+  \item $F \to G$
+  \item $F \leftrightarrow G$
+  \end{itemize}
+\end{itemize}
+
+\begin{mydef}
+  If $P$ is a variable, then $P$ and $\neg P$ are called \textbf{literals}.
+\end{mydef}
+
+\begin{mydef}
+  An \textbf{interpretation} $I$ is a truth-value assignment to propositional
+  variables $P,Q,\dots$
+  \[
+    I : \{ P \mapsto \top, Q \mapsto \bot, \dots\}
+  \]
+\end{mydef}
+
+\begin{mydef}
+  The truth value of a variable $P$ under an interpretation $I$ is denoted by
+  $I[P]$. For example, we would have
+  \[
+    I[P] = \top, I[Q] = \bot, \dots
+  \]
+\end{mydef}
+
+\begin{mydef}
+  For an interpretation $I$, we write
+  \[
+    I \models F
+  \]
+
+  if and only if propositional formula $F$ is $true$ under the interpretation
+  $I$.
+\end{mydef}
+
+\begin{theorem}
+  We have the following for $F$ and $G$ being a propositional variables :
+  \begin{itemize}
+  \item $I \models \top$
+  \item $I \not\models \bot$
+  \item $ I \models F$ iff $I[F] = \top$
+  \item $ I \not\models F$ iff $I[F] = \bot$
+  \item $ I \models (F)$ iff $I \models F$
+  \item $ I \models \neg F$ iff $I \not\models F$
+  \item $ I \models F \wedge G $ iff $I \models F$ and $I \models G$
+  \end{itemize}
+\end{theorem}
+
+
+
 \chapter{Computability}
 \section{Undecidability of First-order Logic}
 \chapter{Complexity}
