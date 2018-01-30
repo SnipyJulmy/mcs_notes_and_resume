@@ -14,6 +14,7 @@
 \usepackage{algpseudocode}
 
 \title{Resume : Formal Methods}
+\author{Sylvain Julmy}
 
 \setlength{\parindent}{0cm}
 
@@ -22,11 +23,19 @@
 % For definition, theorem, ...
 \newtheorem*{mydef}{Definition}
 \newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\newtheorem{lemma}{Lemma}
 
 % Inference rules
 \newenvironment{bprooftree}
-  {\leavevmode\hbox\bgroup}
-  {\DisplayProof\egroup}
+{\leavevmode\hbox\bgroup}
+{\DisplayProof\egroup}
+
+% completexity class
+\newcommand{\Pc}{\ensuremath{\mathcal{P}} }
+\newcommand{\NPc}{\ensuremath{\mathcal{NP}} }
+\newcommand{\NPCc}{\ensuremath{\mathcal{NP}\text{-complete}}}
+\newcommand{\NPHc}{\ensuremath{\mathcal{NP}\text{-hard}}}
 
 \begin{document}
 
@@ -294,7 +303,8 @@ A formula in propositional logic can be constructed as follows :
 
 \begin{mydef}
   An \textbf{interpretation} $I$ is a truth-value assignment to propositional
-  variables $P,Q,\dots$
+  variables $P, Q, \dots$
+  
   \[
     I : \{ P \mapsto \top, Q \mapsto \bot, \dots\}
   \]
@@ -781,11 +791,9 @@ using DPLL.
   (P_3 \vee P) \wedge
   (P_3 \vee \neg Q) \wedge
   (\neg P_3 \vee \neg P \vee Q)) = \\
-  \text(w.r.t. $\ Q$) P \wedge P_3 \wedge P_1 \wedge (P_3 \vee P) \wedge (\neg
-  P_3 \vee \neg P \vee = \\
-  \text(w.r.t. $\ P_3$) P \wedge P_1 \wedge (P_3 \wedge P) \wedge (\neg P \vee
-  Q) = \\
-  \text(w.r.t. $\ P$) P_1 \wedge (P_3 \vee P) \wedge Q = \\
+  \text{(w.r.t. $Q$)} P \wedge P_3 \wedge P_1 \wedge (P_3 \vee P) \wedge (\neg P_3 \vee \neg P) = \\
+  \text{(w.r.t. $P_3$)} P \wedge P_1 \wedge (P_3 \wedge P) \wedge (\neg P \vee Q) = \\
+  \text{(w.r.t. $P$)} P_1 \wedge (P_3 \vee P) \wedge Q = \\
   \textbf{DPLL}(\dots [P_1 \mapsto \top]) = \\
   \textbf{DPLL}(\dots [Q \mapsto \top]) = \\
   \textbf{DPLL}(\dots [P_3 \mapsto \top]) = \\
@@ -801,11 +809,795 @@ $(P \wedge (P \to Q))\to Q$ is satisfiable with the interpretation
 \]
 
 \chapter{Computability}
+
+Decidability and undecidability are synonymous to computability and
+non-computability in the case of decision problems.
+
+In general, it is impossible to decide wheter or not a program will write
+``Hello, World''. That does not mean that we cannot decide the property for all
+programs but it means that we can't decide the property for any program.
+
+\begin{theorem}
+  Testing whether a program will always print ``Hello, World'' (or any other
+  property) is undecidable, i.e. no computing device can perform the test.
+\end{theorem}
+\begin{proof}
+  The proof is by contradiction. Assume there exists a program \textbf{tester}
+  that gets as input a program $P$ and an input $I$ for the program $P$. Then,
+  \textbf{tester}, when apply to $P$ and $I$ (denote $tester(P,I)$), will output
+  ``yes'' or ``no'' depending on whether $P$ on $I$ outputs ``Hello, World''.
+
+  Then we define the function \textbf{tester2} and \textbf{tester3} as follow :
+
+  \begin{algorithmic}
+    \Function{tester2}{$P$,$I$}
+    \If{$tester(P,I) ==''yes`'$} 
+    \State $print(''yes`')$
+    \Else
+    \State $print(''Hello, world`')$
+    \EndIf
+    \EndFunction
+  \end{algorithmic}
+  
+  \begin{algorithmic}
+    \Function{tester3}{$P$}
+    \State $print(tester2(P,P))$
+    \EndFunction
+  \end{algorithmic}
+
+Finally we apply $tester3$ to itself :
+\begin{mathpar}
+  tester3(tester3) = tester2(tester3,tester3) = tester(tester3,tester3)
+\end{mathpar}
+
+If $tester3$ on input $tester3$ output ``Hello, World'', then
+$tester(tester3,tester3)$ will output ``yes'' and then $tester3(tester3)$ must
+output ``yes''.
+
+If $tester3$ on input $tester3$ does not output ``Hello, World'', then $tester$
+$tester(tester3,tester3)$ will output ``no'' and this $tester3$ must output
+``Hello, World''.
+\end{proof}
+
+\section{Reduction}
+
+\begin{mydef}
+  For two problems $P_1$ and $P_2$ where $P_2$ is undecidable, if we can show
+  that if $P_1$ is decidable then $P_2$ is decidable too, then $P_2$ is
+  undecidable.
+
+  We say we \textbf{reduced} $P_2$ to $P_1$.
+\end{mydef}
+
+\paragraph{Example :} The problem of wheter or not a program calls a particular
+function named $foo$ is undecidable.
+
+\begin{proof}
+  For any program, if it contains a function $foo$, rename that function.
+
+  Add an empty function $foo$ and an array storing the first $12$ letters of
+  program output.
+
+  Modify the program in such a way that whenever anything is output, check if
+  the array contains ``Hello, World'' and, if yes, call $foo$.
+
+So $foo$ is called if and only if the original program had output ``Hello,
+World''. So if calling $foo$ were decidable, we would decide outputting ``Hello,
+World'', which we know is undecidable.
+\end{proof}
+
+\section{Church-Turing Thesis}
+
+``Any general way to compute will allow us to compute what can be computed by a
+Turing machine''.
+
+A Turing machine uses
+\begin{itemize}
+\item a finite control memory (\textbf{states}) of a read-/write-head.
+\item a two-sidedly infinite \textbf{tape} divided into \textbf{cells} that can
+  store finitely many different tape symbols.
+\end{itemize}
+
+Initially, a string of \textbf{input symbols} is stored on the tape (all cells
+not containing input contain the so-called \textbf{blank}), and the
+read-/write-head is positioned at the tape cell that contains the first symbol
+of the input string.
+
+The Turing machine reads the content of the cell where its
+read-/write-head is positioned. Depending on its state and the
+symbol in the cell, it overwrites the cell content, changes the
+control state and moves the read-/write-head one cell to the left or
+to the right.
+
+If the Turing machine reaches an accepting state, it stops
+accepting.
+
+If the Turing machine cannot move being in a non-accepting state,
+it stops non-accepting.
+
+\begin{mydef}
+  A \textbf{deterministic Turing machine} $M = (Q,\Sigma,\Gamma,\delta,q_0,B,F)$ consists
+  of :
+  \begin{itemize}
+  \item a finite set $Q$ of states,
+  \item a finite set $\Sigma$ of input symbols,
+  \item a finite set $\Gamma \supseteq \Sigma$ of type symbols,
+  \item a transition function $\delta$ : $Q \times \Gamma \rightarrow Q \times
+    \Gamma \times \{L,R\}$,
+  \item an initial state $q_0 \in Q$,
+  \item a blank symbol $B \in \Gamma \setminus \Sigma$,
+  \item a finite set $F \subseteq Q$ of accepting states.
+  \end{itemize}
+\end{mydef}
+
+A Turing machine halts when it cannot move anymore or when it reaches an
+accepting state. Whenever the Turing machine halts in its accepting state it
+accepts its input and what is on the tape is the output that it computed.
+
+\section{Non-computability}
+
+There exists functions that cannot be computed, it means that no computer or
+human being can compute the function.
+
+A \textbf{Busy Beaver} is a Turing machine with a two symbol alphabet $\{B,1\}$.
+\begin{itemize}
+\item It starts on an empty tape, write a sequence of consecutive $1$'s and then stops.
+\item Its output is the number of $1$'s it writes on the tape.
+\item Takes as input a number $n$.
+\item $BB(n)$ is the maximal output a busy beaver with $n+1$ states can produce.
+\end{itemize}
+
+\begin{theorem}
+  $BB(n)$ is not computable.
+\end{theorem}
+
+\begin{proof}
+  The proof is by contradiction on $BB(\dots)$.
+  \begin{itemize}
+  \item Let $f(n)$ be a computable function.
+  \item Let $compute$ be a Turing machine computing $f(n)$ in unary format with
+    a constant number of states.
+  \item Let $write\_m$ be a Turing machine writing $m$-many $1$'s with $m+1$
+    states.
+  \item Let $double$ be a Turing machine doubling the number of $1$'s with a
+    constant number of states.
+  \end{itemize}
+
+  Let's combine those Turing machines, we get a new Turing machine, having $m+c$
+  states, that is a busy beaver (it writes $f(2 \times m)$-many $1$'s). Hence,
+  $BB(m + c) \geq f(2 \times m)$.
+
+  Now we assume that $m > c$, then $BB(2 \times m) > BB(m + c) \geq f(2 \times
+  m)$, hence $BB(\dots)$ grows more quickly than $f(\dots)$.
+
+  $BB(\dots)$ grows more quickly than $f(\dots)$, where $f(\dots)$ is an
+  arbitrary computable function, if $BB(\dots)$ were computable, it would grow
+  more quickly than itself, thus $BB(\dots)$ is not computable.
+\end{proof}
+
+We can turn each computational problem into a decision problem by giving the TM
+(Turing Machine) two strings $v$ and $w$ and ask whether the TM on input $v$
+will produce output $w$.
+
+To decide a decision problem, the TM gets some input and says ``yes'' or ``no''
+whenever it stop in an accepting state, respectively in an non-accepting state.
+
+\section{Binary Coding of TMs}
+
+We can number the elements from the sets $Q$, $\Gamma$ and $\{L,R\}$. Let
+$\delta(q_i,X_j) = (q_k,X_l,D_m)$, where the indices indicate the numbers
+representing the different objects used in the definition of $\delta$. Then, we
+can encode $\delta(q_i,X_j) = (q_k,X_l,D_m)$ by $0^i10^j10^k10^l10^m$.
+
+Each such code $C_1,\dots,C_n$ for all the entries for $\delta$ in the TM's
+transition table, can be separated by two consecutive $1$'s, giving us
+$C_111C_211\dots11C_n$ as a binary coding of the entire TM.
+
+We assume that we are dealing, for the moment, only with TMs with $\Gamma =
+\{0,1,B\}$.
+
+\begin{itemize}
+\item Not each binary string represents the coding of a TM.
+\item We define that these strings represent the TM with one state and no move
+  (accepting nothing [the empty set]).
+\item That allows us to talk about the $i$th TM (we have an ordering on TMs).
+\end{itemize}
+
+Let $L_D$ be the set of all strings $w$ of $0$'s and $1$'s such that, if $w$ is
+the code of a TM $M$, $M$ does not accept $w$.
+
+TMs and their input ($0$ : not accepted, 1 : accepted):
+\[
+  \bordermatrix{%
+    & w_1 & w_2 & w_3 & w_4 & \dots \cr
+    M_1 & \textbf{1}   & 0   & 0   & 1   & \dots \cr 
+    M_2 & 0   & \textbf{1}   & 1   & 0   & \dots \cr 
+    M_3 & 0   & 1   & \textbf{0}   & 0   & \dots \cr 
+    M_4 & 1   & 1   & 1   & \textbf{0}   & \dots \cr
+    \vdots & \vdots & \vdots & \vdots   & \vdots   & \ddots
+  }
+\]
+
+The big diagonal is the language of all TMs that accept their coding as input.
+So its complement is $L_D$, then we use $L_D$ for the diagonal :
+
+\[
+  \bordermatrix{%
+    & w_1 & w_2 & w_3 & w_4 & \dots \cr
+    M_1 & \textbf{0}   & 0   & 0   & 1   & \dots \cr 
+    M_2 & 0   & \textbf{0}   & 1   & 0   & \dots \cr 
+    M_3 & 0   & 1   & \textbf{1}   & 0   & \dots \cr 
+    M_4 & 1   & 1   & 1   & \textbf{1}   & \dots \cr
+    \vdots & \vdots & \vdots & \vdots   & \vdots   & \ddots
+  }
+\]
+
+$L_D$ is not in the list of TM accepted language (it differs with each line in
+at least one bit).
+
+\begin{theorem}
+  There does not exist a Turing machine accepting $L_D$.
+\end{theorem}
+
+\begin{proof}
+  The proof is by contradiction to the assumption that $M$ exists, where $M$ is
+  a Turing machine that accept $L_D$.
+
+  By definition, $M$ would occur in our list of Turing machine at position $i$,
+  it is $M_i$. Then, is $w_i \in L_D$ ?
+
+  \begin{itemize}
+  \item If $w_i \in L_D$, then $M_i$ accepts $w_i$, because it accepts $L_D$.
+    However, $w_i \in  L_D$ indicates that $M_i$ does not accept $w_i$.
+  \item If $w_i \not\in L_D$, then $M_i$ does no accepts $w_i$, because it accepts $L_D$.
+    However, $w_i \not\in  L_D$ indicates that $M_i$ accept $w_i$.
+  \end{itemize}
+
+  We get a contradiction in both cases to the assumption that $M$ exists.
+\end{proof}
+
+\begin{mydef}
+  A language L is called \textbf{recursively enumerable} (RE) if and only if
+  there exists a TM $M$ such that:
+  \begin{itemize}
+  \item whenever $w \in L$, then $M$ will stop in an accepting state when started on
+    input $w$.
+  \item whenever $w \not\in L$, then $M$ will stop in a non-accepting state or run
+    forever when started on input $w$.
+  \end{itemize}
+\end{mydef}
+
+\begin{mydef}
+  A language L is called \textbf{recursive} if and only if there exists a TM $M$
+  such that:
+  \begin{itemize}
+  \item whenever $w \in L$, then $M$ will stop in an accepting state when
+    started on input $w$ .
+  \item whenever $w \not\in L$, then $M$ will stop in a non-accepting state
+    when started on input $w$ .
+  \end{itemize}
+\end{mydef}
+
+A problem is decidable when the language that encodes the problem is recursive.
+
+\section{Reductions}
+
+\begin{mydef}
+  A \textbf{reduction} of one problem $P_1 \subseteq \Sigma_1^*$ to another
+  problem $P_2 \subseteq \Sigma_2^*$ is a computable transformation $r:
+  \Sigma_1^* \rightarrow \Sigma_2^*$ such that
+  \[
+    \forall w \in \Sigma_1^* ; w \in P_1 \Longleftrightarrow r(w) \in P_2
+  \]
+
+  We then say that $P_1$ reduces to $P_2$, written $P_1 \varpropto P_2$
+\end{mydef}
+
+\begin{theorem}
+  Let $P_1 \varpropto P_2$. If $P_2$ is decidable, then $P_1$ is decidable.
+\end{theorem}
+
+\begin{proof}
+  To decide whether or not $w \in P_1$, compute $r(w)$ where $r$ is the reduction of
+  $P_1$ to $P_2$. Using the fact that $P_2$ is decidable, we decide whether or not
+  $r(w) \in P_2$, deciding immediately whether or not $w \in P_1$.
+\end{proof}
+
+\begin{corollary}
+  Let $P_1 \varpropto P_2$. If $P_1$ is undecidable, then $P_2$ is undecidable.
+\end{corollary}
+
+\begin{proof}
+  The corollary is just the counterpositive version of the theorem.
+\end{proof}
+
+\section{The Universal Language $L_u$}
+
+\begin{mydef}
+  $L_u$ is defined as follows :
+  \[
+    \{(M,w) | \text{TM $M$ accepts input $w$}\}
+  \]
+
+  The structure $(M,w)$ represents, in fact, the word over $\{0,1\}$ that stats
+  with the encoding of $M$, followed by $111$, followed by $w$.
+\end{mydef}
+
+\begin{lemma}
+  $L_u$ is recursively enumerable.
+\end{lemma}
+
+\begin{proof}
+  The TM $M_u$ that accepts $L_u$ operates in a quite simple way. On input
+  $(M,w)$, $M_u$ simulates $M$ on input $w$.
+  \begin{itemize}
+  \item As soon as $M$ reaches its accepting when operating on $w$, then $M_u$
+    stops accepting.
+  \item As soon as $M$ stops without accepting $w$, then $M_u$ stops without
+    accepting.
+  \item Otherwise $M_u$ continues simulating $M$ on $w$.
+  \end{itemize}
+\end{proof}
+
+The complement of $L_u$ in not RE.
+
+\begin{mydef}
+  A \textbf{property} of the RE languages is just a set of RE languages (those
+  that satisfy the property).
+
+  An RE language possesses the property if and only if it is contained in the
+  set representing the property.
+
+  A property is \textbf{trivial} if it is either the empty set or the set of all
+  RE languages.
+  
+  All other properties are nontrivial.
+
+  Sets of languages cannot be recognised as the languages themselves (they are
+  normally infinite).
+  
+  RE languages are recognised by TMs.
+  
+  If $P$ is a property of the RE languages, we define $L_P$ to be the language
+  containing (the codes) of the TMs recognising the languages in $P$.
+  
+  The decidability of $P$ is then defined as the decidability of $L_P$.
+\end{mydef}
+
+\begin{theorem}[Rice's Theorem]
+  Every nontrivial property of the RE languages is undecidable.
+\end{theorem}
+
+\begin{proof}
+  The proof is by reducing $L_u$ to $L_P$.
+
+  Let $P$ be a nontrivial property of the RE languages. Assume for the moment
+  that $\emptyset \not \in P$. Then, there must be some nonempty language $L \in
+  P$.
+
+  Let $M_L$ be the $TM$ recognising $L$. We transform $(M,w)$ into the following
+  TM $M'$ :
+  \begin{itemize}
+  \item $M'$ get input $x$.
+  \item $M'$ simulates $M$ on $w$.
+  \item If $M$ accepts $w$, then $M'$ simulates $M_L$ on $x$.
+  \item Otherwise $M'$ stops without accepting.
+  \end{itemize}
+
+  If $\emptyset \in P$, then $\overline{P}$ is a nontrivial property not
+  containing $\emptyset$.
+
+  Therefore $\overline{P}$ is not decidable, and consequently $P$ is neither.
+\end{proof}
+
+Practically nothing is decidable for formal (and practical) systems that are
+equivalent to TMs.
+
+So proving that a formal system is Turing complete (i.e. equivalent to a TM)
+immediately proves that nothing can be decided about that systems.
+
+\begin{mydef}
+  A \textbf{non-deterministic Turing machine} $M =
+  (Q,\Sigma,\Gamma,\delta,q_0,B,F)$ consists of :
+  \begin{itemize}
+  \item a finite set $Q$ of states,
+  \item a finite set $\Sigma$ of input symbols,
+  \item a finite set $\Gamma \supseteq \Sigma$ of type symbols,
+  \item a transition relation $\delta$ : $Q \times \Gamma \rightarrow
+    2^{Q \times \Gamma \times \{L,R\}}$,
+  \item an initial state $q_0 \in Q$,
+  \item a blank symbol $B \in \Gamma \setminus \Sigma$,
+  \item a finite set $F \subseteq Q$ of accepting states.
+  \end{itemize}
+\end{mydef}
+
 \section{Undecidability of First-order Logic}
+
 \chapter{Complexity}
+
+A non-computable (undecidable) problem is a problem to which no algorithm
+solving the problem exists.
+
+An \textbf{intractable} problem is one to which an algorithm solving the problem
+does exist, but it is so inefficient that it is considered as practically
+useless.
+
+\begin{mydef}
+  The \textbf{running time} of an algorithm is a function $T(n)$ taking as its
+  argument the length $n$ of the input given to the algorithm. Whenever a TM
+  makes at most $T(n)$ moves on an input of length $n$, we say that $T(n)$ is
+  the \textbf{running time} (or \textbf{time complexity}) of the TM.
+
+  If $T(n)$ is a polynomial in $n$, we say that the algorithm has a
+  \textbf{polynomial run-time}. Polynomials algorithms are perceived to be
+  tractable.
+  
+  If $T(n)$ is an exponential function in $n$, we say that the algorithm has an
+  \textbf{exponential run-time}. Exponentials algorithms are perceived to be
+  intractable.
+\end{mydef}
+
+\begin{mydef}
+  If for a problem $P$ there exists a deterministic TM $M$ such that $M$ solves
+  $P$ in polynomial time, then we say that $P$ is in the complexity class \Pc.
+\end{mydef}
+
+\begin{mydef}
+  If for a problem $P$ there exists a non-deterministic TM $M$ such that $M$
+  solves $P$ in polynomial time, then we say that $P$ is in the complexity class
+  \NPc.
+\end{mydef}
+
+Because a deterministic TM is a special case of a non-deterministic TM, we get
+that $\Pc \subseteq \NPc $.
+
+However, it is strongly believed that \Pc and \NPc are different, and therefore
+that $\NPc \not \subseteq \Pc$.
+
+\section{\Pc versus \NPc}
+
+We know $\Pc \subseteq \NPc$. If we find a problem that is in \NPc, but not in
+\Pc, then we found $\Pc \neq \NPc$.
+
+However, if we take an arbitrary problem from \NPc and find that it is in \Pc,
+then this does not tell us anything, we could just have picked a problem that is
+in \Pc.
+
+If $\Pc \neq \NPc$, clearly $\NPc \setminus \Pc \neq \emptyset$. Can we somehow
+characterize the problems that, if $\Pc \neq \NPc$, would be in $\NPc \setminus
+\Pc$ ?
+
+If, for such a problem, we found that it were in \Pc, then we would know $\Pc =
+\NPc$.
+
+\begin{mydef}
+  We say that a problem $P_1$ is more difficult that a problem $P_2$, when $P_1$
+  cannot be solved in polynomial time whereas $P_2$ can.
+\end{mydef}
+
+To prove that a problem is more difficult than another, we are doing a
+\textbf{polynomial-time reduction}, denote by $P_1 \propto_{poly} P_2$.
+
+Note that the transformation will produce an output of a length that is
+polynomial in the length of the input it started with.
+
+If $P_1 \propto_{poly} P_2$ and $P_2 \in \Pc$, then $P_1 \in \Pc$.
+
+\begin{mydef}
+  Let $P_1 \propto_{poly} P_2$. Then if
+  \[
+    P_2 \in \Pc \Longrightarrow P_1 \in \Pc
+  \]
+
+  or, conversely
+  \[
+    P_1 \not\in \Pc \Longrightarrow P_2 \not\in \Pc
+  \]
+
+  Then $P_2$ is at least as difficult as $P_1$.
+\end{mydef}
+
+\begin{mydef}
+  A problem $P$ is said to be \textbf{\NPCc} if and only if
+  \begin{itemize}
+  \item $P \in \NPc$,
+  \item $\forall P' \in \NPc : P' \propto_{poly} P$.
+  \end{itemize}
+
+  Note that \NPCc problems are believed to be intractable.
+\end{mydef}
+
+To show that a problem in \NPCc, we need a first \NPCc problem and then we use
+reduction proofs.
+
 \section{Cook's Theorem}
-\section{NP-completeness}
-\section{PSPACE-Completeness}
+
+\begin{mydef}
+  Instantaneous Descriptions ID
+
+  Let $x_1x_2\dots x_i \dots x_n$ be the content of the tape where $x_1$ is the
+  leftmost \textbf{non-blank} symbol and $x_n$ is the rightmost one.
+
+  If the TM points in the tape cell that contains the $i$th symbol $x_i$, then
+  the TM's ID is
+  \[
+    x_1x_2\dots x_{i-1}q x_i x_{i+1}\dots x_n
+  \]
+  
+  If the TM points in the tape cell that contains the $j$th blank symbol left of
+  $x_1$, then the TM's ID is $qB^jx_1x_2\dots x_n$
+  
+  If the TM points in the tape cell that contains the $j$th blank symbol right
+  of $x_n$, then the TM's ID is $x_1x_2\dots x_n B^{j-1}qB$.
+\end{mydef}
+
+To represent a propositional formula to a TM :
+\begin{itemize}
+\item $n$ truth variables and the symbol's set $\{ (,),\wedge,\vee,\neg \}$.
+\item For a symbol, we just write into into the tape cells.
+\item For the variables $x_1,x_2,\dots,x_n$,we write $x$ in a tape cell,
+  followed by tape cells containing $0$'s and $1$'s that represent $x$'s index
+  in binary format.
+\item The tape alphabet is $\Gamma = \{x,0,1,(,),\wedge,\vee,\neg,B\}$.
+\end{itemize}
+
+The length of such a formula is $2m-1$ where $m$ is the number of different
+variable. The representation of the formula has length $m \log_2 m + m - 1$,
+which is $O(m \log_2 m)$, which is polynomial.
+
+\begin{theorem}
+  SAT is \NPCc.
+\end{theorem}
+
+\begin{proof}
+  We will prove that SAT is in \NPc and in \NPHc.
+
+  \paragraph{SAT is in \NPc :} A non-deterministic TM can check all the truth
+  assignments to the propositional variables in parallel, and then evaluate the
+  formula in polynomial time.
+
+  So SAT is in \NPc.
+
+  \paragraph{SAT is in \NPHc :} We will show $\forall P \in \NPc : P
+  \propto_{poly} SAT$.
+
+  If a problem $P$ is in \NPc, then there is an non-deterministic TM $M$ that
+  decides $P$ in time $p(n)$ for input of size $n$, where $p(n)$ is a
+  polynomial.
+
+  Making at most $p(m)$ moves, $M$ cannot move right of its $p(n)$th tape cell.
+
+  \begin{itemize}
+  \item $M$'s computations are ID sequences $ID_1\dots ID_{p(n)+1}$.
+  \item Each ID contains $p(n)+1$ symbols.
+  \end{itemize}
+
+  So $(p(n) + 1) \times (p(n) + 1)$-many symbols suffice to represent a
+  computation of $M$.
+
+  \begin{itemize}
+  \item We represent each symbol by $X_{i,j}$ with $o \leq i,j \leq p(n)$
+    representing the $j$th symbol of the $i$th ID.
+  \item Each of these symbols is either a tape symbol or a state of $M$.
+  \item There is a constant number $c$ of tape symbols and states of $M$.
+  \end{itemize}
+
+  To each $X_{i,j}$ we create $c$-many propositional variables $y_{i,j,z}$ where
+  $Z$ is a tape symbol or a state of $M$. $y_{i,j,z}$ being true is supposed to
+  represent the $j$th symbol of the $i$th ID being $Z$.
+
+  The number of propositional variables is $c \times (p(n)+1) \times (p(n)+1)$,
+  which is polynomial.
+
+  Using the propositional variables $y_{i,j,z}$ , we build a propositional formula
+  that will be true if and only if we can assign to the $y_{i,j,z}$ truth values
+  that correspond to representing an accepting computation of $M$.
+
+  The size of the formula will be a polynomial $q(\dots)$ in the number of
+  propositional variables ($O(q(p^2(n)))$).
+
+  So the formula, that can be constructed in polynomial time, will be
+  satisfiable if and only if $M$ accepts the given input (the input is in $P$).
+  In other word, $P$ is reduced in polynomial time to SAT.
+
+  \paragraph{Constructing the Formula :} The formula that we construct is $U
+  \wedge S \wedge N \wedge F$, such that
+  \begin{itemize}
+  \item $U$ represents that each symbol in the ID sequence is unique,
+  \item $S$ represents that the start ID is correct,
+  \item $N$ represents that the next ID is represented correctly,
+  \item $F$ represents that the sequence of IDs finishes correctly (i.e. an
+    accepting ID is reached).
+  \end{itemize}
+
+  \paragraph{Formula $U$ : } $U$ is the logical conjuntion (AND) of formulas
+  \[
+    \neg(y_{i,j,Z_1} \wedge y_{y_i,j,Z_2})
+  \]
+
+  with $Z_1 \neq Z_2$. The size of $U$ is $O(p^2(n))$.
+
+  \paragraph{Formula $S$ : } Let $q_0$ be the initial state of $M$ and let
+  $a_1a_2\dots a_n$ be its input. Then $S$ is the formula
+  \[
+    y_{0,0,q_0} \wedge y_{0,1,a_1} \wedge y_{0,2,a_2} \wedge \dots \wedge
+    y_{0,n,a_n} \wedge y_{0,n+1,B} \wedge \dots \wedge y_{0,p(n),B}
+  \]
+
+  The size of $S$ is $O(p(n))$.
+
+  \paragraph{Formula $F$ : } Let $q_1,\dots,q_k$ be the accepting states of $M$
+  and, for $0 \leq j \leq p(n)$, let $F_j$ be the formula
+  \[
+    y_{p(n),j,q_1} \wedge y_{p(n),j,q_2} \wedge \dots \wedge y_{p(n),j,q_k}
+  \]
+
+  Then $F$ is the formula
+  \[
+    F_0 \wedge F_1 \wedge \dots \wedge F_{p(n)}.
+  \]
+
+  The size of $F$ is $O(p(n))$.
+  
+  \paragraph{Formula $N$ : } $N$ is the formula
+  \[
+    N_0 \wedge N_1 \wedge \dots \wedge N_{p(n)-1}
+  \]
+
+  The $N_i$ are constructed in such a way that they ensure that the $(i+1)$st ID
+  is one of the successor IDs of the $i$th ID.
+
+  $N_i$ is of the form
+  \[
+    (A_{i,0} \vee B_{i,0}) \wedge (A_{i,1} \vee B_{i,1}) \wedge \dots \wedge (A_{i,p(n)} \vee B_{i,p(n)})
+  \]
+
+  such that $A_{i,j}$ handles the case where the $j$th symbol in the $i$th ID is
+  the state, and $B_{i,j}$ handles the case where the $j$th symbol in the $i$th
+  ID is not the state.
+
+  The size of $N$ is $O(p^2(n))$, because $A_{i,j}$ and $B_{i.j}$ are $O(1)$.
+
+  \paragraph{Formula $B_{i,j}$ : } Let $a_0 \dots a_s$ be the tape symbols of
+  $M$, then, for $0 < j < p(n)$, $B_{i,j}$ is
+
+  \begin{mathpar}
+    (y_{i,j,a_0} \vee \dots \vee y_{i,j,a_s}) \wedge(
+    (y_{i,j-1,a_0} \vee \dots \vee y_{i,j-1,a_s}) \wedge
+    (y_{i,j+1,a_0} \vee \dots \vee y_{i,j+1,a_s}) \to
+    (y_{i,j,a_0} \wedge y_{i+1,j,a_0}) \vee \dots \vee
+    (y_{i,j,a_s} \wedge y_{i+1,j,a_s}))
+  \end{mathpar}
+
+  which is equivalent to
+  \begin{mathpar}
+    (y_{i,j,a_0} \vee \dots \vee y_{i,j,a_s}) \wedge (
+    \neg (y_{i,j-1,a_0} \vee \dots \vee y_{i,j-1,a_s}) \vee
+    \neg (y_{i,j+1,a_0} \vee \dots \vee y_{i,j+1,a_s}) \vee
+    (y_{i,j,a_0} \wedge y_{i+1,j,a_0}) \vee \dots \vee
+    (y_{i,j,a_s} \wedge y_{i+1,j,a_s}))
+  \end{mathpar}
+
+  If $j=0$, then $B_{i,j}$ reduces to
+  \begin{mathpar}
+    (y_{i,j,a_0} \vee \dots \vee y_{i,j,a_s}) \wedge
+    (
+    \neg (y_{i,j+1,a_0} \vee \dots \vee y_{i,j+1,a_s}) \vee
+    (y_{i,j,a_0} \wedge y_{i+1,j,a_0}) \vee \dots \vee
+    (y_{i,j,a_s} \wedge y_{i+1,j,a_s})
+    )
+  \end{mathpar}
+  
+  If $j=p(n)$, then $B_{i,j}$ reduces to
+  \begin{mathpar}
+    (y_{i,j,a_0} \vee \dots \vee y_{i,j,a_s}) \wedge
+    (
+    \neg (y_{i,j-1,a_0} \vee \dots \vee y_{i,j-1,a_s}) \vee
+    (y_{i,j,a_0} \wedge y_{i+1,j,a_0}) \vee \dots \vee
+    (y_{i,j,a_s} \wedge y_{i+1,j,a_s})
+    )
+  \end{mathpar}
+
+  The size of $B_{i,j}$ is $O(1)$.
+
+  \paragraph{Formula $A_{i,j}$ : } We consider the case $0 < j < p(n)$.
+  $A_{i,j}$ is the disjunction of sub-formulas we get in the following way :
+
+  \begin{itemize}
+  \item Let $(p,b,L) \in \delta(q,a)$ be a transition of $M$. Then $A_{i,j}$
+    contains, for all tape symbols $c$ of $M$, the sub-formulas
+    \[
+      y_{i,j-1,c} \wedge y_{i,j,q} \wedge y_{i,j+1,a} \wedge y_{i+1,j-1,p}
+      \wedge y_{i+1,j,c} \wedge y_{i+1,j+1,b}
+    \]
+  \item Let $(p,b,R) \in \delta(q,a)$ be a transition of $M$. Then $A_{i,j}$
+    contains, for all tape symbols $c$ of $M$, the sub-formulas
+    \[
+      y_{i,j-1,c} \wedge y_{i,j,q} \wedge y_{i,j+1,a} \wedge y_{i+1,j-1,c}
+      \wedge y_{i+1,j,b} \wedge y_{i+1,j+1,p}
+    \]
+  \item Let $q$ be an accepting state of $M$. Then $A_{i,j}$ contains, for all
+    tape symbols $a,b$ of $M$, the sub-formulas
+    \[
+      y_{i,j-1,a} \wedge y_{i,j,q} \wedge y_{i,j+1,b} \wedge y_{i+1,j-1,a}
+      \wedge y_{i+1,j,q} \wedge y_{i+1,j+1,b}
+    \]
+  \end{itemize}
+  For the case $j=0$, $A_{i,0}$ is the disjunction of sub-formulas we get in the
+  following way :
+
+  \begin{itemize}
+  \item Let $(p,b,R) \in \delta(q,a)$ be a transition of $M$. Then $A_{i,0}$
+    contains the sub-formulas
+    \[
+      y_{i,0,q} \wedge y_{i,1,a} \wedge y_{i+1,0,b} \wedge y_{i+1,1,p}
+    \]
+  \item Let $q$ be an accepting state of $M$. Then $A_{i,0}$ contains, for all
+    tape symbols $a,b$ of $M$, the sub-formulas
+    \[
+      y_{i,0,q} \wedge y_{i,1,a} \wedge y_{i+1,0,q} \wedge y_{i+1,1,a}
+    \]
+  \end{itemize}
+  
+  The size of $A_{i,j}$ is $O(1)$.
+
+  For an arbitrary problem $P$ that is in \NPc, we take a polynomial-time
+  non-deterministic Turing machine $M$ that accepts $P$ and an input $w$ to $M$
+  of length $n$, and construct a propositional formula $\phi$ of size $O(p^2(n))$
+  where $p(n)$ is the polynomial limiting $M$’s run time on inputs of length n.
+  Even if for each construction step, we would require a number of steps that is
+  itself a polynomial in $n$, the construction will not take more than polynomial
+  time.
+
+  $\phi$ will be satisfiable if and only if there is an accepting
+  computation of $M$ on $w$ or, in other words, if and only if $w$ is in $P$.
+  Therefore our construction is a polynomial-time reduction from $P$ to SAT.
+\end{proof}
+
 \chapter{Polynomial Time Reductions}
 
-\end{document}
+CSAT is the problem of whether or not a given formula in CNF is satisfiable.
+
+\begin{lemma}
+  CSAT is \NPCc.
+\end{lemma}
+
+\begin{proof}
+  CSAT is in \NPc, because SAT is in \NPc. We can check the satisfiability of
+  arbitrary propositional formulas in non-deterministic polynomial time, we
+  clearly can do this for a subset of propositional formulas.
+
+  CSAT is in \NPHc, we reduce SAT to CSAT in polynomial time. We just apply the
+  construction of equisatisfiable formulas that we applied when dealing with
+  resolution.
+\end{proof}
+
+3SAT is the problem of whether or not a given formula in CNF, such that each of
+the clauses consists of the disjunction of exactly $3$ literals, is satisfiable.
+
+\begin{lemma}
+  3SAT is \NPCc.
+\end{lemma}
+
+\begin{proof}
+  3SAT is in \NPc, because SAT is in \NPc.
+
+  3SAT is \NPHc, we reduce CSAT to 3SAT in linear time by using the following
+  construction :
+
+  The disjunction
+  \[
+    (x_1 \vee x_2 \vee \dots x_n)
+  \]
+
+  is satisfiable if and only if the conjunction
+  \begin{mathpar}
+    (x_1 \vee x_2 \vee y_1) \wedge (x_3 \vee \neg y_1 \vee y_2) \wedge (x_4 \vee
+    \neg y_2 \vee y_3) \dots (x_{n-2} \vee \neg y_{n-4} \vee y_{n-3}) \wedge
+    (x_{n-1} \vee x_n \vee \neg y_{n-3})
+  \end{mathpar}
+
+  is satisfiable, where $y_1,y_2,\dots,y_{n-3}$ are new variables.
+\end{proof}
+
+\end{document}.
