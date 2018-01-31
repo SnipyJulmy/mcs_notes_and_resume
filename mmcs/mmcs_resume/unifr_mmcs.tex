@@ -1,0 +1,46 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{etoolbox}
+\usepackage{sourcecodepro}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{fullpage}
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage[tableaux]{prooftrees}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+
+\title{Resume : Formal Methods}
+\author{Sylvain Julmy}
+
+\setlength{\parindent}{0cm}
+
+\newcommand{\HTriple}[3]{\{#1\}\ #2 \ \{#3\}}
+
+% For definition, theorem, ...
+\newtheorem*{mydef}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\newtheorem{lemma}{Lemma}
+
+% Inference rules
+\newenvironment{bprooftree}
+{\leavevmode\hbox\bgroup}
+{\DisplayProof\egroup}
+
+% completexity class
+\newcommand{\Pc}{\ensuremath{\mathcal{P}} }
+\newcommand{\NPc}{\ensuremath{\mathcal{NP}} }
+\newcommand{\NPCc}{\ensuremath{\mathcal{NP}\text{-complete}}}
+\newcommand{\NPHc}{\ensuremath{\mathcal{NP}\text{-hard}}}
+
+\begin{document}
+
+\maketitle
+
+
+
+\end{document}
