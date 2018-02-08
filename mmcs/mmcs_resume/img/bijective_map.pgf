@@ -1,0 +1,12 @@
+\usetikzlibrary{graphs,graphs.standard}
+
+\begin{tikzpicture}[every node/.style={}]
+	\graph [simple] {
+	a1 -!- b1;
+	a2 -!- b2;
+	a3 -!- b3;	
+	a1 -- b2;
+	a2 -- b3;
+	a3 -- b1;
+	}; 
+\end{tikzpicture}
