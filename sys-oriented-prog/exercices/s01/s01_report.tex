@@ -1,0 +1,66 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{fullpage}
+
+\usepackage{amsmath}
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{color}
+
+% for finite state automata
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    System-oriented Programming\\
+    Spring 2018
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  S01
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Philippe Cudré-Mauroux
+
+    Assistant : Michael Luggen
+  \end{flushleft}
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  Submitted by Sylvain Julmy
+  
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercice 4}
+
+The \verb|[OPTION]| available for \verb|wc| offers the possibility to print only
+some specific information as well as displaying the help and the version of the
+software.
+
+The \verb|[FILE]| part catch the file on which to operate the software, by using
+the \verb|--files0-from=F|, we can use a file that specify all the filename on
+which to operate the software. If the \verb|[FILE]| is not specified or if the
+\verb|--files0-from=F| is empty, then the software read from the standard input.
+
+We can imagine two enhancements for both of that part of the command :
+
+\begin{itemize}
+\item \verb|[OPTION]| : we could use some kind of filter to count the words from
+  a file, for example only counting the word which contains an ``a''.
+\item \verb|[FILE]| : we could use a filter on the file of the current directory
+  in order to choose among them the ones to process. For example, using a
+  regular expression of the filename or on the content of each file.
+\end{itemize}
+
+\end{document}

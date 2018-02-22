@@ -39,6 +39,14 @@ product'' xs = inner xs (\x -> x) where
   inner [] cont = cont 1
   inner (x:xs) cont = inner xs (\n -> cont (n * x))
 
+-- factorial CPS
+fac :: Int -> Int
+fac n = inner n (\x -> x) where
+  inner :: Int -> (Int -> Int) -> Int
+  inner 0 cont = cont 1
+  inner 1 cont = cont 1
+  inner x cont = inner (x-1) (\n -> cont(n * x))
+
 -- Ex1.c
 flatten',flatten'' :: [[a]] -> [a]
 flatten' xss = inner xss [] where
