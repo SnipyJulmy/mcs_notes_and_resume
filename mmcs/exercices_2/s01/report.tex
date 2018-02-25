@@ -1,0 +1,286 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath}
+\usepackage{fullpage}
+\usepackage{mathpartir}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\newcommand*{\bin}[2]{\begin{pmatrix}#1 \\ #2\end{pmatrix}}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    Mathematical Methods for Computer Science 2\\
+    Spring 2018
+  }
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  Series 1
+  \vspace*{1.4cm}
+
+  Sylvain Julmy
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+\end{center}
+
+\section*{\texttt{1}}
+
+\subsection*{2.1)}
+
+\begin{align*}
+  (1 + \sqrt{5})^n &= \bin{n}{0} 1^{n} \sqrt{5}^{0} + \bin{n}{1} 1^{n-1} \sqrt{5}^{1} + \dots + \bin{n}{n-1} 1^{1} \sqrt{5}^{n-1} + \bin{n}{n} 1^{0} \sqrt{5}^{n} \\
+                   &= 1 + \bin{n}{1} \sqrt{5} + \bin{n}{2} \sqrt{5}^{2} + \dots + \bin{n}{n-1} \sqrt{5}^{n-1} + \bin{n}{n} \sqrt{5}^{n} \\
+                   &= \sum_{i=0}^{n} \bin{n}{i} \sqrt{5}^{i}
+\end{align*}
+
+\subsection*{a.2)}
+
+\begin{align*}
+  (1 - \sqrt{5})^n &= (1 + (-\sqrt{5}))^n \\
+                   &= \bin{n}{0} 1^{n} (-\sqrt{5})^{0} + \bin{n}{1} 1^{n-1} (-\sqrt{5})^{1} + \dots + \bin{n}{n-1} 1^{1} (-\sqrt{5})^{n-1} + \bin{n}{n} 1^{0} (-\sqrt{5})^{n} \\
+                   &= 1 - \bin{n}{1} \sqrt{5} + \bin{n}{2} \sqrt{5}^{2} - \dots + \bin{n}{n-1} (-\sqrt{5})^{n-1} + \bin{n}{n} (-\sqrt{5})^{n} \\
+                   &= \sum_{i=0}^{n} (-1)^i \bin{n}{i} \sqrt{5}^{i}
+\end{align*}
+
+\subsection*{b)}
+
+\begin{align*}
+  a_n &= \frac{\bin{n}{1} + 5 \bin{n}{3} + 5^2 \bin{n}{5} + \dots}{2^{n-1}} \\
+\end{align*}
+
+The proof is by expanding the Binet's formula using the binomial coefficient. So
+we have
+
+\begin{align*}
+  a_n &= \frac{1}{\sqrt{5}} ((\frac{1 + \sqrt{5}}{2})^n - (\frac{1 - \sqrt{5}}{2})^n) \\
+\end{align*}
+
+and after expansion we obtain
+
+\begin{align*}
+  a_n &=  \frac{1}{2^n \sqrt{5}} \left(\sum_{i=0}^{n}\left(\bin{n}{k}(\sqrt{5}^k)\right) - \sum_{i=0}^{n}\left(\bin{n}{k}(\sqrt{5}^k)(-1)^k\right)\right) \\
+      &= \frac{1}{2^n \sqrt{5}} \left(\sum_{i=0}^{n}\left(\bin{n}{k} (\sqrt{5})^k (1-(-1)^k))\right) \right) \\
+\end{align*}
+
+When $k$ is even, $1-(-1)^k = 0$ and $1-(-1)^k = 2$ when $k$ is odd. So we
+obtain
+
+\begin{align*}
+  a_n &= \frac{1}{2^n \sqrt{5}} \left(\sum_{2j+1=1}^{2j+1=n}\left(\bin{n}{2j+1} (\sqrt{5})^{2j+1} \cdot 2 \right) \right) \\
+      &= \frac{1}{2^{n-1} \sqrt{5}} \sum_{j=0} \left( \bin{n}{2j+1}(5^j \sqrt{5}) \right) \\
+      &= \frac{1}{2^{n-1}} \sum_{j=0} \left( 5^j \bin{n}{2j+1} \right) \\
+      &= \frac{5^0 \bin{n}{1} + 5^1 \bin{n}{3} + 5^2 \bin{n}{5} \dots}{2^{n-1}}
+\end{align*}
+
+
+\section*{\texttt{2}}
+
+\begin{align*}
+  a_1 &= 1 \\
+  a_2 &= 5 \\
+  a_n &= 5a_{n-1} - 6a_{n-2}
+\end{align*}
+
+We find that
+\begin{gather*}
+  a_2 = 5a_1 - 6a_0 = 5 \\
+  5 = 5 * 1 - 6 * a_0 = 5 - 6 * a_0 \\
+  6 * a_0 = 0 \\
+  a_0 = 0
+\end{gather*}
+
+\begin{mathpar}
+  X = (1, \lambda, \lambda^2) \\
+  \lambda^n = 5 \lambda^{n-1} - 6 \lambda^{n-2} \\
+  \lambda^2 = 5 \lambda - 6 \\
+  -\lambda^2 + 5 \lambda - 6 = 0
+\end{mathpar}
+
+We compute the discriminant :
+
+\begin{mathpar}
+  \Delta = 25 - (4 * -1 * -6) = 25 - 24 = 1 \\
+  \lambda_1 = \frac{-5 + \sqrt{1}}{2 * (-1)} = \frac{-4}{-2} = 2 \\
+  \lambda_2 = \frac{-5 - \sqrt{1}}{2 * (-1)} = \frac{-6}{-2} = 3 \\
+\end{mathpar}
+
+And we obtain
+
+\begin{mathpar}
+  A = C_1 \lambda_1 + C_2 \lambda_2 \\
+  a_n = C_1 \lambda_1^n + C_2 \lambda_2^n \\
+\end{mathpar}
+
+For $n=0$
+\begin{mathpar}
+  a_0 = C_1 + C_2
+\end{mathpar}
+
+For $n=1$
+\begin{mathpar}
+  a_1 = C_1 \lambda_1 + C_2 \lambda_2
+\end{mathpar}
+
+and we obtain the following system :
+\[
+  \begin{cases}
+    C_1 + C_2 = 0\\
+    C_1 \lambda_1 + C_2 \lambda_2 = 1
+  \end{cases}
+  =
+  \begin{cases}
+    C_1 + C_2 = 0\\
+    2 C_1 + 3 C_2 = 1 
+  \end{cases}
+\]
+
+Resolution :
+
+\begin{mathpar}
+  C_1 = - C_2 \\
+  2 (- C_2) + 3 C_2 = 1 \\
+  C_2 = 1 \\
+  C_1 = -1
+\end{mathpar}
+
+Finally we have
+
+\begin{align*}
+  a_n &= C_1 \lambda_1^n + C_2 \lambda_2^n \\
+      &= (-1) * 2^n + 1 * 3^n \\
+      &= 3^n - 2^n
+\end{align*}
+
+\section*{\texttt{3}}
+
+\begin{align*}
+  a_1 &= 1 \\
+  a_2 &= 2 \\
+  a_3 &= 5 \\
+  a_n &= 3 a_{n-2} - 2 a_{n-3}
+\end{align*}
+
+We find that
+\begin{mathpar}
+  a_3 = 3 a_1  - 2 a_0 \\
+  5 = 3 * 1 - 2 * a_0 \\
+  2 = - 2 * a_0 \\
+  a_0 = -1
+\end{mathpar}
+
+\begin{mathpar}
+  \lambda^n = 3 \lambda^{n-2} - 2 \lambda^{n-3}
+\end{mathpar}
+
+We pick $n=3$
+
+\begin{gather*}
+  \lambda^3 = 3\lambda - 2 \\
+  -\lambda^3 + 3\lambda - 2 = 0
+\end{gather*}
+
+We find that $1$ is a root of the equation and we obtain
+
+\begin{gather*}
+  -\lambda^3 + 3\lambda - 2 = (\lambda - 1)(-\lambda^2 - \lambda + 2)
+  = -(\lambda - 1)^2(\lambda + 2) \\
+  \lambda_1 = 1 \\
+  \lambda_2 = -2 \\
+\end{gather*}
+
+\begin{align*}
+  P(\lambda) &= (\lambda - \lambda_1)^2 (\lambda - \lambda_2) \\
+             &= (\lambda - 1)^2 (\lambda - (-2)) \\
+\end{align*}
+
+\begin{align*}
+  a_n &= C_1 \lambda_1^n + C_2 n \lambda_1^n + C_3 \lambda_2^n \\
+      &= C_1 * 1^n + C_2 * n * 1^n + C_3 * (-2)^n \\
+      &= C_1 + n * C_2 + (-2)^n * C_3
+\end{align*}
+
+For $n=0$
+
+\[
+  a_0 = C_1 + C_3 = -1
+\]
+
+For $n=1$
+\[
+  a_1 = C_1 + C_2 - 2 C_+ 1
+\]
+
+For $n=2$
+\[
+  a_2 = C_1 + 2 C_2 + 4 C_3 = 2
+\]
+
+And we obtain the following system :
+
+\[
+  \begin{cases}
+    C_1 + C_3 = -1 \\
+    C_1 + C_2 - 2 C_3 = 1 \\
+    C_1 + 2 C_2 + 4 C_3 = 2
+  \end{cases}
+\]
+
+\begin{mathpar}
+  C_1 = - 1 - C_3
+\end{mathpar}
+
+\[
+  \begin{cases}
+    - C_3 - 1 + C_2 - 2 C_3 = 1 \\
+    - C_3 - 1 + 2 C_2 + 4 C_3 = 2
+  \end{cases}
+  =
+  \begin{cases}
+    C_2 - 3 C_3 - 1 = 1 \\
+    3 C_3 - 1 + 2 C_2 = 2
+  \end{cases}
+\]
+
+\begin{mathpar}
+  C_2 = 3 C_3 + 2
+\end{mathpar}
+
+\begin{mathpar}
+  3 C_3 - 1 + 2 (3 C_3 + 2) = 2 \\
+  3 C_3 - 1 + 4 + 6 C_3 = 2 \\
+  9 C_3 + 3 = 2 \\
+  9 C_3 = -1 \\
+  C_3 = -\frac{1}{9} \\
+  C_2 = 3 * -\frac{1}{9} + 2 = \frac{5}{3} \\
+  C_1 = -1 - \frac{1}{9} = -\frac{8}{9}\\
+\end{mathpar}
+
+Finally we have
+\begin{align*}
+  a_n &= C_1 \lambda_1^n = C_2 n \lambda_1^n + C_3 \lambda_2^n \\
+      &= -\frac{4}{3} * 1^n + 2 * n * 1^n + (-\frac{1}{6}) * (-2)^n \\
+      &= -\frac{8}{9} + n \frac{5}{3} + (-2)^n \cdot -\frac{1}{9}
+\end{align*}
+
+
+\section*{\texttt{4}}
+\subsection*{a)}
+\subsection*{b)}
+
+\section*{\texttt{5}}
+\subsection*{a)}
+\subsection*{b)}
+
+\section*{\texttt{6}}
+\subsection*{a)}
+\subsection*{b)}
+
+
+\end{document}
+
+

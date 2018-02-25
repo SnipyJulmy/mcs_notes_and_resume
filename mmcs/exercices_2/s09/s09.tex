@@ -1,0 +1,254 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath}
+\usepackage{fullpage}
+\usepackage{tikz}
+
+\usetikzlibrary{graphs,graphs.standard}
+
+\makeatletter
+\pgfmathdeclarefunction{alpha}{1}{%
+  \pgfmathint@{#1}%
+  \edef\pgfmathresult{\pgffor@alpha{\pgfmathresult}}%
+}
+
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{color}
+\usepackage{nd3}
+
+\newcommand*{\contract}[2]{contraction of $#1$ with $#2$}
+
+\newcommand*{\MP}{Modus Ponens }
+\newcommand*{\MPr}[2]{\MP of \ref{#1} and \ref{#2}}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    Mathematical Methods for Computer Science 1\
+    Fall 2017
+  }
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  Series 9
+  \vspace*{1.4cm}
+
+  Sylvain Julmy
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+\end{center}
+
+\section*{\texttt{1}}
+
+\subsection*{\texttt{(a)}}
+
+\begin{ND}[Proof][proof1a][][][0.6\linewidth]
+  \ndl{}{$A \rightarrow B$}{premise \label{1}}
+  \ndl{}{$A$}{premise \label{2}}
+  \ndl{}{$B$}{\MP of \ref{1} and \ref{2} \label{3}}
+  \ndl{}{$B \rightarrow C$}{premise \label{4}}
+  \ndl{}{$C$}{\MP of \ref{3} and \ref{4} \label{5}}
+\end{ND}
+
+\subsection*{\texttt{(b)}}
+
+By deduction lemma, we transform $(A \to B) \to ((B \to C) \to (A \to C))$ to
+$(A \to B),(B \to C),A \vdash C$ :
+
+\begin{prooftree}
+  \Axiom$ \fCenter (A \to B) \to ((B \to C) \to (A \to C))$
+  \UnaryInf$(A \to B) \vdash \fCenter ((B \to C) \to (A \to C))$
+  \UnaryInf$(A \to B),(B \to C) \vdash \fCenter (A \to C)$
+  \UnaryInf$(A \to B),(B \to C),A \vdash \fCenter C$
+\end{prooftree}
+
+Then we prove $C$ :
+
+\begin{ND}[Proof][proof1b][][][0.6\linewidth]
+  \ndl{}{$A \rightarrow B$}{premise \label{1}}
+  \ndl{}{$A$}{premise \label{2}}
+  \ndl{}{$B$}{\MP of \ref{1} and \ref{2} \label{3}}
+  \ndl{}{$B \rightarrow C$}{premise \label{4}}
+  \ndl{}{$C$}{\MP of \ref{3} and \ref{4} \label{5}}
+\end{ND}
+
+\newpage
+
+\section*{\texttt{2}}
+
+We know that $\Gamma_1$ can prove $A$ and $\Gamma_2,A$ can prove $B$. In order
+to show that $\Gamma_1 \cup \Gamma_2, A \vdash B$, we would construct $\Gamma_3$
+by pick either a formulas from $\Gamma_1$ or $\Gamma_2$ (with respect in wich
+they appear in the sequence) until both are empty. Clearly, $\Gamma_3$ is
+$\Gamma_1 \cup \Gamma_2$. Then, $A$ will appear in the sequence and $A$ is
+provable by $\Gamma_1$. Then, $B$ is provable because $\Gamma_2$ and $A$ appears
+in $\Gamma_3$.
+
+\section*{\texttt{3}}
+
+\subsection*{\texttt{(a)}}
+
+By deduction lemma, we transform $((A \wedge B) \to C) \to (A \to (B \to C))$ to
+$((A \wedge B) \to C),A,B \vdash C$ :
+
+\begin{prooftree}
+  \Axiom$ \fCenter ((A \wedge B) \to C) \to (A \to (B \to C))$
+  \UnaryInf$((A \wedge B) \to C) \vdash \fCenter (A \to (B \to C))$
+  \UnaryInf$((A \wedge B) \to C),A \vdash \fCenter (B \to C)$
+  \UnaryInf$((A \wedge B) \to C),A,B \vdash \fCenter C$
+\end{prooftree}
+
+Then we prove $C$ :
+
+\begin{ND}[Proof][proof3a][][][0.7\linewidth]
+  \ndl{}{$A$}{premise \label{1}}
+  \ndl{}{$B$}{premise \label{2}}
+  \ndl{}{$(A \to (B \to (A \wedge B)))$}{Axiom 4 \label{3}}
+  \ndl{}{$(B \to (A \wedge B))$}{\MP of \ref{1} and \ref{3} \label{4}}
+  \ndl{}{$(A \wedge B)$}{ \MP of \ref{1} and \ref{4}\label{5}}
+  \ndl{}{$((A \wedge B) \to C)$}{premise \label{6}}
+  \ndl{}{$C$}{\MP of \ref{5} and \ref{6} \label{7}}
+\end{ND}
+
+\subsection*{\texttt{(b)}}
+
+By deduction lemma, we transform $(A \wedge B) \to (B \wedge A)$ to $(A \wedge
+B) \vdash (B \wedge A)$ :
+
+\begin{prooftree}
+  \Axiom$ \fCenter (A \wedge B) \to (B \wedge A)$
+  \UnaryInf$(A \wedge B) \vdash \fCenter (B \wedge A)$
+\end{prooftree}
+
+\begin{ND}[Proof][proof3b][][][0.7\linewidth]
+  \ndl{}{$(A \wedge B)$}{premise \label{1}}
+  \ndl{}{$(A \wedge B) \to A$}{Axiom 3a \label{2}}
+  \ndl{}{$A$}{\MP of \ref{1} and \ref{2} \label{3}}
+  \ndl{}{$(A \wedge B) \to B$}{Axiom 3b \label{4}}
+  \ndl{}{$B$}{\MP of \ref{2} and \ref{4} \label{5}}
+  \ndl{}{$(B \to (A \to (B \wedge A)))$}{Axiom 4 \label{6}}
+  \ndl{}{$(A \to (B \wedge A))$}{\MP of \ref{6} and \ref{5} \label{7}}
+  \ndl{}{$(B \wedge A)$}{\MP of \ref{7} and \ref{3} \label{8}}
+\end{ND}
+
+\section*{\texttt{4}}
+
+In order to show that
+\[
+((A \wedge C) \vee (B \wedge C)) \to ((A \vee B) \wedge C)
+\]
+is provable in our proof system, we will use the case distinction lemma :
+
+\begin{prooftree}
+  \AxiomC{$\Gamma,A \vdash C$}
+  \AxiomC{$\Gamma,B \vdash C$}
+  \BinaryInfC{$\Gamma,(A \vee B) \vdash C$}
+\end{prooftree}
+
+By using the deduction lemma, we transform $((A \wedge C) \vee (B \wedge C)) \to
+((A \vee B) \wedge C)$ into $((A \wedge C) \vee (B \wedge C)) \vdash ((A \vee B)
+\wedge C)$ :
+
+\begin{prooftree}
+  \Axiom$\fCenter ((A \wedge C) \vee (B \wedge C)) \to ((A \vee B) \wedge C)$
+  \UnaryInf$((A \wedge C) \vee (B \wedge C)) \vdash \fCenter ((A \vee B) \wedge C)$
+\end{prooftree}
+
+Then, if we show that $\Gamma,(A \wedge C) \vdash ((A \vee B) \wedge C)$ and
+$\Gamma,(B \wedge C) \vdash ((A \vee B) \wedge C$, we could conclude by the case
+distinction lemma that
+
+\begin{prooftree}
+  \AxiomC{$\Gamma,(A \wedge C) \vdash ((A \wedge B) \vee C)$}
+  \AxiomC{$\Gamma,(B \wedge C) \vdash ((A \wedge B) \vee C)$}
+  \BinaryInfC{$\Gamma, (A \wedge B) \vee (B \wedge C) \vdash ((A \wedge B) \vee C)$}
+\end{prooftree}
+
+\begin{ND}[Proof of $\Gamma,(A \wedge C) \vdash ((A \wedge B) \vee C)$][proof4a][][][0.8\linewidth]
+  \ndl{}{$A \wedge C$}{premise \label{1}}
+  \ndl{}{$(A \wedge C) \to A $}{Axiom 3a \label{2}}
+  \ndl{}{$(A \wedge C) \to C $}{Axiom 3b \label{3}}
+  \ndl{}{$A$}{\MPr{1}{3} \label{4}}
+  \ndl{}{$C$}{\MPr{1}{2} \label{5}}
+  \ndl{}{$A \to (A \vee B)$}{Axiom 5a \label{6}}
+  \ndl{}{$A \vee B $}{\MPr{4}{6} \label{7}}
+  \ndl{}{$(A \vee B) \to (C \to ((A \vee B) \wedge C)) $}{Axiom 4 \label{8}}
+  \ndl{}{$C \to ((A \vee B) \wedge C)$}{\MPr{7}{8} \label{9}}
+  \ndl{}{$(A \vee B) \wedge C$}{\MPr{5}{9} \label{10}}
+\end{ND}
+
+
+\begin{ND}[Proof of $\Gamma,(B \wedge C) \vdash ((A \wedge B) \vee C)$][proof4b][][][0.8\linewidth]
+  \ndl{}{$B \wedge C$}{premise \label{1}}
+  \ndl{}{$(B \wedge C) \to B$}{Axiom 3a \label{2}}
+  \ndl{}{$(B \wedge C) \to C$}{Axiom 3b \label{3}}
+  \ndl{}{$B$}{\MPr{1}{2} \label{4}}
+  \ndl{}{$C$}{\MPr{1}{3} \label{5}}
+  \ndl{}{$B \to (A \vee B)$}{Axiom 5b \label{6}}
+  \ndl{}{$A \vee B$}{\MPr{4}{6} \label{7}}
+  \ndl{}{$(A \vee B) \to (C \to ((A \vee B) \wedge C))$}{Axiom 4 \label{8}}
+  \ndl{}{$C \to ((A \vee B) \wedge C)$}{\MPr{7}{8} \label{9}}
+  \ndl{}{$(A \vee B) \wedge C$}{\MPr{5}{9} \label{10}}
+\end{ND}
+
+Finally, by case distinction lemma, we have
+
+\begin{prooftree}
+  \AxiomC{$\Gamma,(A \wedge C) \vdash ((A \wedge B) \vee C)$}
+  \AxiomC{$\Gamma,(B \wedge C) \vdash ((A \wedge B) \vee C)$}
+  \BinaryInfC{$\Gamma, (A \wedge B) \vee (B \wedge C) \vdash ((A \wedge B) \vee C)$}
+\end{prooftree}
+
+\section*{\texttt{5}}
+
+We use the following lemma (Lemma 1) in order to prove $\Gamma \vdash \neg \neg A \to A$ :
+
+\begin{prooftree}
+  \AxiomC{$A$}
+  \AxiomC{$A$}
+  \BinaryInfC{$A$}
+\end{prooftree}
+
+By deduction lemma, $\vdash A \to A$ is provable if and only if $\Gamma, A
+\vdash A$. Because $A$ is a premise, $A$ holds.
+
+Then, we prove $\vdash \neg \neg A \to A$ :
+
+\begin{ND}[Proof][proof5a][][][0.8\linewidth]
+  \ndl{}{$(\neg \neg A \to (A \to A)) \to ((\neg \neg A \to A) \to (\neg \neg A
+    \to A))$}{Axiom 2\label{1}}
+  \ndl{}{$(\neg \neg A \to A) \to ((\neg \neg A \to A) \to (\neg \neg A
+    \to A))$}{By Lemma 1\label{2}}
+  \ndl{}{$(\neg \neg A \to A) \to (\neg \neg A \to A)$}{By Lemma 1\label{3}}
+  \ndl{}{$\neg \neg A \to A$}{By Lemma 1\label{4}}
+\end{ND}
+
+So we have that $\Gamma \vdash \neg \neg A \to A$ holds in our proof system.
+Then, we have to show that the axiom set without the axiom $9$ ($A \vee \neg A$)
+and with the axiom $9'$ ($\neg \neg A \to A$) can prove $A \vee \neg A$.
+
+So we prove $\Gamma \setminus \{A \vee \neg A\} \cup \{\neg \neg A \to A\}
+\vdash A \vee \neg A$.
+
+\begin{ND}[Proof][proof5b][][][0.9\linewidth]
+  \ndl{}{$\neg (A \vee \neg A)$}{Assumption \label{1}}
+  \ndl{}{$A$}{Assumption \label{2}}
+  \ndl{}{$A \to (A \vee \neg A)$}{Axiom 5a \label{3}}
+  \ndl{}{$A \vee \neg A$}{\MPr{2}{3} \label{4}}
+  \ndl{}{$\bot$}{Because \ref{1} and \ref{2} are in contrary, one is false \label{5}}
+  \ndl{}{$\neg A$}{Proof by contradiction \label{6}}
+  \ndl{}{$\neg A \to (A \vee \neg A)$}{Axiom 5b \label{7}}
+  \ndl{}{$A \vee \neg A$}{\MPr{6}{7} \label{8}}
+  \ndl{}{$\bot$}{Because \ref{1} and \ref{8} are in contrary, one is false \label{9}}
+  \ndl{}{$\neg \neg (A \vee \neg A)$}{Proof by contradiction \label{10}}
+  \ndl{}{$A \vee \neg A$}{Double Negation elimination (see before) \label{11}}
+\end{ND}
+
+\end{document}

@@ -1,0 +1,279 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{fullpage}
+\usepackage{tikz}
+
+\usetikzlibrary{graphs,graphs.standard}
+
+\makeatletter
+\pgfmathdeclarefunction{alpha}{1}{%
+  \pgfmathint@{#1}%
+  \edef\pgfmathresult{\pgffor@alpha{\pgfmathresult}}%
+}
+
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{color}
+\usepackage{nd3}
+
+\newcommand*{\contract}[2]{contraction of $#1$ with $#2$}
+
+\newcommand*{\MP}{Modus Ponens }
+\newcommand*{\MPr}[2]{\MP of \ref{#1} and \ref{#2}}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    Mathematical Methods for Computer Science 1\
+    Fall 2017
+  }
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  Series 11
+  \vspace*{1.4cm}
+
+  Sylvain Julmy
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+\end{center}
+
+\section*{\texttt{1}}
+
+\subsection*{\texttt{(a)}}
+``Every ice hockey team has a goalkeeper''
+\[
+  \forall x.(\exists y. ( H(x) \wedge G(x,y) ))
+\]
+
+\subsection*{\texttt{(b)}}
+``Nobody can be goalkeeper in two different teams''
+\[
+  \neg(\exists x.( G(x,y) \wedge G(x,z) \wedge \neg(z = y)))
+\]
+
+\subsection*{\texttt{(c)}}
+``If Gottéron beats Berne, then Gottéron does not lose to every team''
+\[
+  B(f,b) \to \exists x.(\neg(L(f,x)))
+\]
+
+\subsection*{\texttt{(d)}}
+``Gottéron beats some team, which beats Berne''
+\[
+  \exists x.(B(f,x) \wedge B(x,b))
+\]
+
+\section*{\texttt{2}}
+
+\subsection*{\texttt{(a)}}
+
+Specification :
+
+\begin{align*}
+  R(x) : && \text{the things $x$ is red} \\
+  B(x) : && \text{the things $x$ is in the box}
+\end{align*}
+
+\subsubsection*{(i)}
+\[
+  \forall x.(R(x) \to B(x))
+\]
+
+\subsubsection*{(ii)}
+\[
+  \forall x.(B(x) \to R(x))
+\]
+
+\subsection*{\texttt{(b)}}
+
+Specification :
+
+\begin{align*}
+  f(x) : && \text{function which return the father of $x$} \\
+  a : && \text{constant that represent the person ``Arther''} \\
+  g : && \text{constant that represent the person ``Gaspard''} \\
+  s : && \text{constant that represent the person ``Ben'''}
+\end{align*}
+
+
+\subsubsection*{(i)}
+
+``Ben is a grandfather''
+
+\[
+  \exists x.(f(f(x)) = s)
+\]
+
+\subsubsection*{(ii)}
+
+``Arthur and Gaspard have the same father''
+
+\[
+  f(a) = f(g)
+\]
+
+\subsection*{\texttt{(c)}}
+
+Specification :
+
+\begin{align*}
+  F(x,y) : && \text{predicate that is true if $x$ is the father of $y$} \\
+  a : && \text{constant that represent the person ``Arther''} \\
+  g : && \text{constant that represent the person ``Gaspard''} \\
+  s : && \text{constant that represent the person ``Ben'''}
+\end{align*}
+
+\subsubsection*{(i)}
+
+``Ben is a grandfather''
+
+\[
+  \exists x.(F(x,y) \wedge F(s,x))
+\]
+
+\subsubsection*{(ii)}
+
+``Arthur and Gaspard have the same father''
+
+\[
+  \exists x.(F(x,a) \wedge F(x,g))
+\]
+
+\section*{\texttt{3}}
+
+\subsection*{\texttt{(a)}}
+
+\subsubsection*{(i)}
+\[
+  P(f(x,y))
+\]
+
+is not a valid formula in the predicate logic, because $f$ is a unary function
+symbol, and, in the formula, $f$ is used as a binary function.
+
+\subsubsection*{(ii)}
+\[
+  Q(m,f(m))
+\]
+
+is a valid formula in the predicate logic.
+
+\subsubsection*{(iii)}
+\[
+  Q(Q(m,x),y)
+\]
+
+is not a valid formula in the predicate logic, because the predicate $Q$ has a
+predicate in its parameters, which is not allowed. Predicate only allows terms
+as parameters, and $Q$ is not a term.
+
+\subsubsection*{(iv)}
+\[
+  Q(x,y) \to \exists x.(Q(z,y))
+\]
+
+is a valid formula in the predicate logic.
+
+
+\subsection*{\texttt{(b)}}
+
+In the formula
+
+\[
+  \exists x.(P(y,z) \wedge (\forall y.(\neg Q(y,x) \wedge P(y,z))))
+\]
+
+\begin{itemize}
+\item $x$ is a bound variable.
+\item $y$ is a free variable in the scope $P(y,z) \wedge (\forall y.(\neg Q(y,x) \wedge P(y,z)))$.
+\item $y$ is a bound variable in the scope $\neg Q(y,x) \wedge P(y,z)$.
+\item $z$ is a free variable.
+\end{itemize}
+
+\subsection*{\texttt{(c)}}
+
+We change the free variable $y$ and $z$ to $v$ and $w$ and add universal
+quantifier in front of the formula for both.
+
+\[
+  \forall v.(\forall w.( \exists x.(P(v,w) \wedge (\forall y.(\neg Q(y,x) \wedge P(y,w))))))
+\]
+
+\section*{\texttt{4}}
+
+\subsection*{\texttt{(a)}}
+
+The formula $\forall x.(\exists y.(P(x,y) \wedge (Q(y))))$ is satisfy by the
+first interpretation. For any $x$, we can find an $y$ which is greater than $x$
+and greater than $0$. If $x$ is greater or equals than $0$, then $x + 1$ is
+greater than $0$ and greater than $x$, else, if $x$ is less than $0$, we can
+pick $1$, which is greater than any negative number and greater than $0$. So the
+formula is satisfiable by the first interpretation.
+
+On the other hand, the second interpretation does not satisfy the formula,
+because if we assign $x$ to a negative number, then we can't find an $y$ which
+is lesser than $x$ and greater than $0$.
+
+\subsection*{\texttt{(b)}}
+
+The formula is satisfiable under the following interpretation :
+
+\begin{align*}
+  U &= \mathbb{Z} \\
+  P &= \{(x,y) | x^2 = y\} \\
+  Q &= \{x | x > 0\}
+\end{align*}
+
+but the formula is not satisfiable under the interpretation
+
+\begin{align*}
+  U &=  \{a,b,c\} && \text{} \\
+  P(x,y) &= \{(a,b),(b,a)\} &&  \text{predicate that is true only if $y$ is blue and $x$ is yellow} \\
+  Q(x)  &= \{a,b,c\} && \text{predicate that is true if $x$ is red}
+\end{align*}
+
+so the formula is not valid because we found an interpretation that falsify the
+formula. We can't satisfy the formula $P(x,y)$ for all $y$, because $P(x,y)$ can't be
+$true$ if $x$ or $y$ is $c$.
+
+\section*{\texttt{5}}
+
+The formula $\phi = \forall x.(\exists y.(P(x,y) \to Q(x,y)))$ is satisfiable
+under the given interpretation. In order to make the formula $true$, we found
+that $P(x,y)$ is false. To make that $\forall x.(\exists y.(P(x,y)))$ is
+$false$, we found an $y$ for any $x$ that falsify $P$ :
+
+\begin{itemize}
+\item if $x$ is $a$, then we put $y$ is $c$, so $P$ is falsify
+\item if $x$ is $b$, then we put $y$ is $a$, so $P$ is falsify
+\item if $x$ is $c$, then we put $y$ is $a$, so $P$ is falsify
+\end{itemize}
+
+Then, $\phi$ is satisfiable.
+
+The formula $\psi$ is not satisfiable, because we have to make it $true$ for any
+$x$. For all $x$ means that we have to check for any assignement of $x$ with an
+element of $U$, if $x$ is $c$, then whatever we pick for $y$, the predicate $P$
+would be satisfy :
+
+\begin{itemize}
+\item $(c,a)$ is $true$, because $(c,a) \in Q$
+\item $(c,b)$ is $true$, because $(c,b) \in Q$
+\item $(c,c)$ is $true$, because $(c,c) \in Q$
+\end{itemize}
+
+So the first part of the implication is satisfy, but then, we can't satisfy
+$P(x,y)$ because $(c,a) \not\in P$, $(c,b) \not\in P$ and $(c,c) \not\in P$.
+
+
+
+\end{document}

@@ -1,0 +1,191 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath}
+\usepackage{fullpage}
+\usepackage{tikz}
+
+\usetikzlibrary{graphs,graphs.standard}
+
+\makeatletter
+\pgfmathdeclarefunction{alpha}{1}{%
+  \pgfmathint@{#1}%
+  \edef\pgfmathresult{\pgffor@alpha{\pgfmathresult}}%
+}
+
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{color}
+
+\newcommand*{\contract}[2]{contraction of $#1$ with $#2$}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    Mathematical Methods for Computer Science 1\
+    Fall 2017
+  }
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  Series 7
+  \vspace*{1.4cm}
+
+  Sylvain Julmy
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+\end{center}
+
+\section*{\texttt{1}}
+
+\subsection*{(a)}
+
+The complete bipartite graph $K_{n,n} = (X \sqcup Y, E)$ where $X \sqcup Y =
+\emptyset$ has $n!$ perfect matching : we can take any vertice from $X$ in any
+order and associate with one of $Y$. So at the first pick, it would be $n$
+choices, then $n-1$, hand so on, until $1$ : $n * (n-1) * \cdots * 1 = n!$.
+
+\subsection*{(b)}
+
+Because the graph is complete, this problem is the same has counting the number
+of ways of partitioning all the $2n$ vertices into to group.
+
+To compute the formula, we just take $1$ vertice at first, it could go with
+$2n-1$ other different vertices, then the second can go with $2n-3$ vertices,
+hand so on. So, we have $(2n-1) * (2n-3) * \cdots = (2n-1)!!$, which is the
+double factorial of a number.
+
+\[
+  (2n-1)!! = (2n-1) * (2n-3) * (2n-5) * \cdots * 1
+\]
+
+\section*{\texttt{2}}
+
+\subsection*{(a)}
+In an Hamiltonian graph, if $|V| \equiv 0 \mod 2$, the graph holds a perfect
+matching. The cycle of the graph is isomorphic to $C_{|V|}$, and $C_n$ has a
+perfect matching only if $n$ is even.
+
+In a matching, there is an even number of vertices because if a vertices appers
+twice, this is not a matching. So if $n$ is odd it can't be a perfect matching.
+
+If $n$ is even, we just take alternatively one edge from the cycle and that
+leads to a perfect matching.
+
+
+\subsection*{(b)}
+
+In the graph given in the exercice is bipartite (like a chess board), so the
+perfect matching will associtate any vertices from the first groupe to exactly
+one of the second group. Becase a group has more vertices than the other, it
+can't be a perfect matching.
+
+\section*{\texttt{3}}
+
+\subsection*{(a)}
+
+$|X| = |Y|$, because there is exactly $k|X|$ edges than are going out of $X$ and
+$k|Y|$ are going inside $Y$, so we have $k|X| = k|Y| \implies |X| = |Y|$.
+
+\subsection*{(b)}
+
+We know that $|X| = |Y|$ and that $G$ is $k$-regular, if $k=1$, this is already
+a perfect matching, because every vertices of $X$ is adjacent to at least one
+vertice of $Y$. If $k > 1$, then we can rhmwk/hm4.pdfemove edges in order to obtain the case
+of $G$ is $1$-regular.
+
+If we can't find a way such that we would obtain a $1$-regular from a
+$k$-regular graph, it means that $|X| \neq |Y|$ so there would be a contradiction.
+
+\section*{\texttt{4}}
+
+We consider a bipartite graph $G=(X \sqcup Y,E)$, $X$ represent the set of all
+the $13$ possible piles and $Y$ the set of the possible $13$ possible rank.
+There is an edge $\{x,y\}$ such that $x \in X$ and $ y \in Y$.
+
+If there is a perfect matching in $G$, then we  would show that it is always
+possible to select exactly one card from each pile in such a way that among
+the 13 selected cards there is exactly one card of each rank.
+
+$G$ has a perfect matching, because if we take any $k$ piles, there would be at
+least $k$ possible rank. Finally, according to hall's theorem, there exist a
+perfect matching.
+
+\section*{\texttt{5}}
+
+Given the graph $G = (V,E)$, where $V = X \sqcup Y =
+\{\underbrace{x_1,x_2,x_3,x_4,x_5}_X,\underbrace{y_1,y_2,y_3,y_4,y_5}_Y\}$ and
+$M = \{\{x_2,y_2\},\{x_3,y_3\},\{x_5,y_5\}\}$.
+
+\subsubsection*{Step 1}
+$N(S) = N(x_1) = \{y_2,y_3\}$
+
+$T = \emptyset$
+
+$N(S) \neq T$, we choose $y \in N(S) \setminus T \rightarrow y = y_2$. $y$ is
+matched, so $\{y_2,x_2\} \in M$.
+
+$S := S \cup \{x_2\} \rightarrow S = \{x_1,x_2\}$
+
+$T := T \cup \{y_2\} \rightarrow T = \{y_2\}$
+
+\subsubsection*{Step 2}
+$N(S) = N(\{x_1,x_2\}) = \{y_1,y_2,y_3,y_4,y_5\}$
+
+$T = \{y_2\}$
+
+$N(S) \neq T$, we choose $y \in N(S) \setminus T \rightarrow y = y_5$. $y$ is
+matched, so $\{y_5,x_5\} \in M$.
+
+$S := S \cup \{x_5\} \rightarrow S = \{x_1,x_2,x_5\}$
+
+$T := T \cup \{y_5\} \rightarrow T = \{y_2,y_5\}$
+
+\subsubsection*{Step 3}
+$N(S) = N(\{x_1,x_2,x_5\}) = \{y_1,y_2,y_3,y_4,y_5\}$
+
+$T = \{y_2,y_5\}$
+
+$N(S) \neq T$, we choose $y \in N(S) \setminus T \rightarrow y = y_4$. $y$ is
+not matched, so we need to find an augmenting path.
+
+\begin{center}
+  \begin{forest}
+    [$y_4$
+    [$x_2$ [$y_1$]]
+    [$x_5$ [$y_5$ [$x_2$]]]
+    ]
+  \end{forest}
+\end{center}
+
+Problem, $x_2$ appears in both branch, there is a contradiction, $G$ does not
+contains a maximum matching.
+
+\section*{\texttt{6}}
+
+\subsection*{(a)}
+
+Because there is a perfect matching $M$, the player $2$ just have to pick the
+edges which is adjacent to the vertices picked by player $1$ in $M$. Because $M$
+is a perfect matching, player $2$ would never loose. If player $2$ can't choose
+an edges, it means that $M$ is not a perfect matching.
+
+\subsection*{(b)}
+
+Player $1$ need to found a maximal matching $M$ and pick an edge $v_1$ that is not
+matched. Then, player $2$ has two kinds of move :
+\begin{itemize}
+\item Pick $v_2$ an edge matched by $M$, then player $1$ pick the adjacent to $v_2$
+  in $M$.
+\item Pick $v$ not in $M$, player $2$ pick an edge that is not in $M$ too. If
+  player $2$ can't found such an edge, it means that $\{v_1,v_2\}$ would have
+  been in $M$.
+\end{itemize}
+
+
+\end{document}

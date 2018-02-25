@@ -1,0 +1,254 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{fullpage}
+\usepackage{tikz}
+
+\usetikzlibrary{graphs,graphs.standard}
+
+\makeatletter
+\pgfmathdeclarefunction{alpha}{1}{%
+  \pgfmathint@{#1}%
+  \edef\pgfmathresult{\pgffor@alpha{\pgfmathresult}}%
+}
+
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{color}
+\usepackage{nd3}
+
+\newcommand*{\contract}[2]{contraction of $#1$ with $#2$}
+
+\newcommand*{\MP}{Modus Ponens }
+\newcommand*{\MPr}[2]{\MP of \ref{#1} and \ref{#2}}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    Mathematical Methods for Computer Science 1\
+    Fall 2017
+  }
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  Series 12
+  \vspace*{1.4cm}
+
+  Sylvain Julmy
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+\end{center}
+
+\section*{\texttt{1}}
+
+\subsection*{\texttt{(a)}}
+
+The formula
+
+\[
+  \phi = (\forall x.(P(x) \wedge (\exists y.(\forall z.(Q(y,z)))) )) \to (\forall x.(P(x) \vee (\exists y.(\forall z.(Q(y,z)))) ))
+\]
+
+is a special case of the formula $(q \wedge p) \to (q \vee p)$, so if $(q \wedge
+p) \to (q \vee p)$ is valid in our proof system, then $\phi$ is valid too.
+
+So we have to prove $\vdash (q \wedge p) \to (q \vee p)$, by deduction lemma, we
+are going to prove $q \wedge p \vdash q \vee p$.
+
+\begin{ND}[Proof][proof1a][][][0.6\linewidth]
+  \ndl{}{$q \wedge p$}{premise \label{1}}
+  \ndl{}{$(q \wedge p) \to q$}{Axiom 3a \label{2}}
+  \ndl{}{$q$}{\MPr{1}{2} \label{3}}
+  \ndl{}{$q \to (q \vee p)$}{Axiom 5b \label{4}}
+  \ndl{}{$q \vee p$}{\MPr{3}{4} \label{5}}
+\end{ND}
+
+\subsection*{\texttt{(b)}}
+
+The formula
+
+\[
+  \phi = Q(x,y) \to (\forall z.(P(z)) \to (Q(x,y) \to \forall z.(P(z))))
+\]
+
+is a special case of the formula $p \to (q \to (p \wedge q))$ and $p \to (q \to
+(p \wedge q))$ is an axiom in our proof system, then $\phi$ is a valid formula.
+
+\section*{\texttt{2}}
+
+\subsection*{\texttt{(a)}}
+
+\[
+  \phi = (\forall x.(\exists y.(P(x,y)))) \vee (\forall x.(\exists y.(\neg P(x,y))))
+\]
+
+\begin{align*}
+  & P(x,y) = \{(x,y) | x = y\} \\
+  & U = \{0,1\}
+\end{align*}
+
+In order to falsify $\phi$, we have to falsify both side of the $\vee$ connective.
+
+To falsify $\forall x.(\exists y.(P(x,y)))$, for any $x$, we can found an $y$
+that is not equal to $x$, and then falsify the formula. For $x=1$, we pick $y=0$
+and for $x=0$ we pick $y=1$.
+
+To falsify $\forall x.(\exists y.(\neg P(x,y)))$, for any $x$, we can found an
+$y$ that is equal to $x$, and then falsify the formula. For $x=1$, we pick $y=1$
+and for $x=0$, we pick $y=0$.
+
+We can't make $U$ smaller because :
+\begin{itemize}
+\item $|U| = 0$ is not possible, because $U \neq \emptyset$
+\item $|U| = 1$ is not possible, because the predicate have to ``return''
+  $false$ or $true$, and it is not possible to construct a predicate that is
+  non-deterministic. For example, $P(1,1)$ can't ``return'' $true$ one time and
+  $false$ on another time.
+\end{itemize}
+
+\subsection*{\texttt{(b)}}
+
+\[
+  \phi = \forall x.(\exists y.(P(x,y))) \to \exists x.( \forall y.(P(x,y)))
+\]
+
+\begin{align*}
+  & P(x,y) = \{(x,y) | x = y\} \\
+  & U = \{0,1\}
+\end{align*}
+
+In order to falsify $\phi$, we have to satisfy the left hand side and falsify
+the right hand side of the $\to$ connective.
+
+To satisfy $\forall x.(\exists y.(P(x,y)))$, we have to find, for any $x$, and
+$y$ which ois equal to $x$. For $x=1$, we pick $y=1$ and for $x=0$, we pick
+$y=0$.
+
+To falsify $\exists x.( \forall y.(P(x,y)))$, we have to find an $x$, that for
+all $y$, $x$ is not always equal to $y$. We pick $x=1$, then if $y=1$, the
+formula is satisfy, but for $y=0$, the formula is not.
+
+We can't make $U$ smaller because :
+\begin{itemize}
+\item $|U| = 0$ is not possible, because $U \neq \emptyset$
+\item $|U| = 1$ is not possible, we use the same argument as before. The
+  predicate $P(x,y)$ is deterministic. So if we have only one choice to fill
+  $P$, with only one single value, then $P(\lambda,\lambda)$ would always
+  ``return'' the same value, either $true$ or $false$. Then both left and right
+  hand side of the $\to$ connective have the same value and $true \to true$ and
+  $false \to false$ are valid.
+\end{itemize}
+
+\section*{\texttt{3}}
+
+\subsection*{\texttt{(a)}}
+
+We will prove $\vdash \neg \forall x.( \neg \phi) \to \exists x.(\phi)$, by
+proving the contrapositive : $\vdash \neg \exists x.(\phi) \to \forall x.(\neg
+\phi)$ and by deduction lemma, $\neg \exists x.(\phi) \vdash \forall x.(\neg
+\phi)$.
+
+\begin{ND}[Proof][proof3a][][][0.85\linewidth]
+  \ndl{}{$\neg \exists x.(\phi)$}{Premise \label{1}}
+  \ndl{}{$\phi \to \exists x.(\phi)$}{Axiom 11 \label{2}}
+  \ndl{}{$\neg \exists x.(\phi) \to (\phi \to \neg \exists x.(\phi))$}{Axiom 1 \label{3}}
+  \ndl{}{$\phi \to \neg \exists x.(\phi)$}{\MPr{1}{3} \label{4}}
+  \ndl{}{$(\phi \to \exists x.(\phi)) \to ((\phi \to \neg \exists x.(\phi)) \to \neg \phi)$}{Axiom 8 \label{5}}
+  \ndl{}{$(\phi \to \neg \exists x.(\phi)) \to \neg \phi$}{\MPr{2}{5} \label{6}}
+  \ndl{}{$\neg \phi$}{\MPr{5}{6} \label{7}}
+  \ndl{}{$\neg \phi \to \forall x.(\neg \phi)$}{Generalisation rule \label{8}}
+  \ndl{}{$\forall x.(\neg \phi)$}{\MPr{7}{8} \label{9}}
+\end{ND}
+
+\subsection*{\texttt{(b)}}
+
+We will prove $\vdash \neg \exists x.(\neg \phi) \to \forall x.(\phi)$, and by
+deduction lemma, we prove $\neg \exists x.(\neg \phi) \vdash \forall x.(\phi)$
+
+\begin{ND}[Proof][proof3b][][][0.95\linewidth]
+  \ndl{}{$\neg \exists x.(\neg \phi) $}{Premise \label{1}}
+  \ndl{}{$\neg \phi \to \exists x.(\neg \phi) $}{Axiom 11 \label{2}}
+  \ndl{}{$\neg \exists x.(\neg \phi) \to (\neg \phi \to \neg \exists x.(\neg \phi))$}{Axiom 1 \label{3}}
+  \ndl{}{$\neg \phi \to \neg \exists x.(\neg \phi) $}{\MPr{1}{3} \label{4}}
+  \ndl{}{$ \neg \phi \to \exists x.(\neg \phi) \to ((\neg \phi \to \neg \exists
+    x.(\neg \phi)) \to \neg \neg \phi)$}{Axiom 8 \label{5}}
+  \ndl{}{$(\neg \phi \to \neg \exists x.(\neg \phi)) \to \neg \neg \phi$}{\MPr{2}{5} \label{6}}
+  \ndl{}{$\neg \neg \phi$}{\MPr{4}{5} \label{7}}
+  \ndl{}{$\phi$}{Double negation elimination \label{8}}
+  \ndl{}{$\phi \to \forall x.(\phi)$}{Generalisation rule \label{9}}
+  \ndl{}{$\forall x.(\phi)$}{\MPr{8}{9} \label{10}}
+\end{ND}
+
+\section*{\texttt{4}}
+
+\begin{align*}
+  \phi = & \forall x. (\forall y.( P(x,y) \wedge P(y,x) \to x = y)) \wedge && R \\
+         & \forall x. (\forall y.( P(x,y) \vee P(y,x) )) \wedge && S \\
+         & \forall x. (\forall y.( \forall z.( P(x,y) \wedge P(y,z) \to P(x,z) ))) \to && T \\
+         & \exists x.(\forall y.(P(x,y)))
+\end{align*}
+
+\subsection*{\texttt{(a)}}
+
+In order to falsify $\phi$, we have to satisfy $R \wedge S \wedge T$ and falsify
+$\exists x.(\forall y.(P(x,y)))$. So we have to satisfy $R$, satisfy $S$ and
+satisfy $T$ :
+
+\begin{align*}
+  & U = \mathbb{Z} \\
+  & P(x,y) \leftrightarrow \{(x,y) | x >= y\}
+\end{align*}
+
+$R$ is satisfy, because, for any $x$ and $y$, we have $x >= y$ and $y >= x$, and
+the only way satisfy this is to give the same value to $x$ and $y$.
+
+$S$ is satisfy, because for any $x$ and $y$ from $\mathbb{Z}$, either one is
+greater than the other or the invers.
+
+$T$ is satisfy, because the relation $>=$ is transitive, for any $x$, $y$ and
+$z$ from $\mathbb{Z}$, if $x >= y$ and $y >= z$, then $x >= z$.
+
+Finally, we falsify $\exists x.(\forall y.(P(x,y)))$, we pick $x=3$ (for example), then for
+any $y$ from $\mathbb{Z}$, we can't make $P(x,y)$ true, because if $x=3$, for
+the value of $y=4$, then $P(x,y)$ is not true, because $(3,4) \not\in P(x,y)$.
+
+Then we find a counter-example to $\phi$.
+
+\subsection*{\texttt{(b)}}
+
+This formula is true for a finite universe, because we can put $U = \{1\}$, then
+$R$, $S$ and $T$ are $true$ and $\exists x.(\forall y.(P(x,y)))$ is also $true$,
+because we just have to check if $P(1,1)$, which is $true$.
+
+\section*{\texttt{5}}
+
+In order to satisfy $S$ and $R$ but falsify $T$. To do this, we use a modified
+version of the rock, paper, scissors game. The predicate $P(x,y)$ is $true$ is
+$x$ beats $y$, we consider that $P(x,y)$ is $true$ if $x = y$. Then, we have
+
+\begin{align*}
+  & U = \{rock,paper,scissors\} \\
+  & P = \{ \\
+  & (rock,rock), \\
+  & (scissors,scissors), \\
+  & (paper,paper), \\
+  & (rock,scissors), \\
+  & (scissors,paper), \\
+  & (paper,rock) \\
+  & \}
+\end{align*}
+
+Then, $T$ is $true$ because $P(x,y)$ is $true$ if $x=y$. $R$ is also $true$,
+because either $x$ beats $y$ or $y$ beats $x$. But $T$ is $false$, because the
+relation $P$ is not transitive, for any $x$, $y$ and $z$, we would have $x =
+rock$, $y = scissors$ and $z = paper$ at one point. Then, $x$ beats $y$ is
+$true$, $y$ beats $z$ is $true$ but $x$ beats $z$ is $false$.
+
+\end{document}
