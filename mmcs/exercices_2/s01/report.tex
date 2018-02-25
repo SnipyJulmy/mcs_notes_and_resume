@@ -269,17 +269,87 @@ Finally we have
 
 
 \section*{\texttt{4}}
+
 \subsection*{a)}
+It's clear that for $n = 1$, there is only one possible way of placing the
+domino. So $b_1 = 1 = a_2$ which is correct. The same for $b_2$, we could either
+place both two dominos horizontally or vertically, then we obtain $b_2 = 2 =
+a_3$ which is also correct.
+
+Then we use a recurence relation, we got a rectangle of $2 \times n$ denote by
+$R_n$. At the first step, we could place a domine either horizontally or
+vertically, which let us have two cases :
+\begin{itemize}
+\item Horizontally : if the domino is placed horizontally, then we obtain a
+  rectangle $R_{n-1}$ to fill, which we know how to do it.
+\item Vertically : if the domino is placed vertically, then we are forced to
+  place the second one next to him (bottom or top) in order to fill the hole.
+  Then we obtain a rectangle $R_{n-2}$  to fill, which we know how to do it.
+\end{itemize}
+
+Now to count the number of ways to arrange an $R_n$ rectangle with dominos, we
+count the number of ways to arrange $R_{n-1}$ and $R_{n-2}$ and sum them. Which
+is exactly the recurence relation of the Fibonacci's sequence.
+
 \subsection*{b)}
+
+It is the same problem as before. Any edge that is in the matching represent a
+domino tilled on a rectangle $2 \times n$. So the number of perfect matching in
+$P_{2,n}$ is given by $a_{n+1}$.
 
 \section*{\texttt{5}}
+
 \subsection*{a)}
+The number of different compositions of a positive integer $n$ with all summands
+equal to $1$ or $2$ is given by $a_{n+1}$. For $n=0$, there is $1$ solution
+(empty compositions of $1$ and $2$). For $n = 1$, there is $1$ solution.
+For $n=2$, there are $2$ solutions, which is the fibonacci sequence.
+
+Then, for any $n$, we use the construction of $n$ from $1$ and $2$ as a
+recursive one. We could either pick $1$ or $2$ at the beginning :
+\begin{itemize}
+\item If we pick $1$, we count the number of different compositions with $1$ and
+  $2$ of $n-1$.
+\item If we pick $2$, we count the number of different compositions with $1$ and
+  $2$ of $n-2$.
+\end{itemize}
+
+Then we add the number of different compositions of $n-1$ and $n-2$, and sum
+them. Which is exactly the fibonacci recursive relation.
+
 \subsection*{b)}
 
-\section*{\texttt{6}}
-\subsection*{a)}
-\subsection*{b)}
+\[
+  a_{n+1} = \bin{n}{0} + \bin{n-1}{1} + \bin{n-2}{2} + \dots + \bin{n-k}{k} =
+  \sum_{k \geq 0} \bin{n-k}{k}
+\]
 
+The proof is by induction on $n$ :
+
+\paragraph{Base cases : }
+\begin{itemize}
+\item If $n = 0$, we have $1$, which is $a_1$.
+\item If $n = 1$, we have $1$, which is $a_2$.
+\item If $n = 2$, we have $2$, which is $a_3$.
+\end{itemize}
+
+\paragraph{Inductive step : }
+
+We use the following equation for the proof :
+
+\[
+  \bin{n}{k} + \bin{n}{k+1} = \bin{n+1}{k+1}
+\]
+
+We suppose $n > 1$, then we have for $n+1$
+
+\begin{align*}
+  \sum_{k \geq 0} \bin{n + 1 - k}{k}
+  &= \sum_{k \geq 0} \bin{n-k}{k} + \sum_{k \geq 0} \bin{n-k}{k-1} \\
+  &= \sum_{k \geq 0} \bin{n-k}{k} + \sum_{k \geq 0} \bin{n - 1 - (k - 1)}{k-1} \\
+  &= \sum_{k \geq 0} \bin{n-k}{k} + \sum_{j \geq 0} \bin{n - 1 - j}{j} \\
+  &= a_{n+1} + a_{n} = a_{n + 2}
+\end{align*}
 
 \end{document}
 
