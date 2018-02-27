@@ -3,6 +3,8 @@ project(exercices C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(ex2 ex2/kr020.c)
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin")
+add_executable(ex4 ex4/kr020.c)
+add_executable(ex5 ex5/ex5.c)
+add_executable(ex6 ex6/ex6.c)
+add_executable(ex7 ex7/ex7.c)
+add_executable(ex8 ex8/ex8.c)
