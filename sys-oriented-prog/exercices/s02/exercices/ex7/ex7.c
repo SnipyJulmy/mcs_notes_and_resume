@@ -2,6 +2,8 @@
 // Created by snipy on 27.02.18.
 //
 
+#include "stdio.h"
+
 enum {FALSE, TRUE} b; // declaration of variable b, without tag
 enum color_tag {RED, GREEN, BLUE}; // enum declaration,
 // with tag 'color_tag'

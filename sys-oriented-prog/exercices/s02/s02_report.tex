@@ -1,0 +1,233 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{fullpage}
+
+\usepackage{amsmath}
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{color}
+
+% Minted
+\usepackage[cache=false]{minted}
+
+\newmintinline{c}{
+  fontsize=\small,
+  breaklines=true
+}
+
+% for finite state automata
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    System-oriented Programming\\
+    Spring 2018
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  S02
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Philippe Cudré-Mauroux
+
+    Assistant : Michael Luggen
+  \end{flushleft}
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  Submitted by Sylvain Julmy
+  
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercice 4}
+
+\begin{itemize}
+\item \verb+./wcount+
+  
+  This command would just invoke the program \verb+./wcount+, which would read
+  the standard input (keyboard) in order to obtain something to process. We just
+  have to type something, including <ENTER> char and then we send the EOF char
+  by <CTRL+D>. The ouput is printed on the standard output.
+  
+\item \verb+./wcount < wcount.c+
+
+  This command invoke the program \verb+./wcount+, but this time the standard
+  input of the program is the file named \verb+wcount+. The ouput is printed
+  on the standard output.
+  
+\item \verb+./wcount < wcount > test+
+
+  This command invoke the program \verb+./wcount+, but this time the standard
+  input of the program is the file named \verb+wcount.c+. The ouput is
+  redirected to a file named \verb+test+.
+  
+\item \verb+cat wcount.c | ./wcount+
+
+  The \verb+cat+ command will print the content of the file \verb+wcount.c+ on
+  the standard output, but using the \verb+|+ operator, the standard output is
+  redirected into the standard input of the \verb+./wcount+ program.
+  
+\item \verb+grep { wcount.c+
+
+    The \verb+grep+ program would filter and print the content of the file
+    \verb+wcount.c+. This command would print all the line of \verb+wcount.c+
+    that contains a \verb+{+ symbol.
+    
+\item \verb+grep { wcount.c | ./wcount+
+
+    It is the same as before except that the standard output of the \verb+grep+
+    command is redirected to the standard input of the \verb+./wcount+ command.
+    So the whole command would count the number of word, letter, ... of all the
+    line of \verb+wcount.c+ that contains a \verb+{+ symbol.
+    
+\item \verb+grep -l { * | ./wcount+
+
+    The \verb+-l+ option of \verb+grep+ is suppressing the normal output of the
+    command and instead print the name of all the file from which the output
+    would normally be printed. The \verb+*+ symbol represent all the file of the
+    current directory. So the \verb+grep+ command would output all the filename
+    of the current directory that contains the \verb+{+ symbol.
+    
+\end{itemize}
+
+\section*{Exercice 5}
+
+\begin{itemize}
+\item \cinline|printf("%c %i\n", c, c);|
+
+  We don't need any type casting here, \cinline+c+ is a variable of type
+  \cinline|char| which is automaticaly seen as an integer when using the
+  \verb+%i+ formatter. $65$ is the ascii value of ``A''.
+
+  \paragraph{Output : } \verb+A 65+
+  
+\item \cinline|printf("%c %i\n", i, i);|
+
+  We don't need any type casting here, \cinline+i+ is a variable of type
+  \cinline+int+ which is automaticaly downgraded into a \cinline+char+ by simply
+  ``cutting'' the extra-part of the \cinline+integer+ and put it into a
+  \cinline+char+.
+  
+  \paragraph{Output : } \verb+A 65+
+  
+\item \cinline|printf("%f %i\n", pi, (int)pi);|
+
+  This time we need an explicit type casting from a \cinline+float+ into an
+  \cinline+integer+ because the representation, in memory, of floating point
+  number and integer number is different and the compiler has to to some
+  additionnal work in order to correctly transform the float value (by rounding
+  the value from $3.14$ to $3$) into an integer. Without the explicit type
+  casting, the number would have been read directly (the significand, the base
+  and the exponant would'nt have been read separetely).
+  
+  \paragraph{Output : } \verb+3.140000 3+
+
+\end{itemize}
+
+\section*{Exercice 6}
+
+First, the decimal value of the ascii character \verb+@+ is $64$. The output of
+the program is the following
+
+\begin{verbatim}
+  @ 64 100 40
+  @ 64 100 40
+  @ 64 100 40
+\end{verbatim}
+
+Three times the line printed is the same because :
+
+\begin{itemize}
+\item the decimal value of \verb+@+ is 64,
+\item the decimal value of \verb+\100+ is 64,
+\item the decimal value of \verb+\x40+ is 64.
+\end{itemize}
+
+\section*{Exercice 7}
+
+The output of the program is the following :
+
+\begin{verbatim}
+  1 0
+  0 1 2
+\end{verbatim}
+
+In C, each enum fields is represented by an integer value from $0$ to $n-1$
+where $n$ is the number of fields in the enum. Then, \verb+TRUE+ as the value
+$1$ and \verb+FALSE+ as the value $0$, that's why the first line is \verb+1 0+.
+
+For the second line, $C_1$ is initialize to \verb+RED+, which is the first field
+of the \verb+color_tag+ enum, so the value of \verb+RED+ is $0$. $C_2$ is
+initialize to $C_1 + 1$ which is $0 + 1 = 1$. Finally $C_3$ is initialize to
+\verb+BLUE+ which is the third field of the \verb+color_tag+ enum, so the value
+of \verb+BLUE+ is $3$. Then outputing $C_1$, $C_2$ and $C_3$ would be \verb+0 1 2+.
+
+\section*{Exercice 8}
+
+We denote by $n$ any integer not equal to $0$.
+
+\subsection*{\cinline+p || !q+}
+
+\begin{center}
+  \begin{tabular}{@{ }c@{ }@{ }c | c@{ }@{ }c@{ }@{ }c@{ }@{ }c@{ }@{ }c@{ }@{ }c}
+    p & q &  & p & \verb+||+ & \verb+!+ & q & \\
+    \hline 
+    $n$ & $n$ &  & $n$ & \textcolor{red}{$1$} & $0$ & $n$ & \\
+    $n$ & $0$ &  & $n$ & \textcolor{red}{$1$} & $1$ & $0$ & \\
+    $0$ & $n$ &  & $0$ & \textcolor{red}{$0$} & $0$ & $n$ & \\
+    $0$ & $0$ &  & $0$ & \textcolor{red}{$1$} & $1$ & $0$ & \\
+  \end{tabular}
+\end{center}
+
+\subsection*{\cinline+p && (p == q)+}
+
+\begin{center}
+  \begin{tabular}{@{ }c@{ }@{ }c | c@{ }@{ }c@{ }@{ }c@{ }@{}c@{}@{ }c@{ }@{ }c@{ }@{ }c@{ }@{}c@{}@{ }c}
+    p & q &  & p & \verb+&&+ & ( & p & \verb+==+ & q & ) & \\
+    \hline 
+    $n$ & $n$ &  & $n$ & \textcolor{red}{$1$} &  & $n$ & $1$ & $n$ &  & \\
+    $n$ & $0$ &  & $n$ & \textcolor{red}{$0$} &  & $n$ & $0$ & $0$ &  & \\
+    $0$ & $n$ &  & $0$ & \textcolor{red}{$0$} &  & $0$ & $0$ & $n$ &  & \\
+    $0$ & $0$ &  & $0$ & \textcolor{red}{$0$} &  & $0$ & $1$ & $0$ &  & \\
+  \end{tabular}
+\end{center}
+
+\subsection*{\cinline+p && (p = q) || (p = !q)+}
+
+First we add parentheses to clearly show the order of evaluation :
+
+\cinline+( p && (p = q) ) || (p = !q)+
+
+\begin{center}
+  \begin{tabular}{@{ }c@{ }@{ }c | c@{ }@{}c@{}@{ }c@{ }@{ }c@{ }@{}c@{}@{ }c@{ }@{ }c@{ }@{ }c@{ }@{}c@{}@{}c@{}@{ }c@{ }@{}c@{}@{ }c@{ }@{ }c@{ }@{ }c@{ }@{ }c@{ }@{}c@{}@{ }c}
+    p & q &  & ( & p & \verb+&&+ & ( & p & \verb+=+ & q & ) & ) & \verb+||+ & ( & p & \verb+=+ & \verb+!+ & q & ) & \\
+    \hline 
+    $n$ & $n$ &  &  & $n$ & $1$ &  & $n$ & $n$ & $n$ &  &  & \textcolor{red}{$1$} &  & $n$ & $0$ & $0$ & $n$ &  & \\
+    $n$ & $0$ &  &  & $n$ & $0$ &  & $n$ & $0$ & $0$ &  &  & \textcolor{red}{$1$} &  & $0$ & $1$ & $1$ & $0$ &  & \\
+    $0$ & $n$ &  &  & $0$ & $0$ &  & $0$ & $n$ & $n$ &  &  & \textcolor{red}{$0$} &  & $n$ & $0$ & $0$ & $n$ &  & \\
+    $0$ & $0$ &  &  & $0$ & $0$ &  & $0$ & $0$ & $0$ &  &  & \textcolor{red}{$1$} &  & $0$ & $1$ & $1$ & $0$ &  & \\
+  \end{tabular}
+\end{center}
+
+\section*{Exercice 9}
+
+\section*{Exercice 10}
+
+\section*{Exercice 11}
+
+\section*{Exercice 12}
+
+\section*{Exercice 13}
+    
+\end{document}
