@@ -9,5 +9,6 @@ void main(void)
     printf("%s %i %i\n",str,i,d);
     d = scanf("%s %i", str, &i);
     printf("%s %i %i\n",str,i,d);
-
+    d = scanf("%i",&i);
+    printf("%s %i %i\n",str,i,d);
 }
