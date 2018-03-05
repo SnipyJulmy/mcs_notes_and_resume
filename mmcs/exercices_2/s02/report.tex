@@ -76,10 +76,6 @@ which leads to the following :
   2x^3 - x^3 + a_3 x^3 = 0 \longrightarrow a_3 = -1
 \end{gather*}
 
-\subsection*{b)}
-
-TODO
-
 \section*{\texttt{2}}
 
 \subsection*{a)}
@@ -221,19 +217,83 @@ Therefore
 
 \subsection*{b)}
 
+\[
+  \sqrt{1+x} = (1+x)^{\frac{1}{2}} = \sum_{k=0}^\infty \binom{\alpha}{k}x^k = 1
+  + \sum_{k=1}^\infty \binom{\alpha}{k}x^k
+\]
 
+\begin{align*}
+  \binom{\alpha}{k} = \binom{\frac{1}{2}}{k}
+  = \frac{\frac{1}{2} (\frac{1}{2} - 1) (\frac{1}{2} - 3) \dots ((\frac{1}{2} - k + 1))}{k!}
+\end{align*}
 
+We expand the sum :
 
+\begin{gather*}
+  1 - \frac{(\frac{1}{2}) (\frac{1}{2})}{1!} + \frac{(\frac{1}{2})
+    (\frac{1}{2})(\frac{3}{2})}{2!} - \frac{(\frac{1}{2})
+    (\frac{1}{2})(\frac{3}{2})(\frac{5}{2})}{3!} + \dots = \\
+  1 - \frac{(-1)!!}{1! * 2^1} + \frac{1!!}{2! * 2^2} - \frac{3!!}{3! 2^3} +
+  \dots =
+  1 + \sum_{k=1}^{\infty} \frac{(-1)^{k-1} (2k-3)!!}{k! 2^k}
+\end{gather*}
 
 \subsection*{c)}
+
+\begin{align*}
+  a_0 &= 1 \\
+  a_1x &= -\frac{1}{2} x \\
+  a_2x^2 &= \frac{1}{8} x^2 
+\end{align*}
 
 \section*{\texttt{5}}
 
 \subsection*{a)}
 
+We know that
+\[
+  \frac{1}{1-x} = 1 + x + x^2 + x^3 + \dots
+\]
+
+So we have
+
+\begin{align*}
+  \frac{d}{dx} (\frac{1}{1-x}) &= \frac{1}{(1-x)^2} = 1 + 2x + 3x^2 + 4x^3 + \dots \\
+  \frac{d}{dx} (\frac{1}{1+x}) &= \frac{-1}{(1+x)^2} = -1 + 2x - 3x^2 + 4x^3 - \dots \\
+  \frac{1}{(1-x)^2} + \frac{1}{(1+x)^2}&= 4x + 8x^3 + 12x^5 + 16x^7 + \dots \\ 
+                               &= 4x\underbrace{(1 + 2x^2 + 3x^4 + 4x^6)}_{F(x)} \\
+\end{align*}
+
+\begin{align*}
+  F(x) &= \frac{1}{4x}( \frac{1}{(1-x)^2} + \frac{1}{(1+x)^2}) \\
+       &= \frac{1}{4x}(\frac{(1+x)^2 - (1-x)^2}{((1-x)^2)((1+x)^2)}) \\
+       &= \frac{1}{4x}(\frac{1 + x^2 + 2x - 1 - x^2 + 2x}{((1-x)^2)((1+x)^2)})\\
+       &= \frac{1}{4x}(\frac{4x}{((1-x)^2)((1+x)^2)})\\
+       &= \frac{1}{((1-x)^2)((1+x)^2)}\\
+       &= \frac{1}{(1 + x^2 - 2x)(1 + x^2 + 2x)}\\
+       &= \frac{1}{1 + x^2 + 2x + x^2 + x^4 + 2x^3 -2x -2x^3 - 4x^2}\\
+       &= \frac{1}{1 + -2x^2 + x^4}\\
+       &= \frac{1}{(1-x^2)^2}\\
+\end{align*}
+
+\[
+  1 - 2x + 3x^2 - 4x^3 + 5x^4 - \dots = \frac{d}{dx} (\frac{1}{1+x}) = -\frac{1}{(1+x)^2}
+\]
+
 \subsection*{b)}
 
-\section*{\texttt{6}}
+\[
+  \underbrace{1 + 2x + 3x² + 4x^3 + \dots}_{\frac{1}{(1-x)^2}} \cdot
+  \underbrace{1 - 2x + 3x^2 -4x^3 + \dots}_{\frac{1}{(1+x)^2}} =
+  \underbrace{1 + 2x^2 + 3x^4 + 4x^6}_{\frac{1}{(1-x^2)^2}}
+\]
+
+Hence
+
+\begin{align*}
+  (1-x)^2 \cdot (1+x)^2 &= (1 + x^2 + 2x) \cdot (1 + x^2 - 2x) \\
+                        &= (1-x^2)^2
+\end{align*}
 
 \end{document}
 
