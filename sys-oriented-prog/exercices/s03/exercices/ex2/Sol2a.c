@@ -10,24 +10,30 @@ NN, <date> --- implementation of a for loop with a goto
 
 #include <stdio.h>
 
-int main() {
-   int i, n;
+int main()
+{
+    int i, n;
 
-   printf("> n = ");
-   scanf( "%i", &n);
+    printf("> n = ");
+    scanf("%i", &n);
 
 /*-----------  for loop   -----------*/
-   for (i = 0; i < n; i++) {
-      printf("%i\n", i);
-   }
-/*-----------  /for loop   -----------*/ 
+    for (i = 0; i < n; i++)
+    {
+        printf("%i\n", i);
+    }
+/*-----------  /for loop   -----------*/
 
-   printf("i_final = %i\n", i);
-   printf("\n");
+    printf("i_final = %i\n", i);
+    printf("\n");
 
-/*-----------  for loop with a goto   -----------*/ 
-   printf("Not yet implemented\n");                           //¥¥¥-------------
-/*-----------  /for loop with a goto   -----------*/ 
+/*-----------  for loop with a goto   -----------*/
+    i = 0;
+    start:
+    printf("%i\n",i++);
+    if (i < n) goto start;
 
-   printf("i_final = %i\n", i);
+/*-----------  /for loop with a goto   -----------*/
+
+    printf("i_final = %i\n", i);
 }
