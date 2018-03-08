@@ -9,27 +9,31 @@ NN, <date> --- implementation of a break with a goto
 
 #include <stdio.h>
 
-int main() {
-   int i, n;
+int main()
+{
+    int i, n;
 
-   printf("> n = ");   
-   scanf("%i", &n);
+    printf("> n = ");
+    scanf("%i", &n);
 
-/*-----------  break   -----------*/ 
-   for (i=0; i<n; i++) {
-      printf("action 1, i=%i\n", i);
-      if (i>0) break;
-      printf("action 2, i=%i\n", i);
-   }  
-/*-----------  /break   -----------*/ 
+/*-----------  break   -----------*/
+    for (i = 0; i < n; i++)
+    {
+        printf("action 1, i=%i\n", i);
+        if (i > 0) break;
+        printf("action 2, i=%i\n", i);
+    }
+/*-----------  /break   -----------*/
 
-   printf("\n");
+    printf("\n");
 
-/*-----------  break with a goto  -----------*/ 
-   for (i=0; i<n; i++) {
-      printf("action 1, i=%i\n", i);
-      printf("Not yet implemented\n");                        //¥¥¥-------------
-      printf("action 2, i=%i\n", i);
-   }  
-/*-----------  /break with a goto   -----------*/ 
+/*-----------  break with a goto  -----------*/
+    for (i = 0; i < n; i++)
+    {
+        printf("action 1, i=%i\n", i);
+        if (i > 0) goto end;
+        printf("action 2, i=%i\n", i);
+    }
+    end:;
+/*-----------  /break with a goto   -----------*/
 }

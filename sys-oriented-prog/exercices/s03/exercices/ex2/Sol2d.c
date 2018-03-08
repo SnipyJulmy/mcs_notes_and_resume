@@ -9,27 +9,31 @@ NN, <date> --- implementation of a continue with a goto
 
 #include <stdio.h>
 
-int main() {
-   int i, n;
+int main()
+{
+    int i, n;
 
-   printf("> n = ");   
-   scanf("%i", &n);
+    printf("> n = ");
+    scanf("%i", &n);
 
-/*-----------  continue   -----------*/ 
-   for (i=0; i<n; i++) {
-      printf("action 1, i=%i\n", i);
-      if (i>0) continue;
-      printf("action 2, i=%i\n", i);
-   }  
-/*-----------  /continue   -----------*/ 
+/*-----------  continue   -----------*/
+    for (i = 0; i < n; i++)
+    {
+        printf("action 1, i=%i\n", i);
+        if (i > 0) continue;
+        printf("action 2, i=%i\n", i);
+    }
+/*-----------  /continue   -----------*/
 
-   printf("\n");
+    printf("\n");
 
-/*-----------  continue with a goto  -----------*/ 
-   for (i=0; i<n; i++) {
-      printf("action 1, i=%i\n", i);
-      printf("Not yet implemented\n");                        //¥¥¥-------------
-      printf("action 2, i=%i\n", i);
-   }  
-/*-----------  /continue with a goto   -----------*/ 
+/*-----------  continue with a goto  -----------*/
+    for (i = 0; i < n; i++)
+    {
+        printf("action 1, i=%i\n", i);
+        if (i > 0) goto loopEnd;
+        printf("action 2, i=%i\n", i);
+        loopEnd:;
+    }
+/*-----------  /continue with a goto   -----------*/
 }
