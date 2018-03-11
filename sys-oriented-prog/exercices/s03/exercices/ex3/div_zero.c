@@ -1,19 +1,23 @@
 #include <stdio.h>
+
 int N = 3;
-int main() {
-   int ctr, i;
-   int res;
 
-   i = N;
-   res = N;
+int main()
+{
+    int ctr, i;
+    int res;
 
-   printf("res  N  i\n");
-   for (ctr = 0; ctr <= N; ++ctr, --i) { // 'ctr <= N' for exercice 5
-      res = N/i;
-      printf("%3i%3i%3i\n",res, N, i);
-   }
-  
-   return 0;
+    i = N;
+    res = N;
+
+    printf("res  N  i\n");
+    for (ctr = 0; ctr <= N; ++ctr, --i)
+    { // 'ctr <= N' for exercice 5
+        res = N / i;
+        printf("%3i%3i%3i\n", res, N, i);
+    }
+
+    return 0;
 }
 
 /*--------------------------------------------------------------------------

@@ -10,3 +10,5 @@ add_executable(ex2A ex2/Sol2a.c)
 add_executable(ex2B ex2/Sol2b.c)
 add_executable(ex2C ex2/Sol2c.c)
 add_executable(ex2D ex2/Sol2d.c)
+
+add_executable(ex3 ex3/div_zero.c)
