@@ -115,7 +115,9 @@ multiply the factor by $x^k$ :
   p_{n-k,\geq k} = p_{n,k}
 \]
 
-\paragraph{Algebraic proof : } if we have at most $k$
+\paragraph{Algebraic proof : }
+
+
 
 \section*{\texttt{5}}
 
@@ -125,7 +127,46 @@ multiply the factor by $x^k$ :
   p_{n-k,\geq k} = p_{n,k}
 \]
 
+\paragraph{Proof by bijection : } we consider two sets $P_1$ and $P_2$ where
+$P_1$ is the set of partitions of $n-k$ with no parts greater than $k$ and $P_2$
+is the set of partitions of $n$ with parts into exactly $k$ parts.
+
+Clearly, we have $P_1 \cap P_2 = \emptyset$
+
+We can construct the set $P_1$ from the set $P_2$ by using the following
+construction for each parts :
+
+\begin{itemize}
+\item create the Ferrers diagram of the part
+\item separate $k$ into $K =  \underbrace{\{1,1,\dots,1\}}_{k}$
+\item for each $k_i \in K$ add $1$ square to the first row of the diagram, then
+  one to the second row, one to the third, hand so on.
+\item We add one square to the row only if the row index is smaller or equals to
+  $k$.
+\item If we are at the last row, we get back to the first one and repeat the
+  process until we have no $k_i$ left.
+\end{itemize}
+
+This way, each element of $P_1$ is associated with an unique element in $P_2$.
+
 \subsection*{b)}
+
+Let
+\begin{align*}
+  f(x) &= (1+x+x^2)(1+x^2+x^4)(1+x^3+x^6)\cdot\dots \\
+  g(x) &= (1+x+x^2+\dots)(1+x^2+x^4+\dots)(1+x^4+x^8\dots)\cdot\dots
+\end{align*}
+
+Then we have
+
+\begin{align*}
+  g(x) &= (1+x+x^2+\dots)(1+x^2+x^4+\dots)(1+x^4+x^8\dots)\cdot\dots \\
+       &= (\frac{1}{1-x})(\frac{1}{1-x²})(\frac{1}{1-x^4})\cdots\\
+       &= \frac{(\frac{1}{1-x^3})}{(\frac{1}{1-x^3})(\frac{1}{1-x})(\frac{1}{1-x^2})(\frac{1}{1-x^4})\cdots}\\
+       &= \frac{\prod (1-x^{3i})}{\prod (1-x^i)}\\
+       &= (\frac{1-x^3}{1-x})(\frac{1-x^6}{1-x^2})(\frac{1-x^9}{1-x^3})(\frac{1-x^{12}}{1-x^5})(\frac{1-x^{15}}{1-x^6})\cdots\\
+       &= (1+x+x^2)(1+x^2+x^4)(1+x^3+x^6)\cdot\dots = f(x)\\
+\end{align*}
 
 
 \end{document}
