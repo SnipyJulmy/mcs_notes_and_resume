@@ -106,7 +106,7 @@ If we need to have the number of partitions of $n$ into exactly $k$ parts, we
 multiply the factor by $x^k$ :
 
 \[
-  \prod_{k=1}^\infty (\frac{x}{1 - x^k})
+  \prod_{k=1}^\infty (\frac{x^k}{1 - x^k})
 \]
 
 \subsection*{c)}
@@ -117,7 +117,10 @@ multiply the factor by $x^k$ :
 
 \paragraph{Algebraic proof : }
 
-
+\begin{align*}
+  p_{n-k,\geq k} &= \prod_{k=1}^\infty (\frac{1}{1 - x^k}) \\
+  p_{n,k} &= \prod_{k=1}^\infty (\frac{x^k}{1 - x^k})
+\end{align*}
 
 \section*{\texttt{5}}
 
