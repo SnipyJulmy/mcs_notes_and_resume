@@ -169,3 +169,7 @@
 /**/*-tags.tex
 /**/*.trail
 /**/*.zip
+
+# lock free hashset implementation
+os/lock-free-set
+
