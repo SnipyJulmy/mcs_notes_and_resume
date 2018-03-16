@@ -1,3 +1,6 @@
 [submodule "pl"]
 	path = pl
 	url = git@bitbucket.org:Snipy/pl-2018-exercices-julmy-sylvain-12-637-260.git
+[submodule "os/project"]
+	path = os/project
+	url = git@github.com:SnipyJulmy/UniFr-OS-Project-SP18.git
