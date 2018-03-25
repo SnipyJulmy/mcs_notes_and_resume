@@ -1,0 +1,14 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/snipy/Master/mcs-git/sys-oriented-prog/exercices/s04/exercices/main.c
+stdio.h
+-
+stdlib.h
+-
+

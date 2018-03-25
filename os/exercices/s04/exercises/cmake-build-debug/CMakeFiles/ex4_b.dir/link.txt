@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/ex4_b.dir/ex4_b.c.o  -o ex4_b -lpthread 

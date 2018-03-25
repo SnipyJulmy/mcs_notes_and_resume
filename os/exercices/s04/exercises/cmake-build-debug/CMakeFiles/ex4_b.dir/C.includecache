@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/snipy/Master/mcs-git/os/exercices/s04/exercises/ex4_b.c
+stdio.h
+-
+pthread.h
+-
+stdlib.h
+-
+

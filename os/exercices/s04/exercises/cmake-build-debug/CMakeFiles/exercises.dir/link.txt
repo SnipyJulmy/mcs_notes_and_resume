@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/exercises.dir/ex4_a.c.o  -o exercises -lpthread 
