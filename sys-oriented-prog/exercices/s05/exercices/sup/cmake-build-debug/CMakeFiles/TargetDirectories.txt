@@ -1,0 +1,3 @@
+/home/snipy/Master/mcs-git/sys-oriented-prog/exercices/s05/exercices/sup/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/snipy/Master/mcs-git/sys-oriented-prog/exercices/s05/exercices/sup/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/snipy/Master/mcs-git/sys-oriented-prog/exercices/s05/exercices/sup/cmake-build-debug/CMakeFiles/sup.dir

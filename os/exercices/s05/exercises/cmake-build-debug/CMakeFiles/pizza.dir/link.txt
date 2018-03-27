@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/pizza.dir/pizza/pizza.c.o  -o pizza -lpthread 

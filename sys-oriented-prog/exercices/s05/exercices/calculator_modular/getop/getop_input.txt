@@ -1,0 +1,34 @@
+124 .124 1.24 124. 
++-*/%
+e
+3.14159265   2.718
+Q  // Q quit the test program. 
+   // Note that in the preceding lines only blanks, including '\n', are skiped
+   // the last number 3.14159 will generate an error, assuming that MAXOP is set to 5
+
+--------------------------------------------------------------------------------
+DESCRIPTION
+A batch input file for the getop_test.c program. 
+
+Note that this batch file has been provided mostly for documentation reasons: In 
+general it is much better to run this test program interactively!
+
+B. Hirsbrunner, University of Fribourg, 20 October 2011
+--------------------------------------------------------------------------------
+
+The above commands will produce the following output:
+
+>type some operands or operators; blanks are skiped; terminate by typing Q
+
+operand : 124
+operand : .124
+operand : 1.24
+operand : 124.
+operator: +
+operator: -
+operator: *
+operator: /
+error --- not recognized character %
+error --- not recognized character e
+ERROR --- getop() failed to read a number (MAXOP=5): 3.141
+operand : 2.718

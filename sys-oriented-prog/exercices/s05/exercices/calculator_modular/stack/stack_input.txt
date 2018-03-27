@@ -1,0 +1,29 @@
+p 1.25    // push 1.25 onto the stack
+p 2.5     // push 2.5 onto the stack
+o         // pop (remove and get 2.5)
+o         // pop (remove and get 1.25)
+o         // pop (error: empty stack!)
+Q         // quit
+
+--------------------------------------------------------------------------------
+DESCRIPTION
+A batch input file for the push/pop test program. 
+
+Note that this batch file has been provided mostly for documentation reasons: In 
+general it is much better to run this test program interactively!
+
+B. Hirsbrunner, University of Fribourg, 24 January 2008, rev. 20 October 2011
+--------------------------------------------------------------------------------
+
+The above commands will produce the following output:
+
+push/pop usage:  p)push(f)      o)pop
+constants     :  S)STACK_SIZE   E)STACK_IS_EMPTY   e)stack_error
+Test program usage: H)Help      Q)Quit
+
+>push: 1.250000
+>push: 2.500000
+>pop : 2.500000
+>pop : 1.250000
+>error --- stack_is_empty: -2
+>

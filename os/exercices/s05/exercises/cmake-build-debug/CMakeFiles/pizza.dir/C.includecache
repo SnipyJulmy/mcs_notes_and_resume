@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/snipy/Master/mcs-git/os/exercices/s05/exercises/pizza/pizza.c
+stdlib.h
+-
+stdbool.h
+-
+pthread.h
+-
+stdio.h
+-
+

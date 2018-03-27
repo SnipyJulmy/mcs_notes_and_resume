@@ -1,0 +1,45 @@
+ga  // get a  -- character a is readed by getchar()
+gb  // get b  -- character b is readed by getchar()
+uA  // put back A in the buffer
+uB  // put back B in the buffer
+uC  // put back C in the buffer  -- overflow (assuming BUF_SIZE = 2)
+g   // get B from the buffer
+g   // get A from the buffer
+ga  // get a  -- character a is readed by getchar()
+E   // put back EOF in the buffer
+e   // put back an end of line '\n' in the buffer
+g   // get '\n' from the buffer
+g   // get EOF from the buffer
+Q   // quit
+
+--------------------------------------------------------------------------------
+DESCRIPTION
+A batch input file for the getch/ungetch test program. 
+
+Note that this batch file has been provided mostly for documentation reasons: In general it is much better to run this test program interactively!
+
+B. Hirsbrunner, University of Fribourg, 24 Jan 2008, rev. 20 Oct. 2011
+--------------------------------------------------------------------------------
+
+The above commands produce the following output:
+
+
+getch/ungetch usage:  g)getch()   u)ungetch(c)
+constants          :  s)BUF_SIZE  o)BUF_OVERFLOW
+push back          :  e)'\n'      E)EOF
+Test program usage :  H)Help      Q)Quit
+
+>returned by getch: 97 a
+>returned by getch: 98 b
+>pushed back: 65 A
+>pushed back: 66 B
+>error -- buffer overflow -- character has not been pushed back: 67 C
+>returned by getch: 66 B
+>returned by getch: 65 A
+>returned by getch: 97 a
+>EOF has been pushed back: -1
+>'\n' has been pushed back: 10
+>returned by getch: 10 
+
+>returned by getch: -1 �
+>

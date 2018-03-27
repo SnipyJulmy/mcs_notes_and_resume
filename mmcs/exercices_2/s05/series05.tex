@@ -39,11 +39,7 @@
 
 \section*{\texttt{1}}
 
-\subsection*{a)}
-
-\subsection*{b)}
-
-\subsection*{c)}
+Exercice $1$ is in appendix.
 
 \section*{\texttt{2}}
 
@@ -241,14 +237,34 @@ Where $i$ and $k$ are any possible indices. We denote by $enc(e)$ the encoding
 of the bracket-variable expression $e$ using the presented algorithm. Then, for
 each of the cases mentionned :
 
-\paragraph{$e = ((x_ix_{i+1})e_k)$ :} the encoding of such an expression is
+\paragraph{$e = ((x_ix_{i+1})e_k)$ :}
 \[
   ((x_ix_{i+1})e_k) \mapsto ((x_i \cdot x_{i+1}) \cdot enc(e_k)) \mapsto \cdot )
   \cdot enc(e_k) ) \mapsto ()(enc(e_k))
 \]
 
 \paragraph{$e = (e_k(x_ix_{i+1}))$ :}
+\[
+  (e_k(x_ix_{i+1})) \mapsto (enc(e_k) \cdot (x_i \cdot x_{i+1})) \mapsto
+  enc(e_k) \cdot  \cdot )) \mapsto enc(e_k)(())
+\]
 
-\paragraph{$e = (x_ix_{i+1})(x_{i+2}x_{i+3})$ :}
+\paragraph{$e = (e_k)(e_{k+1})$ :}
+\[
+  (enc(e_k))(enc(e_{k+1})) \mapsto enc(e_k))enc(e_{k+1}))
+\]
+In this case, the encoding of both expression will produce an opening bracket.
+
+In the inductive step, each encoding of the expression produces different
+results so the encoding of a bracket-variable expression is uniquely defined.
+
+We use the reverse algorithm to encode bracket expression into bracket-variable
+expression :
+
+\paragraph{Base case :} $() \mapsto \cdot ) \mapsto (x_i \cdot x_{i+1}) \mapsto
+(x_ix_{i+1})$
+
+The inductive step is the same as before but in the other direction, each
+encoding is unique.
 
 \end{document}
