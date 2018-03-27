@@ -4,3 +4,6 @@
 [submodule "os/project"]
 	path = os/project
 	url = git@github.com:SnipyJulmy/UniFr-OS-Project-SP18.git
+[submodule "sys-oriented-prog/project"]
+	path = sys-oriented-prog/project
+	url = git@diuf-gitlab.unifr.ch:sop-2018-p01-chess-monkeys/SOP2018_P01.git
