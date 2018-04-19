@@ -1,0 +1,3 @@
+/home/snipy/Master/mcs-git/os/exercices/s07/exercises/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/snipy/Master/mcs-git/os/exercices/s07/exercises/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/snipy/Master/mcs-git/os/exercices/s07/exercises/cmake-build-debug/CMakeFiles/exercises.dir

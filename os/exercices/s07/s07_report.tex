@@ -1,0 +1,128 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{fullpage}
+
+\usepackage{amsmath}
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{placeins}
+
+
+% for finite state automata
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Minted
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[cache=false]{minted}
+
+%%%%%%%%%% C
+\newmintinline{c}{
+  fontsize=\small,
+  breaklines=true
+}
+
+\newminted{c}{
+  frame=single,
+  framesep=2mm,
+  fontsize=\scriptsize,
+  mathescape
+}
+
+\newminted[ccodeline]{c}{
+  frame=single,
+  framesep=2mm,
+  fontsize=\scriptsize,
+  mathescape,
+  linenos
+}
+
+%%%%%%%%% CMAKE
+\newminted{cmake}{
+  frame=single,
+  framesep=2mm,
+  fontsize=\scriptsize,
+  mathescape,
+  linenos,
+  breaklines=true
+}
+
+% End minted
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    Operating Systems\\
+    Spring 2018
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  S05
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+    AssistantArgs* args = arguments;
+  \begin{flushleft}
+    Professor : Philippe Cudré-Mauroux
+
+    Assistant : Ines Arous
+  \end{flushleft}
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  Submitted by Sylvain Julmy
+  
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercise 2}
+
+Total memory : $2^{32}$ Bytes.
+
+Page size : $8192 = 2^{13}$ Bytes.
+
+Entries : $2^{32} / 2^{13} = 2^{32-13} = 2^{19} = 524'288$ entries.
+
+Time needed to load the page table : $10^{-9} \cdot 100 \cdot 524'288 = 0.052 =
+52$ ms.
+
+If a process get $100$ msec, then $52\%$ of the time is spent on loading page tables.
+
+\section*{Exercise 3}
+
+Page size : $32 - 11 - 9 = 12$ and $2^{12} = 4096 = 4$ KB.
+Number of pages : $9 + 11 = 20$ and $2^{20}$ number of pages is available.
+
+\section*{Exercise 4}
+
+\subsection*{1)}
+
+Because the TLB is an hardware device, an entry in the TLB can be overwritten
+because changes are save to the memory directly and not in the TLB.
+
+\subsection*{2)}
+
+When the modified bit of a TLB is changed to $1$. The modification has to be
+written in the page table entry in memory.
+
+\subsection*{3)}
+
+There are two situations : the TLB context have to be reloaded on every context
+switch and the other from the previous answer.
+
+\section*{Exercise 5}
+
+See attachment.
+
+\end{document}
