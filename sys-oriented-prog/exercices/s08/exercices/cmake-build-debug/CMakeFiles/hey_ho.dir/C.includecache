@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/snipy/Master/mcs-git/sys-oriented-prog/exercices/s08/exercices/ex2/hey_ho.c
+stdlib.h
+-
+unistd.h
+-
+stdio.h
+-
+stdbool.h
+-
+

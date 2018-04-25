@@ -1,4 +1,4 @@
-@default_files = ('s05_report.tex');
+@default_files = ('s07_report.tex');
 
 $latex = 'texfot latex -interaction=nonstopmode -file-line-error -shell-escape';
 $pdflatex = 'texfot xelatex -interaction=nonstopmode -file-line-error -shell-escape';

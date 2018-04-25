@@ -1,0 +1,148 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{fullpage}
+
+\usepackage{amsmath}
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{placeins}
+\usepackage{color}
+
+% Minted
+\usepackage[cache=false]{minted}
+
+\newmintinline{c}{
+  fontsize=\small,
+  breaklines=true
+}
+
+\newminted{c}{
+  frame=single,
+  framesep=2mm,
+  fontsize=\scriptsize,
+  mathescape
+}
+
+\newminted[clinecode]{c}{
+  frame=single,
+  framesep=2mm,
+  fontsize=\scriptsize,
+  mathescape,
+  linenos
+}
+
+\newcommand*{\BBox}[1]{\draw (#1 + 0.5,0.5) -- (#1 + 1.5,0.5) -- (#1 + 1.5,-0.2)
+  -- (#1 + 0.5,-0.2) -- cycle;}
+\newcommand*{\SBox}[1]{}
+
+\newcommand*{\equal}{=}
+
+% for finite state automata
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    System-oriented Programming\\
+    Spring 2018
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  S08
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Philippe Cudré-Mauroux
+
+    Assistant : Michael Luggen
+  \end{flushleft}
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  Submitted by Sylvain Julmy
+  
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercise 1}
+
+\begin{ccode}
+#include <stdlib.h>
+#include <assert.h>
+#include <string.h>
+#include <ctype.h>
+
+char* to_upper_a(char* string)
+{
+    for (int i = 0; i < strlen(string); i++)
+    {
+        string[i] = (char) toupper(string[i]);
+    }
+    return string;
+}
+
+char* to_upper_b(char* string)
+{
+    char* start = string;
+    while (*string != '\0')
+    {
+        if (*string >= 'a' && *string <= 'z')
+            *string += ('A' - 'a');
+        string++;
+    }
+    return start;
+}
+
+int main(void)
+{
+    char* a = malloc(4 * sizeof(char));
+    strcpy(a, "asd");
+    assert(strcmp(to_upper_a(a), "ASD") == 0);
+    strcpy(a, "asd");
+    assert(strcmp(to_upper_b(a), "ASD") == 0);
+    return EXIT_SUCCESS;
+}
+\end{ccode}
+
+\newpage
+
+\section*{Exercise 2}
+
+\subsection*{a)}
+\begin{ccode}
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdbool.h>
+
+int main(void)
+{
+    while(true)
+    {
+        fprintf(stdout,"Hey !\n");
+        sleep(1);
+        fprintf(stderr,"Ho !\n");
+        sleep(1);
+    }
+    return EXIT_SUCCESS;
+}
+\end{ccode}
+
+\subsection*{b)}
+
+The following bash command generate data for \verb+stdout+ and \verb+stdin+,
+then both of the stream are redirected to their corresponding file.
+
+\begin{verbatim}
+{echo "output" ; echo "error" >&2;} 1>> hey.txt 2>> ho.tx
+\end{verbatim}
+
+\end{document}

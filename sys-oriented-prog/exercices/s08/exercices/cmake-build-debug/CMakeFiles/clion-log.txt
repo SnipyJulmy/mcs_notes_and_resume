@@ -1,0 +1,4 @@
+/home/snipy/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/173.4548.31/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/snipy/Master/mcs-git/sys-oriented-prog/exercices/s08/exercices
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/snipy/Master/mcs-git/sys-oriented-prog/exercices/s08/exercices/cmake-build-debug

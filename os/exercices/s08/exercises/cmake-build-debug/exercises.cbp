@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="exercises"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/snipy/Master/mcs-git/os/exercices/s08/exercises/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/snipy/Master/mcs-git/os/exercices/s08/exercises/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/snipy/Master/mcs-git/os/exercices/s08/exercises/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/snipy/Master/mcs-git/os/exercices/s08/exercises/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/snipy/Master/mcs-git/os/exercices/s08/exercises/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/snipy/Master/mcs-git/os/exercices/s08/exercises/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/snipy/Master/mcs-git/os/exercices/s08/exercises/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/snipy/Master/mcs-git/os/exercices/s08/exercises/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/snipy/Master/mcs-git/os/exercices/s08/exercises/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/snipy/Master/mcs-git/os/exercices/s08/exercises/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/snipy/Master/mcs-git/os/exercices/s08/exercises/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/snipy/Master/mcs-git/os/exercices/s08/exercises/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/snipy/Master/mcs-git/os/exercices/s08/exercises/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/snipy/Master/mcs-git/os/exercices/s08/exercises/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/snipy/Master/mcs-git/os/exercices/s08/exercises/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="exercises">
+				<Option output="/home/snipy/Master/mcs-git/os/exercices/s08/exercises/cmake-build-debug/exercises" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/snipy/Master/mcs-git/os/exercices/s08/exercises/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.3.1/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.3.1/include-fixed"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/snipy/Master/mcs-git/os/exercices/s08/exercises/cmake-build-debug/Makefile&quot;  VERBOSE=1 exercises"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/snipy/Master/mcs-git/os/exercices/s08/exercises/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/snipy/Master/mcs-git/os/exercices/s08/exercises/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/snipy/Master/mcs-git/os/exercices/s08/exercises/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="exercises/fast">
+				<Option output="/home/snipy/Master/mcs-git/os/exercices/s08/exercises/cmake-build-debug/exercises" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/snipy/Master/mcs-git/os/exercices/s08/exercises/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.3.1/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/7.3.1/include-fixed"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/snipy/Master/mcs-git/os/exercices/s08/exercises/cmake-build-debug/Makefile&quot;  VERBOSE=1 exercises/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/snipy/Master/mcs-git/os/exercices/s08/exercises/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/snipy/Master/mcs-git/os/exercices/s08/exercises/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/snipy/Master/mcs-git/os/exercices/s08/exercises/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/snipy/Master/mcs-git/os/exercices/s08/exercises/main.c">
+			<Option target="exercises"/>
+		</Unit>
+		<Unit filename="/home/snipy/Master/mcs-git/os/exercices/s08/exercises/priority_queue/priority_queue.c">
+			<Option target="exercises"/>
+		</Unit>
+		<Unit filename="/home/snipy/Master/mcs-git/os/exercices/s08/exercises/priority_queue/priority_queue.h">
+			<Option target="exercises"/>
+		</Unit>
+		<Unit filename="/home/snipy/Master/mcs-git/os/exercices/s08/exercises/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

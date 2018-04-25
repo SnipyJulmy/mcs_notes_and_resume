@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/hey_ho.dir/ex2/hey_ho.c.o  -o hey_ho 

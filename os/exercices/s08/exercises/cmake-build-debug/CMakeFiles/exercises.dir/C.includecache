@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/snipy/Master/mcs-git/os/exercices/s08/exercises/main.c
+stdio.h
+-
+stdlib.h
+-
+time.h
+-
+priority_queue/priority_queue.h
+/home/snipy/Master/mcs-git/os/exercices/s08/exercises/priority_queue/priority_queue.h
+
+/home/snipy/Master/mcs-git/os/exercices/s08/exercises/priority_queue/priority_queue.c
+priority_queue.h
+/home/snipy/Master/mcs-git/os/exercices/s08/exercises/priority_queue/priority_queue.h
+stdlib.h
+-
+assert.h
+-
+
+/home/snipy/Master/mcs-git/os/exercices/s08/exercises/priority_queue/priority_queue.h
+glob.h
+-
+libzvbi.h
+-
+

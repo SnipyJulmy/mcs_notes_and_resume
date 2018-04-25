@@ -1,0 +1,226 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{fullpage}
+
+\usepackage{amsmath}
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{placeins}
+
+
+% for finite state automata
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Minted
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[cache=false]{minted}
+
+%%%%%%%%%% C
+\newmintinline{c}{
+  fontsize=\small,
+  breaklines=true
+}
+
+\newminted{c}{
+  frame=single,
+  framesep=2mm,
+  fontsize=\scriptsize,
+  mathescape
+}
+
+\newminted[ccodeline]{c}{
+  frame=single,
+  framesep=2mm,
+  fontsize=\scriptsize,
+  mathescape,
+  linenos
+}
+
+%%%%%%%%% CMAKE
+\newminted{cmake}{
+  frame=single,
+  framesep=2mm,
+  fontsize=\scriptsize,
+  mathescape,
+  linenos,
+  breaklines=true
+}
+
+% End minted
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    Operating Systems\\
+    Spring 2018
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  S08
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  \begin{flushleft}
+    Professor : Philippe Cudré-Mauroux
+
+    Assistant : Ines Arous
+  \end{flushleft}
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  Submitted by Sylvain Julmy
+  
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercise 2}
+
+\paragraph{Which page will NRU replace ?}
+
+NRU will remove page 1 or 2.
+
+\paragraph{Which page will FIFO replace ?}
+
+FIFO will remove page 3, which was loaded at tick $110$.
+
+\paragraph{Which page will second chance replace ?}
+
+LRU will remove page $1$.
+
+\paragraph{Which page will LRU replace ?}
+
+Second chance will remove page $2$.
+
+\section*{Exercise 3}
+
+\subsection*{a)}
+
+All referenced bit are set to $0$.
+
+  \begin{table}[h]
+\centering
+\caption{Table entries at tick $9$.}
+\label{table:ex3-1}
+\begin{tabular}{ccccc}
+\hline
+\multicolumn{1}{|c|}{\textbf{Page}} & \multicolumn{1}{c|}{\textbf{Timestamp}} & \multicolumn{1}{c|}{\textbf{V}} & \multicolumn{1}{c|}{\textbf{R}} & \multicolumn{1}{c|}{\textbf{M}} \\ \hline
+0                                   & 6                                       & 1                               & 0                               & 1                               \\
+1                                   & 9                                       & 1                               & 1                               & 0                               \\
+2                                   & 9                                       & 1                               & 1                               & 1                               \\
+3                                   & 7                                       & 1                               & 0                               & 0                               \\
+4                                   & 4                                       & 0                               & 0                               & 0                              
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Table entries at tick $10$.}
+\label{table:ex3-2}
+\begin{tabular}{ccccc}
+\hline
+\multicolumn{1}{|c|}{\textbf{Page}} & \multicolumn{1}{c|}{\textbf{Timestamp}} & \multicolumn{1}{c|}{\textbf{V}} & \multicolumn{1}{c|}{\textbf{R}} & \multicolumn{1}{c|}{\textbf{M}} \\ \hline
+0                                   & 6                                       & 1                               & 0                               & 1                               \\
+1                                   & \color{red}{10}                                      & 1                               & \color{red}{0}                              & 0                               \\
+2                                   & \color{red}{10}                                      & 1                               & \color{red}{0}                               & 1                               \\
+3                                   & 7                                       & 1                               & 0                               & 0                               \\
+4                                   & 4                                       & 0                               & 0                               & 0                              
+\end{tabular}
+\end{table}
+
+\subsection*{b)}
+
+\begin{table}[h]
+\centering
+\caption{Table entries at tick $9$.}
+\label{table:ex3-3}
+\begin{tabular}{ccccc}
+\hline
+\multicolumn{1}{|c|}{\textbf{Page}} & \multicolumn{1}{c|}{\textbf{Timestamp}} & \multicolumn{1}{c|}{\textbf{V}} & \multicolumn{1}{c|}{\textbf{R}} & \multicolumn{1}{c|}{\textbf{M}} \\ \hline
+0                                   & 6                                       & 1                               & 0                               & 1                               \\
+1                                   & 9                                       & 1                               & 1                               & 0                               \\
+2                                   & 9                                       & 1                               & 1                               & 1                               \\
+3                                   & 7                                       & 1                               & 0                               & 0                               \\
+4                                   & 4                                       & 0                               & 0                               & 0                              
+\end{tabular}
+\end{table}
+
+\begin{table}[h]
+\centering
+\caption{Contents of the new table entries.}
+\label{table:ex3-4}
+\begin{tabular}{cccccl}
+\hline
+\multicolumn{1}{|c|}{\textbf{Page}} & \multicolumn{1}{c|}{\textbf{Timestamp}} & \multicolumn{1}{c|}{\textbf{V}} & \multicolumn{1}{c|}{\textbf{R}} & \multicolumn{1}{c|}{\textbf{M}} & \multicolumn{1}{l|}{\textbf{Explanation}}                                  \\ \hline
+0                                   & 6                                       & 1                               & 0                               & 1                               & Not in the working set and not removed, go to the next page \\
+1                                   & 9                                       & 1                               & \color{red}{0}                  & 0                               & Set R to $0$ and go to the next page                                       \\
+2                                   & 9                                       & 1                               & \color{red}{0}                  & 1                               & Set R to $0$ and go to the next page                                       \\
+  3                                   & 7                         & \color{red}{0}                               & 0                  & 0                               & Age > tau and clean --> replace it                                         \\
+4                                   & 4                                       & 0                               & 0                               & 0                               & Age > tau and dirty --> claim it                                          
+\end{tabular}
+\end{table}
+
+\section*{Exercise 4}
+
+
+\subsection*{a)}
+
+Address to read : $0x\underbrace{C}_{4 \text{ bits}}\underbrace{0DED}_{16 \text{ bits}}\underbrace{DAB}_{12 \text{ bits}}$.
+
+\begin{itemize}
+\item Segment value : $0xC$
+\item Page value : $0x0DED$
+\item Offset value : $0xDAB$
+\end{itemize}
+
+\subsection*{b)}
+
+\begin{enumerate}
+\item The segment value is used to find the segment descriptor.
+\item Lookup for the page table entry $0x0DED$ and get its page number $n$.
+\item Add $0xDAB$ to $n$ shifted $12$ bits to the left.
+\item Access the memory.
+\end{enumerate}
+
+\subsection*{c)}
+
+\begin{enumerate}
+\item The segment value is used to find the segment descriptor.
+\item If the segment is not in the memory, a segment fault is created.
+\item If the page is not in the memory, a page fault is created.
+\item The page is loaded in the memory.
+\item Set the PTE's present bit to $1$.
+\end{enumerate}
+
+\section*{Exercise 5}
+
+\subsection*{a)}
+
+\begin{itemize}
+\item $m$-bit is set when writing into the frame $\rightarrow$ non-modified
+  frames don't have to be written back.
+\item $r$-bit is set when accessing the frame. The bit is periodicaly reset.
+\end{itemize}
+
+\subsection*{b)}
+
+Each page belongs to a category. There are $4 = 2^2$ categories in total : $00$,
+$01$, $10$ and $11$. The page with the lowest category is evicted at random
+(over all the page in the same category).
+
+\section*{Exercise 6}
+
+The implementation of NRU, NFU and FIFO are available in appendices.
+
+\end{document}

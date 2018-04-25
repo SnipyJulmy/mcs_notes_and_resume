@@ -1,0 +1,4 @@
+/home/snipy/Master/mcs-git/sys-oriented-prog/exercices/s08/exercices/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/snipy/Master/mcs-git/sys-oriented-prog/exercices/s08/exercices/cmake-build-debug/CMakeFiles/hey_ho.dir
+/home/snipy/Master/mcs-git/sys-oriented-prog/exercices/s08/exercices/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/snipy/Master/mcs-git/sys-oriented-prog/exercices/s08/exercices/cmake-build-debug/CMakeFiles/to_upper.dir

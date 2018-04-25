@@ -1,0 +1,6 @@
+cd: aucun fichier ou dossier de ce type: asdasda
+cd: aucun fichier ou dossier de ce type: asdasda
+error
+error
+error
+error
