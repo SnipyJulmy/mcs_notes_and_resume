@@ -1,0 +1,160 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{fullpage}
+
+\usepackage{amsmath}
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{placeins}
+\usepackage{color}
+
+% Minted
+\usepackage[cache=false]{minted}
+
+\newmintinline{c}{
+  fontsize=\small,
+  breaklines=true
+}
+
+\newminted{c}{
+  frame=single,
+  framesep=2mm,
+  fontsize=\scriptsize,
+  mathescape
+}
+
+\newminted[clinecode]{c}{
+  frame=single,
+  framesep=2mm,
+  fontsize=\scriptsize,
+  mathescape,
+  linenos
+}
+
+\newcommand*{\BBox}[1]{\draw (#1 + 0.5,0.5) -- (#1 + 1.5,0.5) -- (#1 + 1.5,-0.2)
+  -- (#1 + 0.5,-0.2) -- cycle;}
+\newcommand*{\SBox}[1]{}
+
+\newcommand*{\equal}{=}
+
+% for finite state automata
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    System-oriented Programming\\
+    Spring 2018
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  S08
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Philippe Cudré-Mauroux
+
+    Assistant : Michael Luggen
+  \end{flushleft}
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  Submitted by Sylvain Julmy
+  
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercise 1}
+
+We use the \verb+man+ command to obtain info on the command :
+
+\verb+man kill+ :
+
+\begin{verbatim}
+The  command kill sends the specified signal to the specified processes
+or process groups.
+
+If no signal is specified, the TERM signal is sent.  The default action
+for  this  signal  is  to terminate the process.  This signal should be
+used in preference to the KILL signal (number 9), since a  process  may
+install  a  handler  for  the  TERM signal in order to perform clean-up
+steps before terminating in an orderly fashion.  If a process does  not
+terminate  after  a TERM signal has been sent, then the KILL signal may
+be used; be aware that the latter signal cannot be caught, and so  does
+not  give  the  target  process the opportunity to perform any clean-up
+before terminating.
+\end{verbatim}
+
+\verb+kill+ is usefull when we want to send some specific signal to a process,
+for testing purpose for example. The command is also used in order to terminate
+process that are not more under control or when process are running even when
+closing the GUI.
+
+\verb+man ps+
+
+\begin{verbatim}
+ps displays information about a selection of the active processes.
+\end{verbatim}
+
+The \verb+ps+ command give us information about process, for example the process
+tree and its hierarchy, the thread used, hand to on.
+
+\verb+man top+
+
+\begin{verbatim}
+The  top program provides a dynamic real-time view of a running system.  It can
+display system summary information$ as well as a list of processes or threads
+currently being managed by the Linux kernel.  The types of system summary
+information shown and the types, order and size of information displayed for
+processes are all user configurable and  that  configuration  can  be  made
+persistent across restarts.
+\end{verbatim}
+
+\verb+top+ is some kind of a better version of \verb+ps+, which display in real
+time the informations about all the processes of the system. One can control and
+send signal to any process using \verb+top+.
+
+\section*{Exercise 2}
+
+\subsection*{1a)}
+
+Tt makes no sense to set permissions on yourself more restrictive than group or
+other, therefore : \verb+chmod 466$+.
+
+\subsection*{1b)}
+
+Only root can do something about a \verb+chmod 000$+ file and the owner of the
+file can change the flag.
+
+\subsection*{2)}
+
+\begin{itemize}
+\item[a] \verb+705+
+\item[b] \verb+770+
+\item[c] \verb+702+
+\end{itemize}
+
+\subsection*{3)}
+
+The permission access of a USB device is \verb+drwxr-xr-x+, it is mount on
+\verb+/run/media/<user>/+, the device is mounted using a directory to access its
+contains. We can have device information using $fdisk$ :
+
+\begin{verbatim}
+Disque /dev/sdb : 7.5 GiB, 8053063680 octets, 15728640 secteurs
+Unités : secteur de 1 × 512 = 512 octets
+Taille de secteur (logique / physique) : 512 octets / 512 octets
+taille d'E/S (minimale / optimale) : 512 octets / 512 octets
+Type d'étiquette de disque : dos
+Identifiant de disque : 0x6f20736b
+\end{verbatim}
+
+\end{document}
