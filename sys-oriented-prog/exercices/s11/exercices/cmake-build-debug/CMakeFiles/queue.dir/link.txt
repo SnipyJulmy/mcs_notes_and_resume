@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/queue.dir/array_stack.c.o CMakeFiles/queue.dir/array_stack_main.c.o  -o queue 

@@ -1,0 +1,1 @@
+/usr/bin/cc    CMakeFiles/exercises.dir/main.c.o CMakeFiles/exercises.dir/priority_queue/priority_queue.c.o  -o exercises 

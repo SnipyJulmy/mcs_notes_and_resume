@@ -1,0 +1,14 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/snipy/Master/mcs-git/sys-oriented-prog/exercices/s11/exercices/minimal_tree.c
+stdlib.h
+-
+assert.h
+-
+

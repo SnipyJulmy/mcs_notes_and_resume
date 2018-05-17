@@ -1,0 +1,210 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{fullpage}
+
+\usepackage{amsmath}
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{placeins}
+\usepackage{color}
+
+% Minted
+\usepackage[cache=false]{minted}
+
+\newmintinline{c}{
+  fontsize=\small,
+  breaklines=true
+}
+
+\newminted{c}{
+  frame=single,
+  framesep=2mm,
+  fontsize=\scriptsize,
+  mathescape
+}
+
+\newminted[clinecode]{c}{
+  frame=single,
+  framesep=2mm,
+  fontsize=\scriptsize,
+  mathescape,
+  linenos
+}
+
+\newcommand*{\BBox}[1]{\draw (#1 + 0.5,0.5) -- (#1 + 1.5,0.5) -- (#1 + 1.5,-0.2)
+  -- (#1 + 0.5,-0.2) -- cycle;}
+\newcommand*{\SBox}[1]{}
+
+\newcommand*{\equal}{=}
+
+% for finite state automata
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    System-oriented Programming\\
+    Spring 2018
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  S11
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Philippe Cudré-Mauroux
+
+    Assistant : Michael Luggen
+  \end{flushleft}
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  Submitted by Sylvain Julmy
+  
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercise 1}
+
+We use a circular array representation for the queue. We use two integer
+variable $top$ and $back$ to represent the start and the end of the dequeue.
+
+We slightly modify the struct $Stack$ in order to use a $size\_t$ type instead
+of an integer for the type of the $member\_size$ field.
+
+\begin{ccode}
+// Main structure containing all elements
+typedef struct
+{
+    size_t memberSize;
+    int maxElements;
+    void* data;
+    int top;
+    int back;
+} Stack;
+
+Stack* stackCreate(size_t memberSize, int maxElements);
+void stackDestroy(Stack* s);
+void stackPush(Stack* s, void* data);
+void stackPop(Stack* s, void* target);
+void stackTop(Stack* s, void* target);
+\end{ccode}
+
+Then, the modification for $push$, $pop$ and $top$ are straightforward :
+
+\begin{ccode}
+void stackPush(Stack* s, void* data)
+{
+    // check if data is valid; if false, writes to stderr
+    assert(data);
+    //check is the stack is full
+    if (s->top == s->back - 1)
+    {
+        fprintf(stderr, "Stack is full\n");
+        exit(2);
+    }
+    s->top = (s->top + 1) % s->maxElements;
+    //calculate starting location for the new element
+    void* target = (char*) s->data + (s->top * s->memberSize);
+    memcpy(target, data, s->memberSize);
+}
+\end{ccode}
+
+\begin{ccode}
+void stackTop(Stack* s, void* target)
+{
+    assert(target);
+    if (s->top == s->back)
+    {
+        printf("Stack is empty\n");
+        target = NULL;
+        return;
+    }
+    void* source = (char*) s->data + (s->back * s->memberSize);
+    memcpy(target, source, s->memberSize);
+}
+\end{ccode}
+
+\begin{ccode}
+void stackPop(Stack* s, void* target)
+{
+    assert(target);
+    // check if stack is empty
+    if (s->top == s->back)
+    {
+        fprintf(stderr, "Couldn't pop an empty stack\n");
+        exit(3);
+    }
+    s->back = (s->back + 1) % s->maxElements;
+    void* source = (char*) s->data + (s->back * s->memberSize);
+    memcpy(target, source, s->memberSize);
+}
+\end{ccode}
+
+\section*{Exercise 2}
+
+The whole implementation is available just below :
+
+\begin{ccode}
+typedef struct Node Node;
+
+// main data structure
+struct Node
+{
+    //payload
+    int data;
+    // in a graph, a node has an arbitrary number of neighbors
+    int capacity;
+    int nb_neighbors;
+    Node** neighbors;
+};
+
+// allocates a new node 
+Node* newNode(int data)
+{
+    // Allocate memory for new node
+    Node* node = malloc(sizeof(node));
+    assert(node != NULL);
+
+    // Assign data to this node
+    node->data = data;
+    node->neighbors = NULL;
+    node->capacity = 10;
+    node->nb_neighbors = 0;
+    return (node);
+}
+\end{ccode}
+
+As well with a function to connect two nodes :
+
+\begin{ccode}
+// connect two node src -> dst
+// directed graph, so dst -> src is not implied
+void connect(Node* src, Node* dst)
+{
+    if (src->neighbors == NULL)
+    {
+        src->neighbors = malloc(src->capacity * sizeof(Node*));
+        assert(src->neighbors != NULL);
+    }
+    if (src->nb_neighbors == src->capacity)
+    {
+        src->capacity *= 2;
+        src->neighbors = realloc(src->neighbors, src->capacity * sizeof(Node*));
+        assert(src->neighbors != NULL);
+    }
+    src->neighbors[src->nb_neighbors] = dst;
+    src->nb_neighbors++;
+}
+\end{ccode}
+
+
+\end{document}

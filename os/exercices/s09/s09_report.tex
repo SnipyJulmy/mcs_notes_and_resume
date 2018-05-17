@@ -1,0 +1,155 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{fullpage}
+
+\usepackage{amsmath}
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{placeins}
+\usepackage{tabularx}
+\usepackage[normalem]{ulem}
+\useunder{\uline}{\ul}{}
+
+
+% for finite state automata
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Minted
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[cache=false]{minted}
+
+%%%%%%%%%% C
+\newmintinline{c}{
+  fontsize=\small,
+  breaklines=true
+}
+
+\newminted{c}{
+  frame=single,
+  framesep=2mm,
+  fontsize=\scriptsize,
+  mathescape
+}
+
+\newminted[ccodeline]{c}{
+  frame=single,
+  framesep=2mm,
+  fontsize=\scriptsize,
+  mathescape,
+  linenos
+}
+
+%%%%%%%%% CMAKE
+\newminted{cmake}{
+  frame=single,
+  framesep=2mm,
+  fontsize=\scriptsize,
+  mathescape,
+  linenos,
+  breaklines=true
+}
+
+% End minted
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    Operating Systems\\
+    Spring 2018
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  S09
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  \begin{flushleft}
+    Professor : Philippe Cudré-Mauroux
+
+    Assistant : Ines Arous
+  \end{flushleft}
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  Submitted by Sylvain Julmy
+  
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercise 2}
+\begin{gather*}
+  100 MHz = 100 \cdot 10^6 Hz \rightarrow \text{$10^8$ times per second, $32$
+    bits goes through the bus} \\
+  10^8 \cdot 4 = 4\cdot10^8 \text{ bytes/s} = 400 \text{ Mbytes/s} \\
+  \text{DMA transfer rate} = 40 \text{ Mbytes/s} \\
+\end{gather*}
+
+For every second, the DMA used $400 / 40 = 10$. The DMA reduced the transfer of
+instructions by $10\%$.
+
+\section*{Exercise 3}
+
+% Please add the following required packages to your document preamble:
+\begin{table}[h]
+\centering
+\caption{Advantages and disadvantages of placing functionality in device
+  controller rather than directly in the kernel.}
+\label{my-label}
+\begin{tabularx}{\textwidth}{|X|c|X|}
+\cline{1-1} \cline{3-3}
+\textbf{Advantages}                                                                & \textbf{} & \textbf{Disadvantages}                                            \\ \cline{1-1} \cline{3-3} 
+Reduce the system's workload                                                       &           & Can slow down the system if this one is idle                      \\ \cline{1-1} \cline{3-3} 
+Compilation target is known so we can optimize for the hardware                    &           & Firmware has to be updated by hand (in most case)                 \\ \cline{1-1} \cline{3-3} 
+Kernel is smaller and could contains less bugs                                     &           & Can't easely modify the firmware                                  \\ \cline{1-1} \cline{3-3} 
+Device is separated from the kernel, so error won't cause the whole system to fail &           & Depending on the device we use, the implementation could be awful \\ \cline{1-1} \cline{3-3} 
+\end{tabularx}
+\end{table}
+
+\section*{Exercise 4}
+
+A character device driver is one that transfers data directly to and from a user
+process. A block device is accessed by block of data, provide buffered access to
+hardware devices, and provide some abstraction from their specifics.
+
+Network device are none of them, such a device have some specific interface to
+the kernel w.r.t. packet transmission. A network device does not implements the
+classis $read$ and $write$ operations.
+
+Yes, a file systems is mount logically and then multiple block devices could be
+used to map the data.
+
+\section*{Exercise 5}
+
+Assuming the $acquire$ function is blocking until the mutex is acquired, the
+following implementation prevent deadlocks.
+
+\begin{ccode}
+void transaction(Account from, Account to, double amount)
+{
+    mutex lock1, lock2;
+    lock1 = get_lock(from);
+    lock2 = get_lock(to);
+
+    acquire(lock1);
+    withdraw(from, amount);
+    release(lock1);
+
+    acquire(lock2);
+    deposit(to, amount);
+    release(lock2);
+}
+\end{ccode}
+
+\end{document}

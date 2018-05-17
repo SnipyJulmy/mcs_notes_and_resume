@@ -1,0 +1,139 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{fullpage}
+
+\usepackage{amsmath}
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{placeins}
+\usepackage{color}
+
+% Minted
+\usepackage[cache=false]{minted}
+
+\newmintinline{c}{
+  fontsize=\small,
+  breaklines=true
+}
+
+\newminted{c}{
+  frame=single,
+  framesep=2mm,
+  fontsize=\scriptsize,
+  mathescape
+}
+
+\newminted[clinecode]{c}{
+  frame=single,
+  framesep=2mm,
+  fontsize=\scriptsize,
+  mathescape,
+  linenos
+}
+
+\newcommand*{\BBox}[1]{\draw (#1 + 0.5,0.5) -- (#1 + 1.5,0.5) -- (#1 + 1.5,-0.2)
+  -- (#1 + 0.5,-0.2) -- cycle;}
+\newcommand*{\SBox}[1]{}
+
+\newcommand*{\equal}{=}
+
+% for finite state automata
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    System-oriented Programming\\
+    Spring 2018
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  S10
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Philippe Cudré-Mauroux
+
+    Assistant : Michael Luggen
+  \end{flushleft}
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  Submitted by Sylvain Julmy
+  
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercise 1}
+
+What is the meaning of the following four expressions :
+\begin{itemize}
+\item \verb+.a+ : any single character followed by an "a".
+\item \verb+\.a+ : a dot followed by an "a".
+\item \verb+[a]*+ : zero or more "a" consecutively.
+\item \verb+[^a]*+ : non-"a" character, zero or more times, consecutively.
+\end{itemize}
+
+What is the meaning of the following line commands :
+\begin{enumerate}
+\item print all line (and line number) from ``hello.c'' which contains a left bracket or a right
+  bracket.
+\item print all line (and line number) from ``hello.c'' which contains a character.
+\item same as \verb+cat hello.c+ but with the ine number, print the whole file.
+\item print the number of line from ``hello.c'' that end with a ``;''.
+\item print the number of line from ``hello.c'' that don't end with a ``;''.
+\item print all file name in the current directory (and sub-directory,
+  recursively) where its name contains any character followed by a ``c''.
+\item print all file name in the current directory (and sub-directory,
+  recursively) where its name contains a dot followed by a ``c''.
+\item print all file name in the current directory (and sub-directory,
+  recursively) where its name end by a dot and a ``c''.
+\item print all the file name which contains a line with ``my\_stack.h'', for
+  example showing all the file that include ``my\_stack.h''.
+\end{enumerate}
+
+\paragraph{"Hello World" : } \verb+egrep -rl 'Hello world'+
+
+\paragraph{"Pattern" : } \verb+egrep -rli 'Pattern'+
+
+\paragraph{"Hello world" in .c files :} \verb+egrep -l 'Hello World' `find . -printf "%p\n" | egrep '\.c'`+
+
+\begin{itemize}
+\item \verb+("University" AND "Fribourg")+
+\item \verb+("University" OR "Fribourg")+
+\item \verb+"University Fribourg"+
+\item \verb+("University Fribourg" OR "University Bern")+
+\item \verb+("University Fribourg" OR "University Bern") NOT "University Geneva"+
+\end{itemize}
+
+
+Output of \verb+echo $USER "$USER" '$USER'+ :
+
+\begin{verbatim}
+snipy snipy $USER
+\end{verbatim}
+
+The \verb+$USER+ in single quote is not interpreted by the shell.
+
+
+\section*{Additional features}
+
+\begin{itemize}
+\item Deletion of a triplet (delete the matching triplet).
+\item Implementation of a static index, which needs to be rebuild if the database change.
+\item Implementation of a dynamic index, which index the data on each insert and delte.
+\item The possibility to precise the index we want to use.
+\item Implementation of a simple shell,in order to use the database in (kind of)
+  real-time, without having to hard code it.
+\item I have much more idea, but it is limited to $5$ here :).
+\end{itemize}
+
+\end{document}

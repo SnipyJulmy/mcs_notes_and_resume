@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/snipy/Master/mcs-git/sys-oriented-prog/exercices/s11/exercices/array_stack.c
+array_stack.h
+/home/snipy/Master/mcs-git/sys-oriented-prog/exercices/s11/exercices/array_stack.h
+
+/home/snipy/Master/mcs-git/sys-oriented-prog/exercices/s11/exercices/array_stack.h
+stdio.h
+-
+stdlib.h
+-
+assert.h
+-
+string.h
+-
+
+/home/snipy/Master/mcs-git/sys-oriented-prog/exercices/s11/exercices/array_stack_main.c
+array_stack.h
+/home/snipy/Master/mcs-git/sys-oriented-prog/exercices/s11/exercices/array_stack.h
+

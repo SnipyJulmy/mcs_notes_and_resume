@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/graph.dir/minimal_tree.c.o  -o graph 
