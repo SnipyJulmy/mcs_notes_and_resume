@@ -1,0 +1,138 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{fullpage}
+
+\usepackage{amsmath}
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{placeins}
+\usepackage{tabularx}
+\usepackage[normalem]{ulem}
+\useunder{\uline}{\ul}{}
+
+
+% for finite state automata
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Minted
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[cache=false]{minted}
+
+%%%%%%%%%% C
+\newmintinline{c}{
+  fontsize=\small,
+  breaklines=true
+}
+
+\newminted{c}{
+  frame=single,
+  framesep=2mm,
+  fontsize=\scriptsize,
+  mathescape
+}
+
+\newminted[ccodeline]{c}{
+  frame=single,
+  framesep=2mm,
+  fontsize=\scriptsize,
+  mathescape,
+  linenos
+}
+
+%%%%%%%%% CMAKE
+\newminted{cmake}{
+  frame=single,
+  framesep=2mm,
+  fontsize=\scriptsize,
+  mathescape,
+  linenos,
+  breaklines=true
+}
+
+% End minted
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    Operating Systems\\
+    Spring 2018
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  S09
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  \begin{flushleft}
+    Professor : Philippe Cudré-Mauroux
+
+    Assistant : Ines Arous
+  \end{flushleft}
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  Submitted by Sylvain Julmy
+  
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercise 2}
+
+\subsection*{\texttt{a)}}
+
+A Type 1 hypervisor is the only programm that is running in the privileged mode.
+A Type 1 hypervisor has to hold multiple copies of the hardware called virtual
+machines, these hypervisor  run directly on the host's hardware to control the
+hardware and to manage guest operating systems.
+
+A Type 2 hypervisor has to relies on an existent operating system to manage
+existing resources.  guest operating system runs as a process on the host.
+Type-2 hypervisors abstract guest operating systems from the host operating
+system.
+
+\subsection*{\texttt{b)}}
+
+Virtual mahcine don't care about the disk partition, the hypervisor divide the
+partition and give to each of its virtual machine one of them.
+
+\section*{Exercise 3}
+
+ Paravirtualization is a virtualization technique that presents to virtual
+ machines a software interface, which is similar yet not identical to the
+ underlying hardware-software interface.
+
+ The paravirtualization offers a set of hypercalls which allow the guest to
+ communicate directly with the hypervisor (like system call on an operating
+ system).
+
+\section*{Exercise 4}
+
+\subsection*{\texttt{a)}}
+
+The host PC need to support multiple virtual machines operating system and all
+of its applications, as well as the programm of the hypervisor (functions, data
+structures, ...). One way to reduce the memory usage is to detect the identical
+memory segment and share them among multiple virtual machines. For example, if
+multiple virtual machines are running the same OS, we can use only one memory
+segment for the OS and share it among multiple virtual machine.
+
+\subsection*{\texttt{b)}}
+
+The idea is to avoid storing the data twice, the technique is to analyze the
+memory of each virtual machines on a host and create a hash value, then
+identical hash value represent the same memory segment and therefore we can
+remove on of them and share the last one among multiple instances.
+
+\end{document}
