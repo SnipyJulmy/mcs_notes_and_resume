@@ -1,0 +1,200 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{etoolbox}
+\usepackage{sourcecodepro}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{fullpage}
+\usepackage{tcolorbox}
+
+\setlength{\parindent}{0pt}
+
+\title{Resume : Programming Language}
+\author{Sylvain Julmy}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+\begin{tcolorbox}[title=What is a Programming Language ?]
+A programming language is a notational system for describing computation in a
+machine-readable and human-readable form.
+
+- Louden
+\end{tcolorbox}
+
+A programming language is a tool for developing executable models for a class of
+problem domains.
+
+Generations of programming languages (higher level of abstraction at each level):
+\begin{itemize}
+\item 1GL : machine codes
+\item 2GL : symbolic assemblers
+\item 3GL : (machine-independent) imperative languages
+\item 4GL : domain specific application generators
+\item 5GL : AI languages ...
+\end{itemize}
+
+Programming languages differ on
+\begin{itemize}
+\item \textbf{Common constructs} : basic data types (numbers, etc.); variables;
+  expressions; statements; keywords; control constructs; procedures; comments;
+  errors ...
+\item \textbf{Uncommon constructs} : type declarations; special types (strings, arrays,
+  matrices, ...); sequential execution; concurrency constructs;
+  packages/modules; objects; general functions; generics; modifiable state; ...
+\end{itemize}
+
+A programming language is a problem solving tool and different paradigm are good
+at something :
+\begin{itemize}
+\item \textbf{Imperative style} : $program = algorithms + data$ good for decomposition.
+\item \textbf{Functional style} : $program = functions \circ functions$ good for
+  reasoning.
+\item \textbf{Logic programming style} : $program = facts + rules$ good for searching.
+\item \textbf{Object-oriented style} : $program = objects + messages$ good for modeling.
+\end{itemize}
+
+\begin{tcolorbox}[title = What\, exactly\, is a programming language ?]
+  A programming language is a tool used to describe and solve problems in a
+  human and computer readable format.
+\end{tcolorbox}
+\begin{tcolorbox}[title=How do compilers and interpreters differ ?]
+  \begin{itemize}
+\item A complier converts the high level instruction into machine language while
+  an interpreter converts the high level instruction into an intermediate form.
+\item Before execution, entire program is executed by the compiler whereas after
+  translating the first line, an interpreter then executes it and so on.
+\item List of errors is created by the compiler after the compilation process
+  while an interpreter stops translating after the first error.
+\item An independent executable file is created by the compiler whereas
+  interpreter is required by an interpreted program each time.
+\end{itemize}
+\end{tcolorbox}
+\begin{tcolorbox}[title=Why was FORTRAN developed ?]
+  To write programs in conventional mathematical notation, and generate code
+  comparable to good assembly programs. Most effort spent on code generation and
+  optimization, its easy to learn and promoted by IMB. Innovations :
+  \begin{itemize}
+  \item Symbolic notation for subroutines and functions
+  \item Assignments to variables of complex expressions
+  \item DO loops
+  \item Comments
+  \item Input/output formats
+  \item Machine-independence
+  \end{itemize}
+\end{tcolorbox}
+\begin{tcolorbox}[title=What were the main achievements of ALGOL 60?]
+  \begin{itemize}
+  \item BNF (Backus-Naur Form) introduced to define syntax (led to syntax-directed compilers)
+  \item First block-structured language; variables with local scope
+  \item Structured control statements
+  \item Recursive procedures
+  \item Variable size arrays
+  \end{itemize}
+\end{tcolorbox}
+\begin{tcolorbox}[title=Why do we call C a ``Third Generation Language'' ?]
+  C is a third generation language because it is completely machine-independent
+  (we can code on a computer and compile it to any architecture we want) and its
+  imperative.
+\end{tcolorbox}
+\begin{tcolorbox}[title=What is a ``Fourth Generation Language'' ?]
+  A fourth generation language is a language design to solve a very specific
+  (area of) problem(s). Like SQL is to specificaly query database.
+\end{tcolorbox}
+\begin{tcolorbox}[title=Why are there so many programming languages ?]
+  They are a lot of different programming languages because there exists a lot
+  of different problem to solve and each programming language owns advantages
+  and disadvantages to solve some problem or another.
+\end{tcolorbox}
+\begin{tcolorbox}[title=Why are FORTRAN and COBOL still important programming
+  languages ?]
+  A lot of business application are written in FORTRAN and in COBOL, making the
+  move to another language is not easy.
+\end{tcolorbox}
+\begin{tcolorbox}[title=Which language should you use to implement a spelling
+  checker ?]
+  Prolog (DCG)
+\end{tcolorbox}
+\begin{tcolorbox}[title=Which language should you use to implement a filter to
+  translate upper-to-lower case ?]
+  Perl and another scripting language
+\end{tcolorbox}
+\begin{tcolorbox}[title=Which language should you use to implement a theorem
+  prover ?]
+  Haskell or ML-like languages due to is type system.
+\end{tcolorbox}
+\begin{tcolorbox}[title=Which language should you use to implement an address
+  database ?]
+  Object-oriented one and SQL to query it.
+\end{tcolorbox}
+\begin{tcolorbox}[title=Which language should you use to implement an expert
+  system ?]
+  C/C++ or Rust ?
+\end{tcolorbox}
+\begin{tcolorbox}[title=Which language should you use to implement a game server
+  for initiating chess games on the internet ?]
+  Java or OOP language, like Scala.
+\end{tcolorbox}
+\begin{tcolorbox}[title=Which language should you use to implement a user
+  interface for a network chess client ?]
+  TCL or QT, design to build GUI.
+\end{tcolorbox}
+
+\section{Stack based programming}
+
+\begin{tcolorbox}[title=What is PostScript ?]
+  is a simple interpretive programming language ... to describe the appearance
+  of text, graphical shapes, and sampled images on printed or displayed pages.
+
+  \begin{itemize}
+  \item introduced in 1985 by Adobe
+  \item display standard supported by all major printer vendors
+  \item simple, stack-based programming language
+  \item minimal syntax
+  \item large set of built-in operators
+  \item PostScript programs are usually generated from applications, rather than hand-coded
+  \end{itemize}
+\end{tcolorbox}
+
+A PostScript program is a sequence of tokens, representing typed objects, that
+is interpreted to manipulate the display and four stacks that represent the
+execution state of a PostScript program:
+
+\begin{itemize}
+\item \textbf{Operand stack} : holds (arbitrary) operands and results of PostScript
+  operators.
+\item \textbf{Dictionnary stack} : holds only dictionaries where keys and values may be
+  stored.
+\item \textbf{Execution stack} : holds executable objects (e.g. procedures) in stages of
+  execution.
+\item \textbf{Graphic state stack} : keeps track of current coordinates etc...
+\end{itemize}
+
+\section{}
+
+\section{}
+
+\section{}
+
+\section{}
+
+\section{}
+
+\section{}
+
+\section{}
+
+\section{}
+
+\section{}
+
+\section{}
+
+\section{}
+
+\end{document}
