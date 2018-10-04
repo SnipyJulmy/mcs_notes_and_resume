@@ -7,5 +7,6 @@ scalaVersion := "2.12.7"
 libraryDependencies ++= Seq(
   "org.scalikejdbc" %% "scalikejdbc" % "3.3.+",
   "com.h2database" % "h2" % "1.4.+",
-  "ch.qos.logback" % "logback-classic" % "1.2.+"
+  "ch.qos.logback" % "logback-classic" % "1.2.+",
+  "org.postgresql" % "postgresql" % "9.3-1103-jdbc41"
 )

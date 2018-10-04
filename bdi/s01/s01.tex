@@ -1,0 +1,260 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{color}
+
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+    \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+\usepackage[cache=false]{minted}
+
+\newminted{sql}{
+  frame=single,
+  framesep=6pt,
+  breaklines=true,
+  fontsize=\scriptsize,
+  linenos
+}
+
+\newmintedfile{js}{
+  frame=single,
+  framesep=6pt,
+  breaklines=true,
+  fontsize=\scriptsize,
+  linenos
+}
+
+\makeatletter
+\pgfmathdeclarefunction{alpha}{1}{%
+  \pgfmathint@{#1}%
+  \edef\pgfmathresult{\pgffor@alpha{\pgfmathresult}}%
+}
+
+% tikz
+\usepackage{tikz}
+\usetikzlibrary{snakes}
+
+\date{\today}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2.5pt}
+
+\begin{document}
+
+\begin{center}
+\Large{
+    Big Data Infrastructures\\
+    Fall 2018
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  Lab 01 : SQL Review
+
+  \vspace*{1.4cm}
+
+  Author : Thomas Schaller, Sylvain Julmy
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Philippe Cudré-Mauroux
+    
+    Assistant : Akansha Bhardwaj
+  \end{flushleft}
+
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercice A}
+
+We use the following to create a new database :
+\begin{sqlcode}
+  CREATE DATABASE homework_1
+  WITH
+  OWNER = postgres
+  ENCODING = 'UTF8'
+  -- LC_COLLATE = 'French_Switzerland.1252'
+  -- LC_CTYPE = 'French_Switzerland.1252'
+  TABLESPACE = pg_default
+  CONNECTION LIMIT = -1;
+\end{sqlcode}
+
+\section*{Exercice B}
+
+We create the tables using the following queries :
+
+\subsection*{Paper}
+\begin{sqlcode}
+  CREATE TABLE Paper (
+    paperID  integer primary key,
+    title    char(255),
+    abstract text
+  );
+\end{sqlcode}
+
+\subsection*{Author}
+\begin{sqlcode}
+  CREATE TABLE Author (
+    authorID    integer primary key,
+    name        char(255),
+    email       char(255),
+    affiliation char(255)
+  );
+\end{sqlcode}
+
+\subsection*{Conference}
+\begin{sqlcode}
+  CREATE TABLE Conference (
+    confID  integer primary key,
+    name    char(255),
+    ranking integer
+  );
+\end{sqlcode}
+
+\subsection*{Writes}
+\begin{sqlcode}
+  CREATE TABLE Writes(
+    authorID integer,
+    paperID integer,
+    PRIMARY KEY (authorID, paperID),
+    CONSTRAINT fk_writes_author
+    REIGN KEY (authorID)
+    FERENCES Author(authorID)
+    DELETE CASCADE,
+    CONSTRAINT fk_writes_paper
+    REIGN KEY (paperID)
+    FERENCES Paper(paperID)
+    DELETE CASCADE
+  );
+\end{sqlcode}
+
+\subsection*{Submits}
+\begin{sqlcode}
+  CREATE TABLE Submits(
+    paperID integer,
+    confID integer,
+    isAccepted boolean,
+    date date,
+    PRIMARY KEY (paperID, confID),
+    CONSTRAINT fk_submits_conf
+    FOREIGN KEY (confID)
+    REFERENCES Conference(confID)
+    ON DELETE CASCADE,
+    CONSTRAINT fk_submits_paper
+    FOREIGN KEY (paperID)
+    REFERENCES Paper(paperID)
+    ON DELETE CASCADE
+  );
+\end{sqlcode}
+
+\subsection*{Cites}
+\begin{sqlcode}
+  CREATE TABLE Cites(
+    paperIDfrom integer, 
+    paperIDto integer,
+    PRIMARY KEY (paperIDfrom, paperIDto),
+    CONSTRAINT fk_cites_paperfrom
+    FOREIGN KEY (paperIDfrom)
+    REFERENCES Paper(paperID)
+    ON DELETE CASCADE,
+    CONSTRAINT fk_cites_paperto
+    FOREIGN KEY (paperIDto)
+    REFERENCES Paper(paperID)
+    ON DELETE CASCADE
+  );
+\end{sqlcode}
+
+Note : We put all of the foreign key to "ON DELETE CASCADE", because for
+example, for the writes relation, if we delete a paper or an author, we have to
+delete also the writes row corresponding to this author.
+
+\section*{Exercice C}
+
+In order to populate the database, we have written a Node.js application using
+knex. The following listings shows how we are doing it.
+
+\jsfile{./seed_app/seeds/1_Paper.js}
+\jsfile{./seed_app/seeds/2_Author.js}
+\newpage
+\jsfile{./seed_app/seeds/3_Conference.js}
+\jsfile{./seed_app/seeds/4_Writes.js}
+\jsfile{./seed_app/seeds/5_Submits.js}
+\jsfile{./seed_app/seeds/6_Cites.js}
+
+\section*{Exercice D}
+
+\subsection*{1)}
+
+\begin{sqlcode}
+  select affiliation, count(*)
+  from author
+  group by affiliation;
+\end{sqlcode}
+
+\subsection*{2)}
+
+\begin{sqlcode}
+  select p.abstract, a.authorId
+  from paper as p
+  inner join writes as w
+    on p.paperId = w.paperId
+  inner join author as a
+    on w.authorId = a.authorId
+  where a.authorId = 2;
+\end{sqlcode}
+
+\subsection*{3)}
+
+\begin{sqlcode}
+  create view PublishesIn1(authorID, confID) as
+    select a.authorID, c.confID
+      from author as a
+      inner join writes as w
+        on a.authorId = w.authorId
+      inner join paper as p
+        on w.paperId = p.paperId
+      inner join submits as s
+        on p.paperId = s.paperId
+      inner join conference as c
+        on s.confId = c.confId
+      where s.isAccepted = true;
+\end{sqlcode}
+
+\subsection*{4)}
+
+\begin{sqlcode}
+  select distinct(w.authorId)
+  from writes as w
+  inner join cites as c
+    on c.paperIdFrom = w.paperId
+  inner join writes as w2
+    on c.paperIdTo = w.paperId
+  where w.authorId = w2.authorId;
+\end{sqlcode}
+
+\newpage
+
+\subsection*{5)}
+
+\begin{sqlcode}
+  select title 
+  from paper 
+  where paperid in (
+    select paperId
+    from writes
+    where paperId in (
+      select paperid 
+      from writes 
+      where authorid = 2
+    )
+    group by paperId
+    having count(paperId) > 1
+  );
+\end{sqlcode}
+
+\end{document}
