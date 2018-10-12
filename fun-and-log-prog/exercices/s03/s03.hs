@@ -35,6 +35,9 @@ permutations xs = [x:ys | x <- xs, ys <- permutations (delete' x xs)] where
   delete' _ [] = []
   delete' (e) (x:xs) = if e == x then xs else x:(delete' e xs)
 
+find' :: Eq a => a -> [a] -> a
+find' e xs = undefined
+
 -- Ex2.a
 -- why using a comprehension ?
 length' :: [a] -> Int
