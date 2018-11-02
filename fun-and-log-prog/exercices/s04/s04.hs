@@ -1,4 +1,4 @@
-module S03 where
+module S04 where
 
 {-# LANGUAGE FlexibleInstances #-}
 
@@ -57,7 +57,7 @@ intersect''2 xs ys = filter (\x -> elem x ys) xs
 
 intersect''' xs ys = [x | x <- xs, y <- ys, x == y]
 
-divisorList,divisorList',divisorList''  :: Int -> [intero generate tInt]
+divisorList,divisorList',divisorList''  :: Int -> [Int]
 
 divisorList v
   | v < 1 = []
