@@ -1,0 +1,45 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage[
+a4paper,landscape,twocolumn
+,top=2cm,bottom=2cm,left=2cm,right=2cm % margin
+]{geometry}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\lhead{\bfseries Metagol example}
+\chead{}
+\rhead{}
+\lfoot{de : H. Dupont}
+\cfoot{pour : J.-P. Martin}
+\rfoot{\thepage}
+
+% minted
+\usepackage{minted}
+
+% Prolog
+\newminted{prolog}{
+  frame=single
+  ,framesep=6pt
+  ,breaklines=true
+  ,fontsize=\scriptsize
+  ,mathescape
+}
+
+\newmintedfile{prolog}{
+  frame=single
+  ,framesep=6pt
+  ,breaklines=true
+  ,mathescape
+}
+
+\begin{document}
+
+\prologfile{example_2.pl}
+\prologfile{example_2.out}
+
+\end{document}

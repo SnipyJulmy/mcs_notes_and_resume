@@ -25,4 +25,5 @@
     <string name="sign_up">Sign Up</string>
     <string name="account_creation_fail">Can\'t create the account</string>
     <string name="sign_in_fail">Can\'t connect to your Dyr account</string>
+    <string name="passwords_not_same">passwords are not the same</string>
 </resources>

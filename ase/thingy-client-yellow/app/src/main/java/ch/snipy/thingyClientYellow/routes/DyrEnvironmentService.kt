@@ -3,6 +3,7 @@ package ch.snipy.thingyClientYellow.routes
 import android.os.Environment
 import retrofit2.Call
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 
 interface DyrEnvironmentService {
@@ -25,11 +26,11 @@ interface DyrEnvironmentService {
     @PUT("/enableNotif/{envId}")
     fun enableNotification(@Path("envId") envId: Int, @Body body: Map<String, String>): Call<String>
 
-    companion object Factory {
+    companion object Factory : DyrServiceFactory {
         fun create(): DyrEnvironmentService {
             val retrofit = Retrofit.Builder()
-                .addConverterFactory(null) // TODO
-                .baseUrl("/environment")
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl("$baseUrl/environment/")
                 .build()
             return retrofit.create(DyrEnvironmentService::class.java)
         }

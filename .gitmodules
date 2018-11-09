@@ -10,3 +10,6 @@
 [submodule "sys-oriented-prog/P01-d1-mini/lib/SOP2018_P01"]
 	path = sys-oriented-prog/P01-d1-mini/lib/SOP2018_P01
 	url = git@diuf-gitlab.unifr.ch:sop-2018-p01-chess-monkeys/SOP2018_P01.git
+[submodule "ase/thingy-server"]
+	path = ase/thingy-server
+	url = git@github.com:aseteamyellow/thingy-api-yellow.git

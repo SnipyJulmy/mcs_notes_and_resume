@@ -3,6 +3,7 @@ package ch.snipy.thingyClientYellow.routes
 import ch.snipy.thingyClientYellow.User
 import retrofit2.Call
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 
 
@@ -19,11 +20,11 @@ interface DyrAccountService {
     @DELETE("/delete/{userId}")
     fun delete(@Path("userId") userId: Int): Call<String>
 
-    companion object Factory {
+    companion object Factory : DyrServiceFactory {
         fun create(): DyrAccountService {
             val retrofit = Retrofit.Builder()
-                .addConverterFactory(null) // TODO
-                .baseUrl("/account")
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl("$baseUrl/account/")
                 .build()
             return retrofit.create(DyrAccountService::class.java)
         }
