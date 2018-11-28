@@ -1,0 +1,151 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{fullpage}
+\usepackage{graphicx}
+
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{color}
+\usepackage{rotating}
+
+
+
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+\usetikzlibrary{fit}
+
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+    \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+\makeatletter
+\pgfmathdeclarefunction{alpha}{1}{%
+  \pgfmathint@{#1}%
+  \edef\pgfmathresult{\pgffor@alpha{\pgfmathresult}}%
+}
+
+\newcommand*{\until}{U}
+\newcommand*{\disj}{\ ,\ }
+\newcommand*{\A}{\square}  % Always
+\newcommand*{\D}{\diamondsuit} % eventually
+
+\newcommand*{\Pq}{(\top,\bot)}
+\newcommand*{\pQ}{(\bot,\top)}
+\newcommand*{\PQ}{(\top,\top)}
+\newcommand*{\pq}{(\bot,\bot)}
+
+
+% tikz
+\usepackage{tikz}
+\usetikzlibrary{snakes}
+
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2.5pt}
+
+\newtheorem*{thm}{Theorem}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    Automata on Infinite Structure\\
+    Fall 2018
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  Exercice Sheet 7
+
+  \vspace*{1.4cm}
+
+  Author : Sylvain Julmy
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Ultes-Nitsche Ulrich
+    
+    Assistant : Stammet Christophe
+  \end{flushleft}
+
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercise 1}
+
+\begin{thm}
+  $\mathcal{PSPACE}$ is closed under union, intersection and complement.
+\end{thm}
+
+\begin{proof}
+  Assume $L_1,L_2 \in \mathcal{PSPACE}$, hence there exist TM $M_1$ and $M_2$
+  that are using polynomial space, such that $M_1$ decides $L_1$ in
+  nondeterministic time $O(n^k)$ and in polynomial space $O(n^{k'})$, and $M_2$
+  decides $L_2$ in nondeterministic time $O(n^l)$ and in polynomial space
+  $O(n^{l'})$. We show that
+  \begin{enumerate}
+  \item there exist a decider $M$ in nondeterministic polynomial time and
+    polynomial space such that $L(M) = L_1 \cup L_2$.
+  \item there exist a decider $M$ in nondeterministic polynomial time and
+    polynomial space such that $L(M) = L_1 \cap L_2$.
+  \end{enumerate}
+
+  The constructions are standard ones.
+
+  \begin{enumerate}
+  \item Intersection : we run the word $\omega$ on $M_1$, if $M_1$ reject it,
+    then $M$ reject it too, else we run $\omega$ on $M_2$, if $M_2$ reject it,
+    then $M$ reject it too, else $M$ accept $\omega$. Clearly, $M$ is a
+    poly-time nondeterministic decider and a poly-space decider for $L_1 \cap
+    L_2$, for the input $\omega$ of length $n$, the time complexity is
+    $O(n^{max(k,l)})$ and the space complexity is $O(n^{max(k',l')})$.
+
+  \item Union : we run the word $\omega$ on $M_1$, if $M_1$ accept it, then $M$
+    accept it too, else we run $\omega$ on $M_2$, if $M_2$ accept it, then $M$
+    accept it too, else $M$ reject $\omega$. Clearly again, $M$ is a
+    poly-time nondeterministic decider and a poly-space decider for $L_1 \cap
+    L_2$, for the input $\omega$ of length $n$, the time complexity is
+    $O(n^{max(k,l)})$ and the space complexity is $O(n^{max(k',l')})$. We could
+    also choose non-deterministicaly either $M_1$ or $M_2$ and use only the
+    selected machine.
+  \end{enumerate}
+
+  To prove that $\mathcal{PSPACE}$ is closed under complement, we use the fact
+  that every language $L \in \mathcal{PSPACE}$ has a deterministic poly-space TM
+  $M$, we can swap the accepting and non-accepting states in $M$ in polynomial
+  time and get a poly-space decider for $\bar{L}$, hence
+  $\bar{L}\in\mathcal{PSPACE}$.
+\end{proof}
+
+\section*{Exercise 2}
+
+\subsection*{$w_1$}
+
+\begin{mathpar}
+  q_0 1010 \longrightarrow
+  1 q_0 010 \longrightarrow
+  10 q_0 10 \longrightarrow
+  101 q_0 0 \longrightarrow
+  1010 q_0  \longrightarrow
+  101 q_1 0 \longrightarrow
+  10 q_1 11 \longrightarrow
+  101 q_2 1
+\end{mathpar}
+
+\subsection*{$w_2$}
+\begin{mathpar}
+  q_0 0100 \longrightarrow
+  0 q_0 100 \longrightarrow
+  01 q_0 00 \longrightarrow
+  010 q_0 0 \longrightarrow
+  0100 q_0  \longrightarrow
+  010 q_1 0 \longrightarrow
+  01 q_1 01 \longrightarrow
+  0 q_1 111 \longrightarrow
+  01 q_2 11
+\end{mathpar}
+  
+\end{document}
