@@ -9,16 +9,15 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.util.StringTokenizer;
 
-public class QuadruplesCounter {
+public class WordCountEx2 {
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
-        Job job = Job.getInstance(conf, "quadruples count");
-        job.setJar("QuadruplesCounter.jar");
-        job.setJarByClass(QuadruplesCounter.class);
+        Job job = Job.getInstance(conf, "word count");
+        job.setJar("WordCountEx2.jar");
+        job.setJarByClass(WordCountEx2.class);
         job.setMapperClass(TokenizerMapper.class);
         job.setCombinerClass(IntSumReducer.class);
         job.setReducerClass(IntSumReducer.class);
@@ -29,36 +28,24 @@ public class QuadruplesCounter {
         System.exit(job.waitForCompletion(true) ? 0 : 1);
     }
 
-    // Test if s is a valid URI or not
-    private static boolean isValidURI(String s) {
-        try {
-            new URI(s);
-            return true;
-        } catch (URISyntaxException e) {
-            return false;
-        }
-    }
-
     public static class TokenizerMapper extends Mapper<Object, Text, Text, IntWritable> {
-
         private final static IntWritable one = new IntWritable(1);
         private Text word = new Text();
 
-        public void map(Object key, Text value, Context context)
-            throws IOException, InterruptedException {
+        public void map(
+                Object key,
+                Text value,
+                Context context
+        ) throws IOException, InterruptedException {
 
-            String[] values = value.toString().split("\t");
-            String subject = values[0];
-            String predicate = values[1];
-            String object = values[2];
-            String provenance = values[3];
+            String value2 = value.toString();
+            value2 = value2.replaceAll("[,\\.:()\"@?!]", "")
+                           .replaceAll("&rdquo;", "")
+                           .toLowerCase();
 
-            assert isValidURI(subject);
-            assert isValidURI(predicate);
-            assert isValidURI(provenance);
-
-            if (!isValidURI(object)) { // object is a literal
-                word.set(subject);
+            StringTokenizer itr = new StringTokenizer(value2);
+            while (itr.hasMoreTokens()) {
+                word.set(itr.nextToken());
                 context.write(word, one);
             }
         }
@@ -67,17 +54,18 @@ public class QuadruplesCounter {
     public static class IntSumReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
         private IntWritable result = new IntWritable();
 
-        public void reduce(Text key, Iterable<IntWritable> values, Context context)
-            throws IOException, InterruptedException {
+        public void reduce(
+                Text key,
+                Iterable<IntWritable> values,
+                Context context
+        ) throws IOException, InterruptedException {
+
             int sum = 0;
             for (IntWritable val : values) {
                 sum += val.get();
             }
-
-            if (sum >= 5) {
-                result.set(sum);
-                context.write(key, result);
-            }
+            result.set(sum);
+            context.write(key, result);
         }
     }
 }

@@ -1,0 +1,453 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{color}
+\usepackage{multicol}
+\usepackage{geometry}
+\usepackage{pdflscape}
+
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+    \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+\usepackage[cache=false]{minted}
+
+\newmintedfile{java}{
+  frame=single,
+  framesep=6pt,
+  breaklines=true,
+  fontsize=\scriptsize,
+  linenos,
+  mathescape,
+  firstnumber=1
+}
+
+\newmintedfile{bash}{
+  frame=single,
+  framesep=6pt,
+  breaklines=true,
+  fontsize=\scriptsize,
+  linenos,
+  mathescape,
+  firstnumber=1
+}
+
+\newminted{java}{
+  frame=single,
+  framesep=2mm,
+  breaklines=true,
+  fontsize=\scriptsize,
+  linenos,
+  mathescape
+}
+
+\newminted{bash}{
+  frame=single,
+  framesep=2mm,
+  breaklines=true,
+  fontsize=\scriptsize,
+  linenos,
+  mathescape
+}
+
+
+\makeatletter
+\pgfmathdeclarefunction{alpha}{1}{%
+  \pgfmathint@{#1}%
+  \edef\pgfmathresult{\pgffor@alpha{\pgfmathresult}}%
+}
+
+% tikz
+\usepackage{tikz}
+\usetikzlibrary{snakes}
+
+\date{\today}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2.5pt}
+
+\begin{document}
+
+\begin{center}
+\Large{
+    Big Data Infrastructures\\
+    Fall 2018
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  Lab 05 : Hadoop and MapReduce
+
+  \vspace*{1.4cm}
+
+  Author : Thomas Schaller, Sylvain Julmy
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Philippe Cudré-Mauroux
+  \end{flushleft}
+
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Running the experiment}
+
+In order to easely run the experiments, we develop a small bash script (see
+\ref{lst:src-bash-1}) which compile, run, clean and move the output of the
+experiments to our local directory in order to watch them.
+
+\begin{listing}[ht]
+\centering
+\bashfile{../src/main/java/run.sh}
+\caption{Script to run the exercises on the Hadoop cluster.}
+\label{lst:scr-bash-1}
+\end{listing}
+
+\section*{Wordcount : }
+
+Listing \ref{lst:ex1}, \ref{lst:ex2} and \ref{lst:ex3} shows the code for the
+various version of the Wordcount.  The function to initialize the map used for
+$htmlEntities$ is shown in listing \ref{lst:ex3-b}.
+
+\begin{listing}[ht]
+\centering
+\javafile[firstline=14]{../src/main/java/WordCountEx1.java}
+\caption{First implementation for Wordcount.}
+\label{lst:ex1}
+\end{listing}
+
+\begin{listing}[ht]
+\centering
+\javafile[firstline=14]{../src/main/java/WordCountEx2.java}
+\caption{First improvement for Wordcount.}
+\label{lst:ex2}
+\end{listing}
+
+\begin{listing}[ht]
+\centering
+\begin{javacode}
+public class WordCountEx3 {
+
+    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        Job job = Job.getInstance(conf, "word count");
+        job.setJar("WordCountEx3.jar");
+        job.setJarByClass(WordCountEx3.class);
+        job.setMapperClass(TokenizerMapper.class);
+        job.setCombinerClass(IntSumReducer.class);
+        job.setReducerClass(IntSumReducer.class);
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(IntWritable.class);
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        System.exit(job.waitForCompletion(true) ? 0 : 1);
+    }
+
+    public static class TokenizerMapper extends Mapper<Object, Text, Text, IntWritable> {
+        private final static IntWritable one = new IntWritable(1);
+        public HashMap<String, String> htmlEntities;
+        private Text word = new Text();
+
+        public void map(
+                Object key,
+                Text value,
+                Context context
+        ) throws IOException, InterruptedException {
+
+            initHashMap();
+            String value2 = value.toString();
+            value2 = value2.replaceAll("[,\\.:()\"@?!]", "")
+                           .replaceAll("&rdquo;", "")
+                           .toLowerCase();
+            for (Map.Entry<String, String> entry : htmlEntities.entrySet()) {
+                String key1 = entry.getKey();
+                String value1 = entry.getValue();
+                value2 = value2.replaceAll(key1, value1);
+            }
+            StringTokenizer itr = new StringTokenizer(value2);
+            while (itr.hasMoreTokens()) {
+                word.set(itr.nextToken());
+                context.write(word, one);
+            }
+        }
+    }
+
+    public static class IntSumReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
+        private IntWritable result = new IntWritable();
+
+        public void reduce(
+                Text key,
+                Iterable<IntWritable> values,
+                Context context
+        ) throws IOException, InterruptedException {
+
+            int sum = 0;
+            for (IntWritable val : values) {
+                sum += val.get();
+            }
+            result.set(sum);
+            context.write(key, result);
+        }
+    }
+}
+\end{javacode}
+\caption{First improvement for Wordcount.}
+\label{lst:ex3}
+\end{listing}
+
+\begin{listing}[ht]
+\centering
+\begin{javacode}
+  public void initHashMap() {
+            htmlEntities = new HashMap<String, String>();
+            htmlEntities.put("&lt;", "<"); htmlEntities.put("&gt;", ">");
+            htmlEntities.put("&amp;", "&"); htmlEntities.put("&quot;", "\"");
+            htmlEntities.put("&agrave;", "à"); htmlEntities.put("&Agrave;", "À");
+            htmlEntities.put("&acirc;", "â"); htmlEntities.put("&auml;", "ä");
+            htmlEntities.put("&Auml;", "Ä"); htmlEntities.put("&Acirc;", "Â");
+            htmlEntities.put("&aring;", "å"); htmlEntities.put("&Aring;", "Å");
+            htmlEntities.put("&aelig;", "æ"); htmlEntities.put("&AElig;", "Æ");
+            htmlEntities.put("&ccedil;", "ç"); htmlEntities.put("&Ccedil;", "Ç");
+            htmlEntities.put("&eacute;", "é"); htmlEntities.put("&Eacute;", "É");
+            htmlEntities.put("&egrave;", "è"); htmlEntities.put("&Egrave;", "È");
+            htmlEntities.put("&ecirc;", "ê"); htmlEntities.put("&Ecirc;", "Ê");
+            htmlEntities.put("&euml;", "ë"); htmlEntities.put("&Euml;", "Ë");
+            htmlEntities.put("&iuml;", "ï"); htmlEntities.put("&Iuml;", "Ï");
+            htmlEntities.put("&ocirc;", "ô"); htmlEntities.put("&Ocirc;", "Ô");
+            htmlEntities.put("&ouml;", "ö"); htmlEntities.put("&Ouml;", "Ö");
+            htmlEntities.put("&oslash;", "ø"); htmlEntities.put("&Oslash;", "Ø");
+            htmlEntities.put("&szlig;", "ß"); htmlEntities.put("&ugrave;", "ù");
+            htmlEntities.put("&Ugrave;", "Ù"); htmlEntities.put("&ucirc;", "û");
+            htmlEntities.put("&Ucirc;", "Û"); htmlEntities.put("&uuml;", "ü");
+            htmlEntities.put("&Uuml;", "Ü"); htmlEntities.put("&nbsp;", " ");
+            htmlEntities.put("&copy;", "\u00a9"); htmlEntities.put("&reg;", "\u00ae");
+            htmlEntities.put("&euro;", "\u20a0"); htmlEntities.put("&rsquo;", "'");
+        }
+\end{javacode}
+\caption{Initialization of $htmlEntities$.}
+\label{lst:ex3-b}
+\end{listing}
+
+\section*{Quadruples : }
+
+Listing \ref{lst:ex4} shows the code for counting the number of literals for
+each node, and listing \ref{lst:ex5} shows the code for computing the In and Out
+degree of each node. Note that we have also created a class $IntTriple$ (in
+listing \ref{lst:ex5-b}) to simplify and pass Triple of int between the map and
+the reduce parts.
+
+\begin{listing}[ht]
+\centering
+\javafile[firstline=15]{../src/main/java/QuadruplesCounter.java}
+\caption{Map-Reduce program for counting the number of literals for each node.}
+\label{lst:ex4}
+\end{listing}
+
+\begin{listing}[ht]
+\centering
+\begin{javacode}
+public class InOutDegreeCounter {
+
+    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+
+        Job job = Job.getInstance(conf, "in and out degree count");
+
+        job.setJar("InOutDegreeCounter.jar");
+        job.setJarByClass(InOutDegreeCounter.class);
+
+        job.setMapperClass(TokenizerMapper.class);
+        job.setCombinerClass(IntSumReducer.class);
+        job.setReducerClass(IntSumReducer.class);
+
+        // Map output
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(IntTriple.class);
+
+        // Global output
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(IntTriple.class);
+
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        System.exit(job.waitForCompletion(true) ? 0 : 1);
+    }
+
+    // Test if s is a valid URI or not
+    private static boolean isValidURI(String s) {
+        try {
+            URI uri = new URI(s);
+            return true;
+        } catch (URISyntaxException e) {
+            return false;
+        }
+    }
+ }
+\end{javacode}
+\caption{Configuration for the last exercise and a small method to check URI.}
+\label{lst:ex5}
+\end{listing}
+
+\begin{listing}[ht]
+\centering
+\begin{javacode}
+public static class TokenizerMapper extends Mapper<Object, Text, Text, IntTriple> {
+
+    private Text word = new Text();
+
+    public void map(Object key, Text value, Context context)
+            throws IOException, InterruptedException {
+
+        String[] values = value.toString().split("\t");
+        String subject = values[0];
+        String predicate = values[1];
+        String object = values[2];
+        String provenance = values[3];
+
+        assert isValidURI(subject);
+        assert isValidURI(predicate);
+        assert isValidURI(provenance);
+
+        // Structure for the triple is (#Literal,#In,#Out)
+
+        if (isValidURI(object)) { // object is a valid URI
+            word.set(subject);
+            // increment the out count
+            IntTriple triple = new IntTriple(0, 0, 1);
+            context.write(word, triple);
+        } else { // object is a literal
+            word.set(subject);
+            // increment the literal count and the out count
+            IntTriple triple = new IntTriple(1, 0, 1);
+            context.write(word, triple);
+        }
+
+        word.set(object);
+        // increment the in count for the object
+        IntTriple triple2 = new IntTriple(0, 1, 0);
+        context.write(word, triple2);
+    }
+}
+\end{javacode}
+\caption{Mapper class for the last exercise.}
+\label{lst:ex5-b}
+\end{listing}
+
+\begin{listing}[h]
+\centering
+\begin{javacode}
+public static class IntSumReducer extends Reducer<Text, IntTriple, Text, IntTriple> {
+    public void reduce(Text key, Iterable<IntTriple> values, Context context)
+            throws IOException, InterruptedException {
+
+        int sumLiteral = 0, sumIn = 0, sumOut = 0;
+
+        for (IntTriple triple : values) {
+            sumLiteral += triple.a.get();
+            sumIn += triple.b.get();
+            sumOut += triple.c.get();
+        }
+
+        assert isValidURI(key.toString());
+
+        if (sumLiteral >= 10) {
+            context.write(key, new IntTriple(sumLiteral, sumIn, sumOut));
+        }
+    }
+}
+\end{javacode}
+\caption{Reducer class for the last exercise.}
+\label{lst:ex5-b}
+\end{listing}
+
+\begin{listing}[h]
+\centering
+\begin{javacode}
+static class IntTriple implements Writable {
+
+    private IntWritable a;
+    private IntWritable b;
+    private IntWritable c;
+
+    public IntTriple() {
+        set(new IntWritable(0), new IntWritable(0), new IntWritable(0));
+    }
+
+    public IntTriple(IntWritable a, IntWritable b, IntWritable c) {
+        this.a = a;
+        this.b = b;
+        this.c = c;
+    }
+
+    public IntTriple(int a, int b, int c) {
+        this.a = new IntWritable(a);
+        this.b = new IntWritable(b);
+        this.c = new IntWritable(c);
+    }
+
+    public int compareTo(IntTriple that) {
+        int cmp = this.a.compareTo(that.a);
+        if (cmp != 0) return cmp;
+        cmp = this.b.compareTo(that.b);
+        if (cmp != 0) return cmp;
+        return this.c.compareTo(that.c);
+    }
+
+    public void set(IntWritable a, IntWritable b, IntWritable c) {
+        this.a = a;
+        this.b = b;
+        this.c = c;
+    }
+
+    public void write(DataOutput dataOutput) throws IOException {
+        a.write(dataOutput);
+        b.write(dataOutput);
+        c.write(dataOutput);
+    }
+
+    public void readFields(DataInput dataInput) throws IOException {
+        a.readFields(dataInput);
+        b.readFields(dataInput);
+        c.readFields(dataInput);
+    }
+
+    @Override
+    public int hashCode() {
+        return a.hashCode() * 163 * 163 + b.hashCode() * 163 + c.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof IntTriple) {
+            IntTriple that = (IntTriple) obj;
+            return this.a.equals(that.a) &&
+                   this.b.equals(that.b) &&
+                   this.c.equals(that.c);
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("(%d,%d,%d)", a.get(), b.get(), c.get());
+    }
+}
+\end{javacode}
+\caption{Implementation of a IntTriple class which represent a Triple of IntWritable.}
+\label{lst:ex5-b}
+\end{listing}
+
+
+\section*{Outputs : }
+
+The various outputs of our programm are available under the following HDFS
+folder :
+\begin{verbatim}
+/bdi_2018/bdi18_07/ex${exerice_number}_output
+\end{verbatim}
+
+\end{document}
