@@ -1,0 +1,8 @@
+cp target\scala-2.11\SampleCode-assembly-1.0.jar target\scala-2.11\SampleCode-assembly-1.0-ex1.jar
+scp target\scala-2.11\SampleCode-assembly-1.0.jar bdi18_07@diufrm202:~/bundle/spark2/SampleCode-assembly-1.0-ex1.jar
+
+export JAVA_HOME=~/bundle/java_7
+export PATH=$PATH:${JAVA_HOME}/bin
+
+bin/hadoop fs -copyToLocal /bdi_2018/bdi18_07/spark_ex1 ~/bundle/spark2/spark_ex1_hdfs
+bin/hadoop fs -rm -r -skipTrash /bdi_2018/bdi18_07/spark_ex1
