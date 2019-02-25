@@ -1,0 +1,103 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{amsmath}
+\usepackage{fullpage}
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+
+\usepackage{prooftrees}
+\newcommand*{\equal}{=}
+\newcommand*{\disj}{,}
+
+\usepackage[cache=false]{minted}
+
+\author{Sylvain Julmy}
+\date{\today}
+
+\setlength{\parindent}{0pt}
+
+\newminted{prolog}{frame=single, framesep=6pt,
+  breaklines=true,fontsize=\scriptsize,linenos}
+\newmintedfile{prolog}{frame=single, framesep=6pt,
+  breaklines=true,fontsize=\scriptsize}
+\newmintinline{prolog}{}
+\newcommand{\ex}[3]{\prologfile[firstline=#1,lastline=#2]{#3.pl}}
+
+\begin{document}
+
+\begin{center}
+  \Large{
+    Functional and Logic Programming\
+    Fall 2018
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  S11 : Prolog
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Le Peutrec Stephane
+    
+    Assistant : Julmy Sylvain
+  \end{flushleft}
+
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Exercise 1}
+
+\subsection*{(a)}
+\begin{forest}
+  for tree={s sep=30mm}
+  [$?- p(X).$
+  [$p(1)$,edge label={node[midway,above,font=\scriptsize]{$X \equal 1$}}
+  [$\square$]]
+  [$!$,edge label={node[midway,left,font=\scriptsize]{$X \equal 2$}}
+  [$\square$]]
+  [$cut$]
+  ]
+\end{forest}
+
+\subsection*{(b)}
+\begin{forest}
+  for tree={s sep=20mm}
+  [$?- p(X) \disj p(Y).$
+  [$ p(Y) $,edge label={node[midway,left,font=\scriptsize]{$X \equal 1$}}
+  [$\square$,edge label={node[midway,left,font=\scriptsize]{$Y \equal 1$}}]
+  [$!$,edge label={node[midway,left,font=\scriptsize]{$Y \equal 2$}} [$\square$]]
+  [$cut$]
+  ]
+  [$ ! \disj p(Y) $,edge label={node[midway,left,font=\scriptsize]{$X \equal2$}}
+  [$p(Y)$
+  [$\square$,edge label={node[midway,left,font=\scriptsize]{$Y \equal 1$}}]
+  [$!$,edge label={node[midway,left,font=\scriptsize]{$Y \equal 2$}} [$\square$]]
+  [$cut$
+  [$\square$]]
+  ]
+  ]
+  [$cut$]
+  ]
+\end{forest}
+
+\subsection*{(c)}
+\begin{forest}
+  for tree={s sep=20mm}
+  [$?- p(X) \disj ! \disj p(Y).$
+  [$ ! \disj p(Y) $,edge label={node[midway,left,font=\scriptsize]{$X \equal 1$}}
+  [$p(Y)$
+  [$\square$,edge label={node[midway,left,font=\scriptsize]{$Y \equal 1$}}]
+  [$!$,edge label={node[midway,left,font=\scriptsize]{$Y \equal 2$}}]
+  [$cut$]
+  ]
+  ]
+  [$cut$]
+  [$cut$]
+  ]
+\end{forest}
+
+\end{document}
+
+%%% Local Variables:
+%%% TeX-command-extra-options: "-shell-escape"
+%%% mode: latex
+%%% End:
