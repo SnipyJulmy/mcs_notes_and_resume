@@ -99,5 +99,7 @@ project/plugins/project/
 *.log
 
 *.idea
+*.pdf
+10Euclidian500
 
 # End of https://www.gitignore.io/api/scala,jetbrains,sbt
