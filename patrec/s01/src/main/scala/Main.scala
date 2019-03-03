@@ -2,6 +2,7 @@ import java.io._
 
 import scala.Function._
 import scala.io.Source
+import scala.language.implicitConversions
 
 object Main extends App {
 
@@ -11,7 +12,10 @@ object Main extends App {
   val trainFile: String = "train.csv"
   val testFile: String = "test.csv"
   val saveDirectoryPath: String = "results"
+  val distanceDirectoryPath: String = "distances"
+
   val doOverrideResults: Boolean = false
+  val doOverrideDistances: Boolean = false
 
   // manage save directory
   val saveDir: File = new File(saveDirectoryPath)
@@ -22,10 +26,23 @@ object Main extends App {
       System.exit(0)
     }
 
+  // manage distances directory
+  val distDir: File = new File(distanceDirectoryPath)
+  if (distDir.exists() && doOverrideDistances) distDir.delete()
+  if (!distDir.exists())
+    if (!distDir.mkdirs()) {
+      println(s"Can't create directory $distanceDirectoryPath... exit")
+      System.exit(0)
+    }
+
   val kToTest = List(1, 3, 5, 10, 15)
-  val nbSampleToClassify = 1000
+  val nbSampleToClassify = 15001
   val distanceFunctions: List[DistanceFunction] = List(
-    DistanceFunction.EuclidianDistance
+    DistanceFunction.EuclidianDistance,
+    DistanceFunction.ManhattanDistance,
+    DistanceFunction.mkMinkowskiDistance(2),
+    DistanceFunction.mkMinkowskiDistance(4),
+    DistanceFunction.mkMinkowskiDistance(6)
   )
 
   println("Load train set")
@@ -46,19 +63,28 @@ object Main extends App {
 
   def mkSavePath(filename: String): String = s"$saveDirectoryPath/$filename"
 
+  def mkDistPath(filename: String): String = s"$distanceDirectoryPath/$filename"
+
   class KNN(val ks: List[Int],
             val trainSet: Vector[LabeledImage]) {
 
     def classify(testSet: Vector[LabeledImage], distanceFunction: DistanceFunction): List[Result] = {
 
-      // compute the distance matrix for each point
-      println(s"compute the distance for ${testSet.length} x ${trainSet.length} with ${distanceFunction.name}")
-      val distances: Vector[(Label, Vector[(Label, Double)])] = testSet.par.map { testImage =>
-        testImage.label -> trainSet.par.map { trainImage =>
-          trainImage.label -> distanceFunction(testImage.data)(trainImage.data)
-        }.toVector.sortBy(_._2)
-      }.toVector
+      val name = DistancesSave.name(testSet.length, trainSet.length, distanceFunction)
+      val distances = DistancesSave.loadOrElse(mkDistPath(name), {
+        println(s"compute the distances for ${testSet.length} x ${trainSet.length} with ${distanceFunction.name}")
+        val res = testSet.par.map { testImage =>
+          testImage.label -> trainSet.par.map { trainImage =>
+            trainImage.label -> distanceFunction(testImage.data)(trainImage.data)
+          }.toVector.sortBy(_._2)
+        }.toVector
+        print(s"save distances to $name...")
+        DistancesSave.save(mkDistPath(name), res)
+        println(s" ... done !")
+        res
+      })
 
+      println("\n compute knn based on calculated distances")
       ks.map { k =>
         println(s"compute for k=$k")
         new Result(
@@ -68,7 +94,6 @@ object Main extends App {
           labels = distances.map(_._1)
         )
       }
-
     }
 
     // distance is a function that take two vectors and return the distance between them
@@ -230,4 +255,46 @@ object Main extends App {
       }
     }
   }
+
+  @SerialVersionUID(101L)
+  class DistancesSave(val distances: Vector[(Label, Vector[(Label, Double)])]) extends Serializable {
+  }
+
+  object DistancesSave {
+    def save(filepath: String, distances: DistancesSave): Unit = {
+      val oss = new ObjectOutputStream(new FileOutputStream(filepath))
+      oss.writeObject(distances)
+      oss.close()
+    }
+
+    def load(filepath: String): Vector[(Label, Vector[(Label, Double)])] = {
+      val ois = new ObjectInputStream(new FileInputStream(filepath))
+      val result = ois.readObject().asInstanceOf[DistancesSave]
+      result
+    }
+
+    def loadOrElse(name: String, default: => DistancesSave): DistancesSave = {
+      val file = new File(name)
+      if (file.exists()) {
+        println(s"Load distances $name")
+        val ois = new ObjectInputStream(new FileInputStream(file))
+        val result = ois.readObject().asInstanceOf[DistancesSave]
+        ois.close()
+        result
+      } else default
+    }
+
+    def name(testSize: Int, trainSize: Int, distanceFunction: DistanceFunction): String =
+      s"${distanceFunction.name}${testSize}x$trainSize"
+
+    def name(distances: Vector[(Label, Vector[(Label, Double)])], distanceFunction: DistanceFunction): String =
+      name(distances.length, distances.headOption match {
+        case Some(value) => value._2.length
+        case None => 0
+      }, distanceFunction)
+  }
+
+  implicit def distances2Save(distances: Vector[(Label, Vector[(Label, Double)])]): DistancesSave = new DistancesSave(distances)
+
+  implicit def Save2Distances(distances: DistancesSave): Vector[(Label, Vector[(Label, Double)])] = distances.distances
 }
