@@ -1,6 +1,0 @@
-{
-    "terminal.integrated.env.linux": {
-        "PATH": "/home/snipy/.platformio/penv/bin:/home/snipy/.platformio/penv:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/var/lib/flatpak/exports/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/usr/lib/smlnj/bin:/home/snipy/prog/node_modules/elm/binwrappers/",
-        "PLATFORMIO_CALLER": "vscode"
-    }
-}
