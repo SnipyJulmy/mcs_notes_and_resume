@@ -170,6 +170,10 @@
 /**/*.trail
 /**/*.zip
 /**/*.idea
+/**/package-lock.json
+/**/node_modules
+/**/*.vscode
+/**/*.DS_Store
 
 # lock free hashset implementation
 os/lock-free-set
