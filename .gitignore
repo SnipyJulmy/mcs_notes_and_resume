@@ -169,6 +169,7 @@
 /**/*-tags.tex
 /**/*.trail
 /**/*.zip
+/**/*.idea
 
 # lock free hashset implementation
 os/lock-free-set
