@@ -1,6 +1,9 @@
 import java.io._
 
+import pb.ProgressBar
+
 import scala.Function._
+import scala.collection.mutable
 import scala.io.Source
 import scala.language.implicitConversions
 
@@ -35,8 +38,9 @@ object Main extends App {
       System.exit(0)
     }
 
+  // train configuration
   val kToTest = List(1, 3, 5, 10, 15)
-  val nbSampleToClassify = 15001
+  val nbSampleToClassify = 500
   val distanceFunctions: List[DistanceFunction] = List(
     DistanceFunction.EuclidianDistance,
     DistanceFunction.ManhattanDistance,
@@ -50,54 +54,83 @@ object Main extends App {
   println("Load test set")
   val testSet = LabeledImage.fromCSV(testFile)
 
-  val results = distanceFunctions.flatMap { f =>
-    val testSamples = testSet.take(nbSampleToClassify)
-    val knn = new KNN(kToTest, trainSet)
-    knn.classify(testSamples, f)
-  }
+  println("Start incremental classification")
+  val results = for {
+    k <- kToTest
+    f <- distanceFunctions
+    knn = new KNN(k, trainSet)
+  } yield knn.incrementalClassification(testSet, f)
 
   println(s"Save the result to $saveDirectoryPath/")
   results.foreach(r => Result.save(mkSavePath(Result.mkName(r)), r))
 
   results.foreach(_.printReport())
 
+
+  /*
+val results = distanceFunctions.flatMap { f =>
+  val testSamples = testSet.take(nbSampleToClassify)
+  val knn = new KNN(kToTest, trainSet)
+  knn.classify(testSamples, f)
+}
+
+*/
+
   def mkSavePath(filename: String): String = s"$saveDirectoryPath/$filename"
 
   def mkDistPath(filename: String): String = s"$distanceDirectoryPath/$filename"
 
-  class KNN(val ks: List[Int],
+  class KNN(val k: Int,
             val trainSet: Vector[LabeledImage]) {
 
-    def classify(testSet: Vector[LabeledImage], distanceFunction: DistanceFunction): List[Result] = {
-
-      val name = DistancesSave.name(testSet.length, trainSet.length, distanceFunction)
-      val distances = DistancesSave.loadOrElse(mkDistPath(name), {
-        println(s"compute the distances for ${testSet.length} x ${trainSet.length} with ${distanceFunction.name}")
-        val res = testSet.par.map { testImage =>
-          testImage.label -> trainSet.par.map { trainImage =>
-            trainImage.label -> distanceFunction(testImage.data)(trainImage.data)
-          }.toVector.sortBy(_._2)
-        }.toVector
-        print(s"save distances to $name...")
-        DistancesSave.save(mkDistPath(name), res)
-        println(s" ... done !")
-        res
-      })
-
-      println("\n compute knn based on calculated distances")
-      ks.map { k =>
-        println(s"compute for k=$k")
-        new Result(
-          k = k,
-          distanceFunction = distanceFunction.name,
-          givenLabels = distances.map(d => assignLabel(k, d._2)),
-          labels = distances.map(_._1)
-        )
+    def incrementalClassification(testSet: Vector[LabeledImage], distanceFunction: DistanceFunction): Result = {
+      var pb = new ProgressBar(testSet.length)
+      pb.showSpeed = false
+      val givenLabels = mutable.Queue[Label]()
+      for {
+        testImage <- testSet
+      } {
+        pb += 1
+        val f = distanceFunction(testImage.data)_
+        val distances = trainSet.map(trainImage => trainImage.label -> f(trainImage.data))
+        val label = distances.sortBy(_._2).take(k).groupBy(p => p._1).maxBy(_._2.length)._1
+        givenLabels += label
       }
+      new Result(k, givenLabels.toVector, trainSet.map(_.label), distanceFunction.name)
     }
 
+    /*
+        def classify(testSet: Vector[LabeledImage], distanceFunction: DistanceFunction): List[Result] = {
+
+          val name = DistancesSave.name(testSet.length, trainSet.length, distanceFunction)
+          val distances = DistancesSave.loadOrElse(mkDistPath(name), {
+            println(s"compute the distances for ${testSet.length} x ${trainSet.length} with ${distanceFunction.name}")
+            val res = testSet.par.map { testImage =>
+              testImage.label -> trainSet.par.map { trainImage =>
+                trainImage.label -> distanceFunction(testImage.data)(trainImage.data)
+              }.toVector.sortBy(_._2)
+            }.toVector
+            print(s"save distances to $name...")
+            DistancesSave.save(mkDistPath(name), res)
+            println(s" ... done !")
+            res
+          })
+
+          println("\n compute knn based on calculated distances")
+          ks.map { k =>
+            println(s"compute for k=$k")
+            new Result(
+              k = k,
+              distanceFunction = distanceFunction.name,
+              givenLabels = distances.map(d => assignLabel(k, d._2)),
+              labels = distances.map(_._1)
+            )
+          }
+        }
+        */
+
     // distance is a function that take two vectors and return the distance between them
-    def assignLabel(k: Int, distances: Vector[(Label, Double)]): Label = {
+    def assignLabel(distances: Vector[(Label, Double)]): Label = {
       distances.take(k).groupBy(p => p._1).maxBy(_._2.length)._1
     }
   }
