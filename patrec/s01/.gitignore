@@ -101,5 +101,9 @@ project/plugins/project/
 *.idea
 *.pdf
 *.csv
+results
+distances
+julmy_s01
+julmy_s01.zip
 
 # End of https://www.gitignore.io/api/scala,jetbrains,sbt

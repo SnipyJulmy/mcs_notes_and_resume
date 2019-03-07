@@ -1,0 +1,244 @@
+\documentclass[a4paper,11pt]{report}
+
+\usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+
+\usepackage{bussproofs}
+\usepackage{mathpartir}
+\usepackage{prooftrees}
+\usepackage{color}
+\usepackage{multicol}
+\usepackage{geometry}
+\usepackage{pdflscape}
+
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+    \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+\usepackage[cache=false]{minted}
+
+\newmintedfile{java}{
+  frame=single,
+  framesep=6pt,
+  breaklines=true,
+  fontsize=\scriptsize,
+  linenos,
+  mathescape,
+  firstnumber=1
+}
+
+\newmintedfile{scala}{
+  frame=single,
+  framesep=6pt,
+  breaklines=true,
+  fontsize=\scriptsize,
+  linenos,
+  mathescape,
+  firstnumber=1
+}
+
+\newmintedfile{bash}{
+  frame=single,
+  framesep=6pt,
+  breaklines=true,
+  fontsize=\scriptsize,
+  linenos,
+  mathescape,
+  firstnumber=1
+}
+
+\newminted{java}{
+  frame=single,
+  framesep=2mm,
+  breaklines=true,
+  fontsize=\scriptsize,
+  linenos,
+  mathescape
+}
+
+\newminted{scala}{
+  frame=single,
+  framesep=6pt,
+  breaklines=true,
+  fontsize=\scriptsize,
+  linenos,
+  mathescape
+}
+
+\newminted{bash}{
+  frame=single,
+  framesep=2mm,
+  breaklines=true,
+  fontsize=\scriptsize,
+  linenos,
+  mathescape
+}
+
+
+\makeatletter
+\pgfmathdeclarefunction{alpha}{1}{%
+  \pgfmathint@{#1}%
+  \edef\pgfmathresult{\pgffor@alpha{\pgfmathresult}}%
+}
+
+% tikz
+\usepackage{tikz}
+\usetikzlibrary{snakes}
+
+\date{\today}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2.5pt}
+
+\begin{document}
+
+\begin{center}
+\Large{
+    Pattern Recognition \\
+    Spring 2019
+  }
+  
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+  Exercise 1a : First Classification Task with KNN
+
+  \vspace*{1.4cm}
+
+  Author : Sylvain Julmy
+  \noindent\makebox[\linewidth]{\rule{\linewidth}{0.4pt}}
+
+  \begin{flushleft}
+    Professor : Dr. Andreas Fischer \\
+    Teaching Assistants : Paul Maergner, Linda Studer
+  \end{flushleft}
+
+  \noindent\makebox[\linewidth]{\rule{\textwidth}{1pt}}
+\end{center}
+
+\section*{Various distance functions}
+For this exercise, we implemented various distance function. Except of
+Euclidian and Manhattan, we also have a value dependent Minkowski function and
+the Hamming distance. The implementation is available in listing
+\ref{lst:distances}.
+
+\begin{listing}[ht]
+  \centering
+  \begin{scalacode}
+object DistanceFunction {
+
+  // $d_{euclidian}(p,q) = d_{euclidian}(q,p) = \sqrt{(p_1 - q_1)^2 + (p_2 - q_2)^2 + \dots + (p_n - q_n)^2}$
+  case object EuclidianDistance extends DistanceFunction {
+    override val name = "Euclidian"
+    override def apply(p1: Vector[Label])(p2: Vector[Label]): Double = Math.sqrt {
+      (p1 zip p2).map { pp =>
+        val diff = pp._1.toDouble - pp._2.toDouble
+        diff * diff
+      }.sum
+    }
+  }
+
+  // $d_{hamming}(p,q) = \sum_{i=0}^{n-1}(p_i \oplus q_i)$
+  case object HammingDistance extends DistanceFunction {
+    override val name: String = "Hamming"
+    override def apply(p1: Vector[Label])(p2: Vector[Label]): Double = {
+      (p1 zip p2).map(pp => if (pp._1 == pp._2) 1 else 0).sum.toDouble
+    }
+  }
+
+  // $d_{manhattan}(p,q) = ||p-q||_1 = \sum_{i=0}^{n-1}|p_i - q_i|$
+  case object ManhattanDistance extends DistanceFunction {
+    override val name: String = "Manhattan"
+    override def apply(p1: Vector[Label])(p2: Vector[Label]): Double = {
+      (p1 zip p2).map(pp => math.abs(pp._1 - pp._2)).sum.toDouble
+    }
+  }
+
+  // $d_{minkowski_p}(X,Y) = (\sum_{i=0}^{n-1} |x_i - y_i|^p)^{\frac{1}{p}}$
+  def mkMinkowskiDistance(order: Int): DistanceFunction = {
+    new DistanceFunction {
+      override val name: String = "Minkowskiorder" + order
+      override def apply(p1: Vector[Label])(p2: Vector[Label]): Double =
+      math.pow(
+        (p1 zip p2).map(pp => math.pow(math.abs(pp._1 - pp._2).toDouble, order.toDouble)).sum,
+        1.0 / order.toDouble
+      )
+    }
+  }
+}
+  \end{scalacode}
+  \caption{Implementation of various distance function.}
+  \label{lst:distances}
+\end{listing}
+
+\section*{Gridsearch on a smaller testing set}
+
+In order to find a good value for $k$ and a good distance function, we have
+performed KNN on a smaller subset of the given test set. We took only $300$
+elements. The table \ref{tab:gridsearch} show the obtained results.
+
+\begin{table}[]
+  \begin{center}
+    \begin{tabular}{lcccccc}
+      \multicolumn{6}{l}{\textbf{Accuracy}}                                                                                                                                                                                                & \multicolumn{1}{l}{\textbf{Mean}} \\ \cline{1-6}
+      \multicolumn{1}{|l|}{\textbf{function \textbackslash k}} & \multicolumn{1}{c|}{\textbf{1}} & \multicolumn{1}{c|}{\textbf{3}} & \multicolumn{1}{c|}{\textbf{5}} & \multicolumn{1}{c|}{\textbf{10}} & \multicolumn{1}{c|}{\textbf{15}} & \multicolumn{1}{l}{}              \\ \hline
+      \multicolumn{1}{|l|}{\textbf{Euclidian}}                 & \multicolumn{1}{c|}{0,950}      & \multicolumn{1}{c|}{0,963}      & \multicolumn{1}{c|}{0,970}      & \multicolumn{1}{c|}{0,963}       & \multicolumn{1}{c|}{0,957}       & \multicolumn{1}{c|}{0,961}        \\ \hline
+      \multicolumn{1}{|l|}{\textbf{Minkowski2}}                & \multicolumn{1}{c|}{0,950}      & \multicolumn{1}{c|}{0,963}      & \multicolumn{1}{c|}{0,970}      & \multicolumn{1}{c|}{0,963}       & \multicolumn{1}{c|}{0,957}       & \multicolumn{1}{c|}{0,961}        \\ \hline
+      \multicolumn{1}{|l|}{\textbf{Minkowski6}}                & \multicolumn{1}{c|}{0,967}      & \multicolumn{1}{c|}{0,960}      & \multicolumn{1}{c|}{0,963}      & \multicolumn{1}{c|}{0,963}       & \multicolumn{1}{c|}{0,963}       & \multicolumn{1}{c|}{0,963}        \\ \hline
+      \multicolumn{1}{|l|}{\textbf{Minkowski4}}                & \multicolumn{1}{c|}{0,960}      & \multicolumn{1}{c|}{0,957}      & \multicolumn{1}{c|}{0,967}      & \multicolumn{1}{c|}{0,967}       & \multicolumn{1}{c|}{0,970}       & \multicolumn{1}{c|}{0,964}        \\ \hline
+      \multicolumn{1}{|l|}{\textbf{Manhattan}}                 & \multicolumn{1}{c|}{0,943}      & \multicolumn{1}{c|}{0,960}      & \multicolumn{1}{c|}{0,967}      & \multicolumn{1}{c|}{0,957}       & \multicolumn{1}{c|}{0,943}       & \multicolumn{1}{c|}{0,954}        \\ \hline
+      \multicolumn{1}{|l|}{\textbf{Mean}}                      & \multicolumn{1}{c|}{0,954}      & \multicolumn{1}{c|}{0,961}      & \multicolumn{1}{c|}{0,967}      & \multicolumn{1}{c|}{0,963}       & \multicolumn{1}{c|}{0,958}       &                                   \\ \cline{1-6}
+                                                                                                                                                                                                                                           & \multicolumn{1}{l}{}            & \multicolumn{1}{l}{}            & \multicolumn{1}{l}{}            & \multicolumn{1}{l}{}             & \multicolumn{1}{l}{}             & \multicolumn{1}{l}{}              \\
+      \multicolumn{6}{l}{\textbf{Precision}}                                                                                                                                                                                               & \multicolumn{1}{l}{\textbf{Mean}} \\ \cline{1-6}
+      \multicolumn{1}{|l|}{\textbf{function \textbackslash k}} & \multicolumn{1}{c|}{\textbf{1}} & \multicolumn{1}{c|}{\textbf{3}} & \multicolumn{1}{c|}{\textbf{5}} & \multicolumn{1}{c|}{\textbf{10}} & \multicolumn{1}{c|}{\textbf{15}} &                                   \\ \hline
+      \multicolumn{1}{|l|}{\textbf{Euclidian}}                 & \multicolumn{1}{c|}{0,951}      & \multicolumn{1}{c|}{0,962}      & \multicolumn{1}{c|}{0,969}      & \multicolumn{1}{c|}{0,964}       & \multicolumn{1}{c|}{0,958}       & \multicolumn{1}{c|}{0,961}        \\ \hline
+      \multicolumn{1}{|l|}{\textbf{Minkowski2}}                & \multicolumn{1}{c|}{0,951}      & \multicolumn{1}{c|}{0,962}      & \multicolumn{1}{c|}{0,969}      & \multicolumn{1}{c|}{0,964}       & \multicolumn{1}{c|}{0,958}       & \multicolumn{1}{c|}{0,961}        \\ \hline
+      \multicolumn{1}{|l|}{\textbf{Minkowski6}}                & \multicolumn{1}{c|}{0,968}      & \multicolumn{1}{c|}{0,961}      & \multicolumn{1}{c|}{0,963}      & \multicolumn{1}{c|}{0,964}       & \multicolumn{1}{c|}{0,963}       & \multicolumn{1}{c|}{0,964}        \\ \hline
+      \multicolumn{1}{|l|}{\textbf{Minkowski4}}                & \multicolumn{1}{c|}{0,962}      & \multicolumn{1}{c|}{0,957}      & \multicolumn{1}{c|}{0,966}      & \multicolumn{1}{c|}{0,966}       & \multicolumn{1}{c|}{0,970}       & \multicolumn{1}{c|}{0,964}        \\ \hline
+      \multicolumn{1}{|l|}{\textbf{Manhattan}}                 & \multicolumn{1}{c|}{0,945}      & \multicolumn{1}{c|}{0,959}      & \multicolumn{1}{c|}{0,967}      & \multicolumn{1}{c|}{0,959}       & \multicolumn{1}{c|}{0,946}       & \multicolumn{1}{c|}{0,955}        \\ \hline
+      \multicolumn{1}{|l|}{\textbf{Mean}}                      & \multicolumn{1}{c|}{0,955}      & \multicolumn{1}{c|}{0,960}      & \multicolumn{1}{c|}{0,967}      & \multicolumn{1}{c|}{0,963}       & \multicolumn{1}{c|}{0,959}       &                                   \\ \cline{1-6}
+                                                                                                                                                                                                                                           & \multicolumn{1}{l}{}            & \multicolumn{1}{l}{}            & \multicolumn{1}{l}{}            & \multicolumn{1}{l}{}             & \multicolumn{1}{l}{}             & \multicolumn{1}{l}{}              \\
+      \multicolumn{6}{l}{\textbf{Recall}}                                                                                                                                                                                                  & \multicolumn{1}{l}{\textbf{Mean}} \\ \cline{1-6}
+      \multicolumn{1}{|l|}{\textbf{function \textbackslash k}} & \multicolumn{1}{c|}{\textbf{1}} & \multicolumn{1}{c|}{\textbf{3}} & \multicolumn{1}{c|}{\textbf{5}} & \multicolumn{1}{c|}{\textbf{10}} & \multicolumn{1}{c|}{\textbf{15}} &                                   \\ \hline
+      \multicolumn{1}{|l|}{\textbf{Euclidian}}                 & \multicolumn{1}{c|}{0,952}      & \multicolumn{1}{c|}{0,965}      & \multicolumn{1}{c|}{0,972}      & \multicolumn{1}{c|}{0,965}       & \multicolumn{1}{c|}{0,959}       & \multicolumn{1}{c|}{0,962}        \\ \hline
+      \multicolumn{1}{|l|}{\textbf{Minkowski2}}                & \multicolumn{1}{c|}{0,952}      & \multicolumn{1}{c|}{0,965}      & \multicolumn{1}{c|}{0,972}      & \multicolumn{1}{c|}{0,965}       & \multicolumn{1}{c|}{0,959}       & \multicolumn{1}{c|}{0,962}        \\ \hline
+      \multicolumn{1}{|l|}{\textbf{Minkowski6}}                & \multicolumn{1}{c|}{0,969}      & \multicolumn{1}{c|}{0,962}      & \multicolumn{1}{c|}{0,965}      & \multicolumn{1}{c|}{0,965}       & \multicolumn{1}{c|}{0,966}       & \multicolumn{1}{c|}{0,965}        \\ \hline
+      \multicolumn{1}{|l|}{\textbf{Minkowski4}}                & \multicolumn{1}{c|}{0,961}      & \multicolumn{1}{c|}{0,958}      & \multicolumn{1}{c|}{0,969}      & \multicolumn{1}{c|}{0,969}       & \multicolumn{1}{c|}{0,972}       & \multicolumn{1}{c|}{0,966}        \\ \hline
+      \multicolumn{1}{|l|}{\textbf{Manhattan}}                 & \multicolumn{1}{c|}{0,945}      & \multicolumn{1}{c|}{0,961}      & \multicolumn{1}{c|}{0,968}      & \multicolumn{1}{c|}{0,957}       & \multicolumn{1}{c|}{0,946}       & \multicolumn{1}{c|}{0,955}        \\ \hline
+      \multicolumn{1}{|l|}{\textbf{Mean}}                      & \multicolumn{1}{c|}{0,956}      & \multicolumn{1}{c|}{0,962}      & \multicolumn{1}{c|}{0,969}      & \multicolumn{1}{c|}{0,964}       & \multicolumn{1}{c|}{0,960}       &                                   \\ \cline{1-6}
+    \end{tabular}
+  \end{center}
+  \caption{Result of the grid search on $300$ samples.}
+  \label{tab:gridsearch}
+\end{table}
+
+From the results of the grid search, we saw that a $k=5$ is a little bit better
+that the others $k$ and the Minkowski distance of order $4$ too.
+
+For the final result, we launch the classification on $6000$ samples, which give
+us the following result :
+
+\begin{verbatim}
+Classification report
+ 	 sample size : 6000
+ 	 k           : 5
+ 	 distance    : Minkowski4
+
+		 precision 	 recall
+class 0 	 0.97 	 1.00
+class 1 	 0.96 	 1.00
+class 2 	 0.99 	 0.95
+class 3 	 0.96 	 0.95
+class 4 	 0.97 	 0.96
+class 5 	 0.97 	 0.96
+class 6 	 0.98 	 0.98
+class 7 	 0.95 	 0.98
+class 8 	 0.97 	 0.93
+class 9 	 0.95 	 0.95
+
+accuracy   	0.9661666666666666
+precision  	0.9666685026164735
+recall     	0.9659881369002999
+\end{verbatim}
+
+The complete source code (an SBT project) is available in the zip file.
+
+\end{document}
