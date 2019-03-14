@@ -1,4 +1,4 @@
-package ch.snipy.Ex1;
+package ch.snipy.ex1;
 
 public class Ex1Sync {
 
