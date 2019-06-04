@@ -1,0 +1,6 @@
+@default_files = ('presentation.tex');
+
+$latex = 'texfot latex -interaction=nonstopmode -file-line-error -shell-escape';
+$pdflatex = 'texfot xelatex -interaction=nonstopmode -file-line-error -shell-escape';
+$clean_ext = "bbl glo lol ist run.xml synctex.gz snm vrb nav";
+$bibtex_use = 1;
