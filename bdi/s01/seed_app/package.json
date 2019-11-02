@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "faker": "^4.1.0",
-    "knex": "^0.15.2",
+    "knex": "^0.20.1",
     "pg": "^7.4.3"
   }
 }
